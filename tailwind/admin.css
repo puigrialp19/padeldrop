@@ -1,0 +1,78 @@
+/* Entrada de Tailwind para el panel. Se compila con: npm run build:css  ->  admin/css/admin.css */
+@import "tailwindcss";
+@source "../admin";
+
+@font-face { font-family: "Barlow Condensed"; font-weight: 800; font-display: swap; src: url("/assets/fonts/barlow-condensed-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 400; font-display: swap; src: url("/assets/fonts/inter-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 500; font-display: swap; src: url("/assets/fonts/inter-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 600; font-display: swap; src: url("/assets/fonts/inter-latin-600-normal.woff2") format("woff2"); }
+
+/* Colores de marca como variables: el modo oscuro solo cambia los valores, no las clases. */
+:root {
+  color-scheme: light;
+  --pd-page: #f4f5f1;
+  --pd-card: #ffffff;
+  --pd-ink: #0a0a0a;
+  --pd-muted: #5b5b5b;
+  --pd-line: #e2e4dd;
+  --pd-soft: #f0f1ec;
+  --pd-grid: #e1e0d9;
+  /* Un color por pack (paleta validada para daltonismo, orden fijo) */
+  --pd-start: #2a78d6;
+  --pd-player: #eb6834;
+  --pd-pro: #1baf7a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --pd-page: #0a0a0a; --pd-card: #151515; --pd-ink: #f5f5f2; --pd-muted: #a3a3a0; --pd-line: #262626; --pd-soft: #1d1d1c; --pd-grid: #2c2c2a;
+    --pd-start: #3987e5; --pd-player: #d95926; --pd-pro: #199e70;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --pd-page: #0a0a0a; --pd-card: #151515; --pd-ink: #f5f5f2; --pd-muted: #a3a3a0; --pd-line: #262626; --pd-soft: #1d1d1c; --pd-grid: #2c2c2a;
+  --pd-start: #3987e5; --pd-player: #d95926; --pd-pro: #199e70;
+}
+
+@theme {
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
+  --color-lime: #c6ff00;
+  --color-lime-dark: #7aa800;
+  --color-page: var(--pd-page);
+  --color-card: var(--pd-card);
+  --color-ink: var(--pd-ink);
+  --color-muted: var(--pd-muted);
+  --color-line: var(--pd-line);
+  --color-soft: var(--pd-soft);
+  --color-grid: var(--pd-grid);
+  --color-pack-start: var(--pd-start);
+  --color-pack-player: var(--pd-player);
+  --color-pack-pro: var(--pd-pro);
+  --color-good: #0ca30c;
+  --color-warning: #fab219;
+  --color-critical: #d03b3b;
+}
+
+@layer base {
+  html { -webkit-tap-highlight-color: transparent; }
+  body { @apply bg-page text-ink font-sans antialiased; }
+  :focus-visible { outline: 3px solid var(--color-lime-dark); outline-offset: 2px; }
+  [hidden] { display: none !important; }
+}
+
+@layer components {
+  .card { @apply rounded-2xl border border-line bg-card; }
+  .btn-primary, .btn-ghost { @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-primary { @apply bg-lime text-black hover:brightness-95; }
+  .btn-ghost { @apply border border-line bg-card text-ink hover:bg-soft; }
+  .input { @apply w-full rounded-xl border border-line bg-card px-3 py-2 text-sm text-ink placeholder:text-muted focus:border-lime-dark focus:outline-none; }
+  .label { @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-muted; }
+  .nav-link { @apply flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-neutral-300 transition hover:bg-white/10 hover:text-white; }
+  .nav-link[aria-current="page"] { @apply bg-lime text-black; }
+  .badge { @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap; }
+  .th { @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted; }
+  .td { @apply px-4 py-3 align-top; }
+  .num { font-variant-numeric: tabular-nums; }
+}

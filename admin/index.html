@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Administración · PADEL DROP</title>
+<link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body class="min-h-screen">
+<div class="flex min-h-screen">
+  <!-- Barra lateral (cajón en móvil) -->
+  <div id="backdrop" class="fixed inset-0 z-30 bg-black/50 lg:hidden" hidden></div>
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col bg-black px-4 py-5 text-white transition-transform lg:static lg:translate-x-0">
+    <a href="#/dashboard" class="mb-8 px-2 font-display text-2xl font-extrabold uppercase tracking-wide">Padel <span class="rounded-md bg-lime px-1.5 text-black">Drop</span></a>
+    <nav class="flex flex-col gap-1" aria-label="Secciones del panel">
+      <a class="nav-link" href="#/dashboard" data-nav="dashboard">
+        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10m6 10V4m6 16v-7m4 7H2"/></svg>Resumen</a>
+      <a class="nav-link" href="#/clientes" data-nav="clientes">
+        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0m1-10a3 3 0 1 0 0-6m5 16a6 6 0 0 0-4-5.6"/></svg>Clientes</a>
+      <a class="nav-link" href="#/pedidos" data-nav="pedidos">
+        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7l9-4 9 4-9 4-9-4zm0 0v10l9 4 9-4V7M12 11v10"/></svg>Pedidos y envíos</a>
+    </nav>
+    <div class="mt-auto border-t border-white/10 pt-4">
+      <p class="truncate px-2 text-xs text-neutral-400" id="me"></p>
+      <button id="logout" class="nav-link mt-2 w-full" type="button">
+        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11"/></svg>Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <div class="flex min-w-0 flex-1 flex-col">
+    <header class="sticky top-0 z-20 flex items-center gap-3 border-b border-line bg-page/90 px-4 py-3 backdrop-blur lg:hidden">
+      <button id="menu" class="btn-ghost size-10 p-0" type="button" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false">
+        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <span class="font-display text-xl font-extrabold uppercase">Padel <span class="rounded bg-lime px-1 text-black">Drop</span></span>
+    </header>
+    <main id="view" class="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8" tabindex="-1"></main>
+  </div>
+</div>
+<div id="toast" class="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-sm rounded-xl bg-black px-4 py-3 text-sm text-white shadow-lg sm:inset-x-auto sm:right-6" role="status" hidden></div>
+<script type="module" src="/admin/js/app.js"></script>
+</body>
+</html>

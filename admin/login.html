@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Acceso administración · PADEL DROP</title>
+<link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body class="min-h-screen bg-black">
+<main class="flex min-h-screen items-center justify-center px-4 py-10">
+  <div class="w-full max-w-sm">
+    <p class="mb-8 text-center font-display text-4xl font-extrabold uppercase tracking-wide text-white">
+      Padel <span class="rounded-md bg-lime px-2 text-black">Drop</span>
+    </p>
+    <form id="login" class="card p-6 shadow-xl sm:p-8" novalidate>
+      <h1 class="text-xl font-semibold">Panel de administración</h1>
+      <p class="mt-1 text-sm text-muted">Acceso restringido al equipo de Padel Drop.</p>
+
+      <div id="error" role="alert" class="mt-5 rounded-xl border border-critical/40 bg-critical/10 px-3 py-2 text-sm text-critical" hidden></div>
+
+      <label class="label mt-5" for="email">Email</label>
+      <input class="input" id="email" name="email" type="email" autocomplete="username" required autofocus>
+
+      <label class="label mt-4" for="password">Contraseña</label>
+      <input class="input" id="password" name="password" type="password" autocomplete="current-password" required>
+
+      <button class="btn-primary mt-6 w-full py-2.5" id="submit" type="submit">Entrar</button>
+    </form>
+    <p class="mt-6 text-center text-xs text-neutral-500"><a class="underline hover:text-neutral-300" href="/">Volver a la web</a></p>
+  </div>
+</main>
+<script type="module" src="/admin/js/login.js"></script>
+</body>
+</html>

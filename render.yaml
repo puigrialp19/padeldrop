@@ -1,0 +1,28 @@
+# Configuración para Render (https://render.com): crea el servidor web con un clic ("Blueprint").
+# Las claves secretas NO están aquí: Render te las pide al crear el servicio (sync: false).
+services:
+  - type: web
+    name: padel-drop
+    runtime: node
+    region: frankfurt            # cerca de Supabase (Frankfurt): más rápido y datos en la UE
+    plan: starter                # siempre encendido (el plan free se duerme tras 15 min)
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /healthz    # Render comprueba que la web y la base de datos responden
+    autoDeploy: true             # cada cambio subido a GitHub se publica solo
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "1"
+      - key: SESSION_HOURS
+        value: "8"
+      - key: STRIPE_SHIPPING_PRICE_ID
+        value: price_1UTSGRRq7KJQz9G9pcum76B0
+      # Secretas: se rellenan en Render al crear el servicio
+      - key: DATABASE_URL
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
