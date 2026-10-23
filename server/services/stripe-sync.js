@@ -118,7 +118,9 @@ async function createOrderFromInvoice(stripe, inv) {
     packLine = lines.find((l) => priceIdOf(l) !== config.stripe.shippingPriceId);
   }
   if (!pack || !packLine) return; // no es una factura de un pack
-  const shipLine = lines.find((l) => l !== packLine && (!config.stripe.shippingPriceId || priceIdOf(l) === config.stripe.shippingPriceId));
+  // Envío = la línea con el Price ID de envío configurado; si no coincide (p. ej. al cambiar de cuenta de Stripe), la otra línea.
+  const shipLine = lines.find((l) => l !== packLine && priceIdOf(l) === config.stripe.shippingPriceId)
+    || lines.find((l) => l !== packLine);
   const discount = (l) => (l?.discount_amounts || []).reduce((a, d) => a + d.amount, 0);
 
   if (subId) await syncSubscription(stripe, await stripe.subscriptions.retrieve(subId));
