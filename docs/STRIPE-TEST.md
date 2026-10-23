@@ -1,15 +1,22 @@
-# Objetos de Stripe (MODO PRUEBAS)
+# Stripe de PADEL DROP (modo prueba)
 
-Cuenta: `acct_1USXZLRq7KJQz9G9` (Padel Drop, livemode=false). No hay claves secretas en el proyecto: la web solo usa URLs públicas de Payment Links.
+Cuenta: acct_1USXZWRqeFc4ANGh · generado 2026-10-23 con server/scripts/stripe-setup.js
 
-| Plan | Producto | Precio mensual (IVA incl.) | Price ID | Payment Link |
-|---|---|---|---|---|
-| START (2 botes + 2 grips) | prod_VTUdqNcb6lNUHT | 11,90 € | price_1UTR6WRq7KJQz9G9XnGJvUvf | plink_1UTcYDRq7KJQz9G916jBPVQd |
-| PLAYER (3 + 3) | prod_VTUdNY9gxJvJ1z | 15,90 € | price_1UTR6ZRq7KJQz9G9LsL75KUQ | plink_1UTcYIRq7KJQz9G92QA12OIo |
-| PRO (5 + 5) | prod_VTa8eLGXHgou3s | 23,90 € | price_1UTR6bRq7KJQz9G9dnELxvRj | plink_1UTcYNRq7KJQz9G9QLBUPBwA |
-| Envío mensual | prod_VUPwBCNwTbw0d9 | 3,50 € | price_1UTSGRRq7KJQz9G9pcum76B0 | (segunda línea de cada link) |
+| Pack | Price ID | Enlace de pago |
+|---|---|---|
+| Pack Básico / PADEL DROP START (11,90 €) | price_1UTmcpRqeFc4ANGhq2s7EBUn | https://buy.stripe.com/test_bJe9AV2Rjb9CfRj5sKeZ200 |
+| Pack Intermedio / PADEL DROP PLAYER (15,90 €) | price_1UTmcqRqeFc4ANGhl4OklegC | https://buy.stripe.com/test_9B6cN74ZrfpS34xbR8eZ201 |
+| Pack Premium / PADEL DROP PRO (23,90 €) | price_1UTmcrRqeFc4ANGhlw8FjT5R | https://buy.stripe.com/test_bJe28t2Rj91ucF77ASeZ202 |
+| Envío mensual (3,50 €) | price_1UTmcsRqeFc4ANGhv4ZEdNkN | (segunda línea de cada enlace) |
 
-- Cada Payment Link contiene el pack + el envío (2 líneas recurrentes), recoge nombre, teléfono, dirección de facturación y envío (solo España) y admite códigos promocionales.
-- Cupón `3CEXKYdR` (10 %, solo el primer mes). Código promocional `promo_1UStwYRq7KJQz9G9UY9c1OYZ` = `INTERPADEL-GUISSONA-TARREGA-GOLMES-3` (solo clientes nuevos).
-- Portal de cliente: configuración `bpc_1USczCRq7KJQz9G9jLV304Aa` (facturas, método de pago, datos, cancelación al final del periodo, cambio de pack).
-- Las URLs de los Payment Links están en `js/config.js`. Para vender en real hay que recrear todo en modo real.
+- Código de socio: `INTERPADEL-GUISSONA-TARREGA-GOLMES-3` (cupón INTERPADEL10, 10 % primer mes, solo clientes nuevos)
+- Portal de cliente: https://billing.stripe.com/p/login/test_bJe9AV2Rjb9CfRj5sKeZ200
+- Webhook: https://padel-drop.onrender.com/api/stripe/webhook (checkout.session.completed, customer.subscription.created, customer.subscription.updated, customer.subscription.deleted, invoice.paid)
+
+## SQL para Supabase
+
+```sql
+UPDATE packs SET stripe_price_id = 'price_1UTmcpRqeFc4ANGhq2s7EBUn' WHERE slug = 'start';
+UPDATE packs SET stripe_price_id = 'price_1UTmcqRqeFc4ANGhl4OklegC' WHERE slug = 'player';
+UPDATE packs SET stripe_price_id = 'price_1UTmcrRqeFc4ANGhlw8FjT5R' WHERE slug = 'pro';
+```
