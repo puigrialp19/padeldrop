@@ -3,6 +3,8 @@ import { renderDashboard } from './views/dashboard.js';
 import { renderCustomers } from './views/customers.js';
 import { renderCustomerDetail } from './views/customer-detail.js';
 import { renderOrders } from './views/orders.js';
+import { renderLive } from './views/live.js';
+import { renderQr } from './views/qr.js';
 import { toast } from './ui.js';
 import { initPush } from './push.js';
 
@@ -17,6 +19,8 @@ const routes = [
   { re: /^\/clientes$/, nav: 'clientes', render: renderCustomers },
   { re: /^\/clientes\/(\d+)$/, nav: 'clientes', render: renderCustomerDetail },
   { re: /^\/pedidos$/, nav: 'pedidos', render: renderOrders },
+  { re: /^\/directo$/, nav: 'directo', render: renderLive },
+  { re: /^\/clubs$/, nav: 'clubs', render: renderQr },
 ];
 
 export function parseHash() {
@@ -96,5 +100,12 @@ document.addEventListener('visibilitychange', () => {
 setInterval(() => { if (document.visibilityState === 'visible' && window.scrollY < 80) softRefresh(); }, 120_000);
 
 initPush();
+const liveBadge = document.getElementById('live-badge');
+async function updateLiveBadge() {
+  if (document.visibilityState !== 'visible') return;
+  try { const { count } = await api.liveSummary(); liveBadge.textContent = count; liveBadge.hidden = !count; } catch { /* sin conexión: se reintenta */ }
+}
+updateLiveBadge();
+setInterval(updateLiveBadge, 15_000);
 addEventListener('hashchange', () => { lastRefresh = Date.now(); route(); });
 route();

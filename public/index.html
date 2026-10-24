@@ -131,7 +131,8 @@
 <ul><li>Identificación y contacto: nombre y apellidos, correo electrónico y teléfono.</li>
 <li>Direcciones de envío y de facturación.</li>
 <li>Datos de la suscripción y de los pedidos: pack contratado, importes, fechas de cobro, estado y número de seguimiento de los envíos.</li>
-<li>Datos técnicos mínimos: dirección IP y registros técnicos del servidor, necesarios para la seguridad de la web.</li></ul>
+<li>Datos técnicos mínimos: dirección IP y registros técnicos del servidor, necesarios para la seguridad de la web.</li>
+<li>Estadística anónima de visitas: contamos cuántas personas hay en la web en cada momento, qué sección miran y desde dónde llegan (por ejemplo, TikTok o el QR de un club). Se hace sin cookies, sin guardar nada en tu dispositivo, sin guardar tu dirección IP y sin identificarte; solo se conserva un recuento total de visitas por día y origen. Base: interés legítimo (art. 6.1.f RGPD) en conocer el funcionamiento de la web.</li></ul>
 <p>Los datos de la tarjeta los recoge y gestiona directamente nuestro proveedor de pagos, Stripe. PADEL DROP no ve ni almacena el número completo de tu tarjeta.</p>
 <h2>3. Finalidades y base jurídica</h2>
 <ul><li>Gestionar tu suscripción, los cobros mensuales y la preparación y entrega de cada pack. Base: ejecución del contrato (art. 6.1.b RGPD).</li>
@@ -166,7 +167,7 @@
 <p>PADEL DROP solo utiliza cookies técnicas, estrictamente necesarias para que la web y el pago funcionen. No usamos cookies analíticas, publicitarias, de personalización ni de seguimiento, y no compartimos datos de navegación con redes sociales ni anunciantes. Por eso no te mostramos un aviso para aceptar cookies: las cookies técnicas no requieren consentimiento (art. 22.2 LSSI-CE).</p>
 <p>Las tipografías de la web se sirven desde nuestro propio servidor, sin conectar con servicios de terceros como Google Fonts.</p>
 <h2>2. Cookies que utilizamos</h2>
-<ul><li><strong>Navegación por la web pública:</strong> la web de PADEL DROP no instala ninguna cookie mientras navegas por ella.</li>
+<ul><li><strong>Navegación por la web pública:</strong> la web de PADEL DROP no instala ninguna cookie ni guarda información en tu dispositivo mientras navegas por ella. Para saber cuántas personas nos visitan, la página envía periódicamente a nuestro servidor una señal anónima (un número aleatorio que desaparece al cerrar la página, la sección que estás viendo y el origen de la visita), sin cookies ni almacenamiento local y sin guardar tu dirección IP.</li>
 <li><strong>Sesión del panel de gestión</strong> (<code>__Host-pd_admin</code>, propia): solo se instala a las personas autorizadas que gestionan la tienda cuando inician sesión. Mantiene la sesión abierta de forma segura y caduca tras 8 horas sin actividad o al cerrar sesión. Los clientes no la reciben.</li>
 <li><strong>Pago y área de cliente</strong> (Stripe, de terceros): cuando pulsas «Contratar y pagar» o «Mi cuenta», pasas a las páginas seguras de Stripe (checkout.stripe.com, buy.stripe.com y billing.stripe.com). Allí, Stripe instala cookies técnicas necesarias para procesar el pago, mantener tu sesión y prevenir el fraude, por ejemplo <code>__stripe_mid</code> (prevención del fraude, 1 año) y <code>__stripe_sid</code> (sesión de pago, 30 minutos). Estas cookies las gestiona Stripe conforme a su <a href="https://stripe.com/es/legal/cookies-policy" target="_blank" rel="noopener">política de cookies</a>.</li></ul>
 <h2>3. Cookies opcionales</h2>
@@ -222,5 +223,6 @@
 
 <script src="js/config.js"></script>
 <script src="js/app.js"></script>
+<script src="js/visit.js"></script>
 </body>
 </html>

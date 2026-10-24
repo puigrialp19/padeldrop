@@ -12,6 +12,9 @@ PLANS.forEach(function(p){
 });
 document.getElementById("pn").textContent=CONFIG.shippingNote;
 var dlg=document.getElementById("dlg"),cb=document.getElementById("cb"),cn=document.getElementById("cn"),cart=null;
+/* Si se llega desde un QR de club con ?codigo=XXX, el código se aplica solo en la página de pago de Stripe */
+var PROMO=(new URLSearchParams(location.search).get("codigo")||"").toUpperCase().replace(/[^A-Z0-9-]/g,"").slice(0,40);
+function checkoutLink(id){var u=CONFIG.checkoutUrl[id];return PROMO?u+(u.indexOf("?")>-1?"&":"?")+"prefilled_promo_code="+encodeURIComponent(PROMO):u}
 function planOf(id){return PLANS.filter(function(x){return x.id===id})[0]}
 function drawCart(){
   cn.hidden=!cart;
@@ -21,9 +24,10 @@ function drawCart(){
   '<p>Total a pagar hoy: <strong>'+eur(p.price+CONFIG.shipping)+'</strong> ('+eur(p.price)+' del pack + '+eur(CONFIG.shipping)+' de envío). La suscripción se renueva cada mes por el mismo importe hasta que la canceles.</p>'+
   '<div class="row"><label><input type="checkbox" id="k1"><span>He leído y acepto las <a href="#/condiciones" data-close>condiciones de contratación</a>, el <a href="#/aviso-legal" data-close>aviso legal</a> y la <a href="#/privacidad" data-close>política de privacidad</a>.</span></label>'+
   '<label><input type="checkbox" id="k2"><span>Entiendo que es una suscripción con renovación automática mensual y que tengo derecho de desistimiento según la ley.</span></label></div>'+
+  (PROMO?'<p class="sum" style="margin-top:12px">Código <strong>'+PROMO+'</strong>: se aplicará automáticamente al pagar.</p>':'')+
   '<a class="btn b1" id="go" role="button" target="_blank" rel="noopener" aria-disabled="true" style="width:100%">Contratar y pagar · '+eur(p.price+CONFIG.shipping)+'</a><p id="cm"></p><button class="lnk" id="rm">Quitar de la cesta</button>';
   var k1=document.getElementById("k1"),k2=document.getElementById("k2"),go=document.getElementById("go");
-  function sync(){var ok=k1.checked&&k2.checked&&CONFIG.checkoutUrl[cart];go.setAttribute("aria-disabled",ok?"false":"true");if(ok)go.href=CONFIG.checkoutUrl[cart];else go.removeAttribute("href")}
+  function sync(){var ok=k1.checked&&k2.checked&&CONFIG.checkoutUrl[cart];go.setAttribute("aria-disabled",ok?"false":"true");if(ok)go.href=checkoutLink(cart);else go.removeAttribute("href")}
   k1.onchange=k2.onchange=sync;
   go.onclick=function(e){var m=document.getElementById("cm");
     if(!(k1.checked&&k2.checked)){e.preventDefault();m.textContent="Marca las dos casillas para continuar."}

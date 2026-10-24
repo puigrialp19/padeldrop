@@ -76,3 +76,13 @@
   .td { @apply px-4 py-3 align-top; }
   .num { font-variant-numeric: tabular-nums; }
 }
+
+/* Impresión de carteles y tarjetas (Material para clubs): solo se imprime #print-root, en A4 sin márgenes */
+#print-root { display: none; }
+@media print {
+  @page { size: A4; margin: 0; }
+  html, body { background: #fff !important; }
+  body > *:not(#print-root) { display: none !important; }
+  #print-root { display: block; }
+  #print-root, #print-root * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

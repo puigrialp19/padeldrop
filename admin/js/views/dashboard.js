@@ -45,6 +45,11 @@ export async function renderDashboard(view, { params, isStale }) {
       ${tile('Churn del mes', pct(k.churn), delta(k.churn, k.prevChurn, { goodWhenUp: false, asPoints: true }), 'Bajas del mes ÷ suscriptores activos al empezar el mes.')}
     </section>
 
+    <a href="#/directo" class="card mt-3 flex items-center gap-3 p-4 hover:border-muted lg:mt-4" id="live-card">
+      <span class="size-3 shrink-0 rounded-full bg-muted/40" id="live-dot" aria-hidden="true"></span>
+      <span class="text-sm"><b class="num" id="live-n">…</b> <span id="live-txt">personas en la web ahora</span></span>
+      <span class="ml-auto text-xs text-muted">Ver en directo →</span>
+    </a>
     <section class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3 lg:mt-4 lg:gap-4" aria-label="Totales históricos">
       <div class="card flex items-center justify-between gap-3 p-4"><span class="text-sm text-muted">Ventas totales (histórico)</span><span class="text-lg font-semibold num">${eur0(k.totalSalesCents)}</span></div>
       <div class="card flex items-center justify-between gap-3 p-4"><span class="text-sm text-muted">Pedidos cobrados (histórico)</span><span class="text-lg font-semibold num">${int(k.totalOrders)}</span></div>
@@ -93,6 +98,12 @@ export async function renderDashboard(view, { params, isStale }) {
 
   view.querySelector('.card').outerHTML = html;
   applyWidths(view);
+  api.liveSummary().then(({ count }) => {
+    if (isStale()) return;
+    view.querySelector('#live-n').textContent = count;
+    view.querySelector('#live-txt').textContent = count === 1 ? 'persona en la web ahora' : 'personas en la web ahora';
+    view.querySelector('#live-dot').className = `size-3 shrink-0 rounded-full ${count ? 'bg-good animate-pulse' : 'bg-muted/40'}`;
+  }).catch(() => {});
 
   const s = d.series;
   const cats = s.map((x) => monthName(x.period));
