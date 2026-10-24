@@ -156,10 +156,10 @@ async function main() {
   const rl = createInterface({ input: process.stdin, output: process.stdout });
   console.log('\n  PADEL DROP · Configurar Stripe');
   console.log('  Necesitas la CLAVE SECRETA de tu cuenta (Stripe → Desarrolladores → Claves de API → "Clave secreta").');
-  console.log('  Empieza por sk_test_ (pruebas) o sk_live_ (cobros reales). No se guarda en ningún archivo.\n');
+  console.log('  Empieza por sk_ o rk_, seguido de test_ (pruebas) o live_ (cobros reales). No se guarda en ningún archivo.\n');
   const key = process.env.STRIPE_SETUP_KEY || await ask(rl, '  Pega la clave secreta y pulsa Enter: ');
-  if (!/^sk_(test|live)_[A-Za-z0-9]+$/.test(key)) { rl.close(); throw new Error('Eso no parece una clave secreta (debe empezar por sk_test_ o sk_live_).'); }
-  const live = key.startsWith('sk_live_');
+  if (!/^(sk|rk)_(test|live)_[A-Za-z0-9]+$/.test(key)) { rl.close(); throw new Error('Eso no parece una clave secreta (debe empezar por sk_ o rk_, seguido de test_ o live_).'); }
+  const live = /^(sk|rk)_live_/.test(key);
   const siteUrl = (await ask(rl, '  Dirección de tu web [https://padel-drop.onrender.com]: ', 'https://padel-drop.onrender.com')).replace(/\/$/, '');
   if (!siteUrl.startsWith('https://')) { rl.close(); throw new Error('La dirección debe empezar por https://'); }
   if (live) {
