@@ -7,6 +7,11 @@ process.env.STRIPE_WEBHOOK_SECRET ||= 'whsec_simulado';
 const { config } = await import('../config.js');
 const { sql, closeDb } = await import('../db/db.js');
 const { handleStripeEvent } = await import('../services/stripe-sync.js');
+const { initPush, __setSender } = await import('../services/push.js');
+// Avisos al móvil: se capturan en vez de enviarse de verdad
+const pushes = [];
+await initPush();
+__setSender(async (sub, payload) => { pushes.push(JSON.parse(payload)); });
 const { monthOf } = await import('../services/metrics.js');
 const { stripeRouter } = await import('../routes/stripe-webhook.js');
 const { default: express } = await import('express');
@@ -38,6 +43,9 @@ const fakeStripe = {
 const ev = (type, object) => ({ id: `evt_${type}_${T}`, type, data: { object } });
 
 try {
+  // Un administrador de prueba con un móvil suscrito a los avisos
+  const [adm] = await sql`INSERT INTO users (email, role) VALUES (${`push.${T}@example.com`}, 'ADMIN') RETURNING id`;
+  await sql`INSERT INTO push_subscriptions (user_id, endpoint, p256dh, auth) VALUES (${adm.id}, ${`https://push.example.com/${T}`}, 'clave', 'auth')`;
   // ===== Escenario A: API nueva (2025+). La factura llega ANTES que el checkout (pasa en la vida real). =====
   console.log('\nA) Pack Intermedio, código de descuento 10 %, formato de API nuevo');
   subs[`sub_A${T}`] = {
@@ -70,6 +78,9 @@ try {
   check('cliente creado con nombre y teléfono del checkout', ua?.first_name === 'Ana' && ua?.phone === '+34611222333', `${ua?.first_name} ${ua?.last_name} · ${ua?.phone}`);
   check('dirección de ENVÍO (no la de facturación)', ua?.street === 'Avinguda Catalunya 10' && ua?.floor_door === '3º B', ua?.street);
   check('un solo pedido aunque el evento llegue dos veces', oa.length === 1, `${oa.length} pedidos`);
+  const avisosPedido = pushes.filter((p) => p.title.includes('Pedido nuevo'));
+  check('aviso al móvil de pedido nuevo, uno solo aunque el evento se repita', avisosPedido.length === 1, avisosPedido.map((p) => `${p.title}: ${p.body}`).join(' | '));
+  check('el aviso abre la pantalla de pedidos', avisosPedido[0]?.url === '/admin/#/pedidos');
   check('pedido pendiente, del mes actual', oa[0]?.status === 'pending' && oa[0]?.period === monthOf(), `${oa[0]?.status} ${oa[0]?.period}`);
   check('importes con descuento: 14,31 € + 3,15 € de envío', oa[0]?.amount_cents === 1431 && oa[0]?.shipping_cents === 315, `${oa[0]?.amount_cents} + ${oa[0]?.shipping_cents}`);
   check('el pedido recibe la dirección del checkout aunque llegó antes', oa[0]?.ship_street === 'Avinguda Catalunya 10' && oa[0]?.ship_postal_code === '25300', oa[0]?.ship_street);
@@ -84,18 +95,22 @@ try {
   await handleStripeEvent(fakeStripe, ev('customer.subscription.deleted', { ...subs[`sub_A${T}`], pause_collection: null, status: 'canceled', ended_at: now + DAY }));
   const [sa3] = await sql`SELECT status, canceled_at, current_period_end FROM subscriptions WHERE id = ${sa.id}`;
   check('baja -> estado "canceled" con fecha de baja', sa3.status === 'canceled' && !!sa3.canceled_at && !sa3.current_period_end);
+  const avisosBaja = pushes.filter((p) => p.title.includes('Baja'));
+  check('aviso al móvil de baja (uno, y no en la pausa)', avisosBaja.length === 1, avisosBaja.map((p) => p.body).join(' | '));
 
   // ===== Escenario B: API antigua, dirección en la factura. =====
   console.log('\nB) Pack Premium, formato de API antiguo');
   subs[`sub_B${T}`] = { id: `sub_B${T}`, customer: `cus_B${T}`, status: 'active', start_date: now, current_period_end: now + 30 * DAY,
     items: { data: [{ price: { id: packs.pro.stripe_price_id, unit_amount: 2390 } }, { price: { id: SHIP, unit_amount: 350 } }] } };
   await handleStripeEvent(fakeStripe, ev('invoice.paid', {
-    id: `in_B${T}`, customer: `cus_B${T}`, subscription: `sub_B${T}`, status_transitions: { paid_at: now },
+    id: `in_B${T}`, customer: `cus_B${T}`, subscription: `sub_B${T}`, status_transitions: { paid_at: now }, billing_reason: 'subscription_cycle',
     customer_shipping: customers[`cus_B${T}`].shipping,
     lines: { data: [{ amount: 2390, price: { id: packs.pro.stripe_price_id } }, { amount: 350, price: { id: SHIP } }] },
   }));
   const [ob] = await sql`SELECT o.*, p.slug FROM orders o JOIN packs p ON p.id = o.pack_id WHERE stripe_invoice_id = ${`in_B${T}`}`;
   check('pedido Pack Premium 23,90 € + 3,50 €', ob?.slug === 'pro' && ob?.amount_cents === 2390 && ob?.shipping_cents === 350);
+  const avisoRenov = pushes.find((p) => p.title.includes('renovación'));
+  check('aviso de renovación mensual con importe y ciudad', !!avisoRenov && avisoRenov.body.includes('27,40 €') && avisoRenov.body.includes('Guissona'), avisoRenov?.body);
   check('dirección completa en el pedido', ob?.ship_street === 'Carrer Major 5' && ob?.ship_floor_door === '2º 1ª' && ob?.ship_city === 'Guissona');
   const [sb] = await sql`SELECT current_period_end FROM subscriptions WHERE stripe_subscription_id = ${`sub_B${T}`}`;
   check('fecha de renovación leída del formato antiguo', !!sb?.current_period_end);
@@ -132,7 +147,7 @@ try {
   console.error('\nError inesperado:', err);
 } finally {
   // Limpieza: todo lo creado lleva el sufijo único de esta prueba (pedidos y suscripciones caen en cascada).
-  await sql`DELETE FROM users WHERE stripe_customer_id LIKE ${`%${T}`}`;
+  await sql`DELETE FROM users WHERE stripe_customer_id LIKE ${`%${T}`} OR email = ${`push.${T}@example.com`}`;
   console.log(failures ? `\n${failures} comprobaciones FALLIDAS.` : '\nTodo correcto: el webhook funciona. Datos de prueba borrados.');
   process.exitCode = failures ? 1 : 0;
   await closeDb();

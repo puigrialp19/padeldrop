@@ -4,6 +4,7 @@ import { renderCustomers } from './views/customers.js';
 import { renderCustomerDetail } from './views/customer-detail.js';
 import { renderOrders } from './views/orders.js';
 import { toast } from './ui.js';
+import { initPush } from './push.js';
 
 const view = document.getElementById('view');
 const sidebar = document.getElementById('sidebar');
@@ -72,5 +73,28 @@ installBtn.addEventListener('click', async () => {
   installBtn.hidden = true;
 });
 
-addEventListener('hashchange', route);
+// ---- Datos siempre al día ----
+// Recarga la pantalla actual sin molestar: si estás escribiendo (p. ej. un nº de seguimiento), espera.
+let lastRefresh = Date.now();
+function softRefresh(reason = '') {
+  const el = document.activeElement;
+  const editing = el && view.contains(el) && /^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName) && el.type !== 'search';
+  if (editing) { if (reason) toast(`${reason}. Guarda o sal del campo y se actualizará.`); return; }
+  lastRefresh = Date.now();
+  route();
+}
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('message', (e) => {
+    if (e.data?.type === 'pd-push') { toast(`${e.data.title}`); softRefresh(e.data.title); }
+    if (e.data?.type === 'pd-open' && e.data.url) location.href = e.data.url;
+  });
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && Date.now() - lastRefresh > 30_000) softRefresh();
+});
+// Cada 2 minutos, solo si estás arriba del todo (no te mueve la pantalla mientras lees)
+setInterval(() => { if (document.visibilityState === 'visible' && window.scrollY < 80) softRefresh(); }, 120_000);
+
+initPush();
+addEventListener('hashchange', () => { lastRefresh = Date.now(); route(); });
 route();

@@ -3,6 +3,9 @@
 import { sql } from '../db/db.js';
 import { config } from '../config.js';
 import { monthOf } from './metrics.js';
+import { notifyAdmins } from './push.js';
+
+const eur = (c) => (c / 100).toFixed(2).replace('.', ',') + ' €';
 
 const toDate = (unix) => (unix ? new Date(unix * 1000) : null);
 const idOf = (v) => (typeof v === 'string' ? v : v?.id) || null;
@@ -82,6 +85,7 @@ async function syncSubscription(stripe, sub) {
 
   const userId = await upsertCustomer(stripe, idOf(sub.customer));
   const status = mapStatus(sub);
+  const [prev] = await sql`SELECT status FROM subscriptions WHERE stripe_subscription_id = ${sub.id}`;
   const row = {
     user_id: userId,
     pack_id: pack.id,
@@ -99,6 +103,15 @@ async function syncSubscription(stripe, sub) {
       current_period_end = EXCLUDED.current_period_end,
       paused_at = CASE WHEN EXCLUDED.status = 'paused' THEN COALESCE(subscriptions.paused_at, EXCLUDED.paused_at) ELSE NULL END,
       canceled_at = EXCLUDED.canceled_at, updated_at = now()`;
+
+  if (status === 'canceled' && prev && prev.status !== 'canceled') {
+    const [info] = await sql`SELECT u.first_name, u.last_name, u.email, p.name AS pack FROM users u, packs p WHERE u.id = ${userId} AND p.id = ${pack.id}`;
+    await notifyAdmins({
+      title: '👋 Baja de un cliente',
+      body: `${`${info.first_name} ${info.last_name}`.trim() || info.email} ha cancelado su ${info.pack}.`,
+      url: '/admin/#/clientes?status=canceled', tag: `pd-baja-${sub.id}`,
+    });
+  }
 }
 
 async function createOrderFromInvoice(stripe, inv) {
@@ -151,7 +164,16 @@ async function createOrderFromInvoice(stripe, inv) {
     paid_at: paidAt,
     stripe_invoice_id: inv.id,
   };
-  await sql`INSERT INTO orders ${sql(order)} ON CONFLICT (stripe_invoice_id) DO NOTHING`;
+  const [created] = await sql`INSERT INTO orders ${sql(order)} ON CONFLICT (stripe_invoice_id) DO NOTHING RETURNING id`;
+  if (created) {
+    const [{ name: packName }] = await sql`SELECT name FROM packs WHERE id = ${pack.id}`;
+    const renewal = inv.billing_reason === 'subscription_cycle';
+    await notifyAdmins({
+      title: renewal ? '🔁 Pedido nuevo (renovación)' : '🎾 Pedido nuevo',
+      body: `${order.ship_name || u.email} · ${packName} · ${eur(order.amount_cents + order.shipping_cents)}${order.ship_city ? ` · ${order.ship_city}` : ''}`,
+      url: '/admin/#/pedidos', tag: `pd-pedido-${created.id}`,
+    });
+  }
 }
 
 /** El checkout trae la dirección que el cliente acaba de escribir: se guarda y se completa el primer pedido si le faltaba. */

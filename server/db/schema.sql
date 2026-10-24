@@ -115,6 +115,22 @@ CREATE TABLE IF NOT EXISTS audit_log (
   created_at  timestamptz NOT NULL DEFAULT now()
 );
 
+-- ---------- Avisos al móvil (notificaciones push) ----------
+-- El servidor también las crea solo al arrancar; están aquí como referencia.
+CREATE TABLE IF NOT EXISTS push_subscriptions (
+  id          bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id     bigint      NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  endpoint    text        NOT NULL UNIQUE,
+  p256dh      text        NOT NULL,
+  auth        text        NOT NULL,
+  user_agent  text        NOT NULL DEFAULT '',
+  created_at  timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS app_settings (
+  key    text PRIMARY KEY,
+  value  text NOT NULL
+);
+
 -- ---------- Seguridad en Supabase ----------
 -- Supabase publica las tablas por su API REST. Activando RLS sin ninguna política,
 -- NADIE puede leerlas desde esa API; solo nuestro servidor (que entra como "postgres").
@@ -124,6 +140,8 @@ ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE orders        ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sessions      ENABLE ROW LEVEL SECURITY;
 ALTER TABLE audit_log     ENABLE ROW LEVEL SECURITY;
+ALTER TABLE push_subscriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE app_settings  ENABLE ROW LEVEL SECURITY;
 
 -- ---------- Los 3 packs de PADEL DROP ----------
 -- Price IDs de Stripe en MODO PRUEBAS. En la Etapa 3 se sustituyen por los de modo real.

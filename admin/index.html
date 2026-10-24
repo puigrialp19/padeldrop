@@ -31,6 +31,9 @@
     </nav>
     <div class="mt-auto border-t border-white/10 pt-4">
       <p class="truncate px-2 text-xs text-neutral-400" id="me"></p>
+      <button id="push-toggle" class="nav-link mt-2 w-full text-left" type="button" data-state="off" aria-pressed="false">
+        <svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg><span id="push-label">Activar avisos de pedidos</span></button>
+      <button id="push-test" class="mt-1 w-full px-3 py-1 text-left text-xs text-neutral-400 underline hover:text-white" type="button" hidden>Enviarme una notificación de prueba</button>
       <button id="install" class="nav-link mt-2 w-full" type="button" hidden>
         <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M12 7v8m0 0l-3-3m3 3l3-3"/></svg>Instalar app</button>
       <button id="logout" class="nav-link mt-2 w-full" type="button">

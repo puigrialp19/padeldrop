@@ -9,6 +9,8 @@ import { metricsRouter } from './routes/metrics.js';
 import { customersRouter } from './routes/customers.js';
 import { ordersRouter } from './routes/orders.js';
 import { stripeRouter } from './routes/stripe-webhook.js';
+import { pushRouter } from './routes/push.js';
+import { initPush } from './services/push.js';
 
 // Comprobar la base de datos antes de aceptar visitas.
 try {
@@ -19,6 +21,8 @@ try {
   console.error('  - ¿Es correcta DATABASE_URL?  - ¿Has creado las tablas? (npm run db:init o el SQL en Supabase)\n');
   process.exit(1);
 }
+// Avisos al móvil: crea sus tablas y claves la primera vez. Si falla, la web funciona igual (sin avisos).
+try { await initPush(); } catch (err) { console.error('  Avisos push no disponibles:', err.message); }
 purgeExpiredSessions();
 setInterval(purgeExpiredSessions, 60 * 60 * 1000).unref();
 
@@ -41,6 +45,7 @@ app.use('/api/admin', requireAdminApi);
 app.use('/api/admin/metrics', metricsRouter);
 app.use('/api/admin/customers', customersRouter);
 app.use('/api/admin/orders', ordersRouter);
+app.use('/api/admin/push', pushRouter);
 app.use('/api', (req, res) => res.status(404).json({ error: 'Ruta no encontrada.' }));
 
 // 3) Panel /admin. El login y su CSS son públicos; todo lo demás exige sesión de administrador.

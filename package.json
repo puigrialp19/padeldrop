@@ -26,7 +26,8 @@
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.0.0",
     "postgres": "^3.4.9",
-    "stripe": "^17.5.0"
+    "stripe": "^17.5.0",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.11",
