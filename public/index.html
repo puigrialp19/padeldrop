@@ -7,9 +7,9 @@
 <meta name="description" content="Recibe cada mes 5 grips y 2 o 3 botes de pelotas de pádel en casa. Elige tu plan y no te quedes sin material.">
 <meta property="og:title" content="PADEL DROP · Tu pádel. Siempre a punto.">
 <meta property="og:description" content="Suscripción mensual de grips y pelotas de pádel con envío a domicilio.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/barlow-condensed-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/fonts-local.css">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -58,7 +58,7 @@
 <div class="grid g3">
 <div class="card rv"><div class="num"><span>1</span></div><h3 style="margin-top:16px">Elige tu plan</h3><p>START, PLAYER o PRO: más o menos botes y grips según cuánto juegues.</p></div>
 <div class="card rv"><div class="num"><span>2</span></div><h3 style="margin-top:16px">Recibe tu pack</h3><p>Introduces tus datos, completas el pago y cada mes te llega la caja a casa.</p></div>
-<div class="card rv"><div class="num"><span>3</span></div><h3 style="margin-top:16px">Disfruta de la pista</h3><p>Material siempre disponible. Gestiona, pausa o cancela desde tu cuenta, según las condiciones del servicio.</p></div>
+<div class="card rv"><div class="num"><span>3</span></div><h3 style="margin-top:16px">Disfruta de la pista</h3><p>Material siempre disponible. Sin permanencia: pausa o cancela cuando quieras, según las condiciones del servicio.</p></div>
 </div></div></section>
 
 <section id="planes"><div class="wrap">
@@ -88,13 +88,13 @@
 <div class="head rv"><p class="eyebrow">Preguntas frecuentes</p><h2>Resolvemos tus dudas</h2></div>
 <div class="faq rv">
 <details><summary>¿Qué contiene cada pack?</summary><p>Cada pack combina botes de pelotas (3 pelotas por bote) y grips. Las cantidades de START, PLAYER y PRO están en la sección de planes.</p></details>
-<details><summary>¿Cuándo se realizan los envíos?</summary><p>Se envía un pack cada mes. El calendario de envíos y los plazos de entrega se confirmarán al contratar, cuando se defina el operador logístico.</p></details>
-<details><summary>¿Los gastos de envío están incluidos?</summary><p>No. El envío cuesta 3,50 € por pack y se suma al precio del plan en el checkout, desglosado antes de pagar. Por ahora enviamos a la España peninsular.</p></details>
-<details><summary>¿Puedo cambiar de plan?</summary><p>Está previsto poder cambiar entre START, PLAYER y PRO desde tu cuenta. Las condiciones del cambio (por ejemplo, cuándo se aplica) se publicarán en las condiciones de contratación.</p></details>
-<details><summary>¿Puedo pausar o cancelar la suscripción?</summary><p>Podrás gestionarlo desde tu cuenta según las condiciones comerciales vigentes, que se mostrarán antes de contratar.</p></details>
-<details><summary>¿Cómo se gestionan los pagos recurrentes?</summary><p>El pago se renueva automáticamente cada mes con el método de pago que indiques. Los pagos los procesará un proveedor de pagos seguro y siempre verás el importe y la fecha de renovación antes de confirmar.</p></details>
-<details><summary>¿Qué ocurre si un envío se retrasa?</summary><p>Te avisaremos y te ayudaremos a resolverlo. La política concreta de retrasos e incidencias se indicará en las condiciones de contratación.</p></details>
-<details><summary>¿Cómo contacto con atención al cliente?</summary><p>Los canales de contacto (correo y formulario) se publicarán aquí antes del lanzamiento.</p></details>
+<details><summary>¿Cuándo se realizan los envíos?</summary><p>Se envía un pack cada mes: el primero tras el pago y los siguientes tras cada cobro mensual. La entrega suele tardar de 2 a 5 días laborables desde el envío y te facilitamos el número de seguimiento.</p></details>
+<details><summary>¿Los gastos de envío están incluidos?</summary><p>No. El envío cuesta 3,50 € al mes y se suma al precio del plan en el checkout, desglosado antes de pagar. Enviamos a la España peninsular.</p></details>
+<details><summary>¿Puedo cambiar de plan?</summary><p>Sí. Escríbenos a padeldropp@gmail.com como mínimo 3 días antes de tu próximo cobro y el nuevo pack se aplicará desde ese cobro.</p></details>
+<details><summary>¿Puedo pausar o cancelar la suscripción?</summary><p>Sí, sin permanencia ni coste. Cancela desde «Mi cuenta» o por correo, y pausa escribiéndonos a padeldropp@gmail.com, siempre como mínimo 3 días antes del siguiente cobro. Detalles en las <a href="#/condiciones">condiciones de contratación</a>.</p></details>
+<details><summary>¿Cómo se gestionan los pagos recurrentes?</summary><p>El pago se renueva automáticamente cada mes con el método de pago que indiques. Los pagos los procesa Stripe, un proveedor de pagos seguro: nosotros nunca vemos tu tarjeta, y siempre verás el importe antes de confirmar.</p></details>
+<details><summary>¿Qué ocurre si un envío se retrasa o llega mal?</summary><p>Escríbenos a padeldropp@gmail.com con tu número de pedido (y una foto si llega dañado) y lo resolvemos: lo reenviamos o te devolvemos el importe.</p></details>
+<details><summary>¿Cómo contacto con atención al cliente?</summary><p>Por correo electrónico en <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a>. Te respondemos lo antes posible.</p></details>
 </div></div></section>
 
 <section style="padding-top:84px"><div class="final rv">
@@ -105,86 +105,113 @@
 </main>
 <main id="legal" class="wrap legal" hidden>
 <article data-r="aviso-legal" hidden><a class="back" href="#top">← Volver al inicio</a>
-<h1>Aviso legal</h1><p class="upd">Última actualización: 20 de octubre de 2026</p>
+<h1>Aviso legal</h1><p class="upd">Última actualización: 24 de octubre de 2026</p>
 <h2>1. Datos identificativos</h2>
-<p>En cumplimiento del artículo 10 de la Ley 34/2002, de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), se informa de que el titular de este sitio web es:</p>
-<ul><li>Titular: Èric Puig Rialp</li><li>NIF: 78102888V</li><li>Domicilio: <mark>[DOMICILIO]</mark></li><li>Correo electrónico: <mark>[CORREO ELECTRÓNICO]</mark></li><li>Sitio web: <mark>[DOMINIO WEB]</mark></li><li>Actividad: venta online de productos de pádel (grips y pelotas) mediante suscripción periódica.</li></ul>
+<p>En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), se informa de que el titular de este sitio web es:</p>
+<ul><li>Titular: Èric Puig Rialp (nombre comercial: PADEL DROP)</li><li>NIF: 78102888V</li><li>Domicilio: Plaza Vell Pla, 3, 25210 Guissona (Lleida), España</li><li>Correo electrónico: <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a></li><li>Sitio web: https://padel-drop.onrender.com</li><li>Actividad: venta online de material de pádel (botes de pelotas y overgrips) mediante suscripción mensual.</li></ul>
 <h2>2. Objeto y condiciones de uso</h2>
-<p>Este aviso regula el acceso y el uso del sitio web de PADEL DROP. Navegar por la web atribuye la condición de usuario e implica aceptar este aviso. El usuario se compromete a hacer un uso lícito y diligente de la web y a no utilizarla para fines contrarios a la ley, la buena fe o el orden público.</p>
+<p>Este aviso regula el acceso y el uso del sitio web de PADEL DROP. Navegar por la web atribuye la condición de usuario e implica la aceptación de este aviso. El usuario se compromete a hacer un uso lícito y diligente de la web y a no utilizarla para fines contrarios a la ley, la buena fe o el orden público, ni para dañar, inutilizar o sobrecargar la web o los sistemas que la sustentan.</p>
 <h2>3. Contratación</h2>
-<p>La contratación de una suscripción se rige por las condiciones de contratación que se mostrarán antes de realizar el pago, por la normativa de consumidores y usuarios (Real Decreto Legislativo 1/2007) y por la LSSI-CE. Antes de confirmar el pedido se informará del precio total, la periodicidad, la renovación automática, el derecho de desistimiento y las condiciones de cancelación.</p>
+<p>La contratación de una suscripción se rige por las <a href="#/condiciones">Condiciones de contratación</a>, por el Real Decreto Legislativo 1/2007, por el que se aprueba el texto refundido de la Ley General para la Defensa de los Consumidores y Usuarios (TRLGDCU), y por la LSSI-CE. Antes de pagar se informa del precio total, la periodicidad, la renovación automática, el derecho de desistimiento y las condiciones de cancelación.</p>
 <h2>4. Propiedad intelectual e industrial</h2>
-<p>La marca PADEL DROP, el logotipo, la mascota, los textos, el diseño y el resto de contenidos de la web pertenecen a su titular o se usan con licencia. No se permite su reproducción, distribución o transformación sin autorización expresa.</p>
+<p>La marca PADEL DROP, el logotipo, la mascota, los textos, las imágenes, el diseño y el resto de contenidos de la web pertenecen a su titular o se utilizan con licencia. Queda prohibida su reproducción, distribución, comunicación pública o transformación sin autorización expresa y por escrito.</p>
 <h2>5. Responsabilidad y enlaces</h2>
-<p>El titular procura que la información de la web sea correcta y actual, pero no garantiza la disponibilidad ininterrumpida del servicio ni la ausencia de errores. Si la web incluye enlaces a sitios de terceros, el titular no responde de sus contenidos ni de sus políticas.</p>
-<h2>6. Reclamaciones</h2>
-<p>Puedes enviar quejas o reclamaciones al correo electrónico indicado en el apartado 1.</p>
+<p>El titular procura que la información de la web sea correcta y esté actualizada, pero no garantiza la disponibilidad ininterrumpida del servicio ni la ausencia de errores, y no responde de los daños que puedan derivarse de interrupciones técnicas ajenas a su control. Si la web incluye enlaces a sitios de terceros (por ejemplo, la página de pago de Stripe), el titular no responde de sus contenidos ni de sus políticas.</p>
+<h2>6. Quejas y reclamaciones</h2>
+<p>Puedes enviar cualquier queja o reclamación a <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a>. Te responderemos lo antes posible y, en todo caso, en el plazo máximo de un mes. Si no quedas satisfecho, puedes acudir a los servicios de consumo de tu comunidad autónoma (en Cataluña, la Agència Catalana del Consum) o a una oficina municipal de información al consumidor.</p>
 <h2>7. Legislación aplicable y jurisdicción</h2>
-<p>Este aviso se rige por la legislación española. Si eres consumidor, para cualquier controversia serán competentes los juzgados y tribunales de tu domicilio, conforme a la normativa vigente.</p></article>
+<p>Este aviso se rige por la legislación española. Si eres consumidor, serán competentes los juzgados y tribunales de tu domicilio.</p></article>
 
 <article data-r="privacidad" hidden><a class="back" href="#top">← Volver al inicio</a>
-<h1>Política de privacidad</h1><p class="upd">Última actualización: 20 de octubre de 2026</p>
-<p>Esta política explica cómo tratamos tus datos personales conforme al Reglamento (UE) 2016/679 (RGPD), a la Ley Orgánica 3/2018 (LOPDGDD) y a la LSSI-CE.</p>
+<h1>Política de privacidad</h1><p class="upd">Última actualización: 24 de octubre de 2026</p>
+<p>Esta política explica cómo tratamos tus datos personales conforme al Reglamento (UE) 2016/679 (RGPD), a la Ley Orgánica 3/2018, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD), y a la LSSI-CE.</p>
 <h2>1. Responsable del tratamiento</h2>
-<ul><li>Èric Puig Rialp, NIF 78102888V</li><li>Domicilio: <mark>[DOMICILIO]</mark></li><li>Correo electrónico: <mark>[CORREO ELECTRÓNICO]</mark></li></ul>
+<ul><li>Èric Puig Rialp (PADEL DROP), NIF 78102888V</li><li>Domicilio: Plaza Vell Pla, 3, 25210 Guissona (Lleida), España</li><li>Correo electrónico: <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a></li></ul>
 <h2>2. Datos que tratamos</h2>
-<p>Datos de identificación y contacto (nombre, correo, teléfono), dirección de entrega y facturación, datos del pedido y de la suscripción, y datos técnicos básicos de navegación (como la dirección IP). Los datos de la tarjeta los gestiona directamente el proveedor de pagos; nosotros no almacenamos el número completo.</p>
+<ul><li>Identificación y contacto: nombre y apellidos, correo electrónico y teléfono.</li>
+<li>Direcciones de envío y de facturación.</li>
+<li>Datos de la suscripción y de los pedidos: pack contratado, importes, fechas de cobro, estado y número de seguimiento de los envíos.</li>
+<li>Datos técnicos mínimos: dirección IP y registros técnicos del servidor, necesarios para la seguridad de la web.</li></ul>
+<p>Los datos de la tarjeta los recoge y gestiona directamente nuestro proveedor de pagos, Stripe. PADEL DROP no ve ni almacena el número completo de tu tarjeta.</p>
 <h2>3. Finalidades y base jurídica</h2>
-<ul><li>Gestionar tu suscripción, los cobros recurrentes y los envíos. Base: ejecución del contrato (art. 6.1.b RGPD).</li>
-<li>Facturar y cumplir obligaciones fiscales y contables. Base: obligación legal (art. 6.1.c).</li>
-<li>Atender consultas, incidencias y reclamaciones. Base: ejecución del contrato o interés legítimo (art. 6.1.b y 6.1.f).</li>
-<li>Prevenir fraude y garantizar la seguridad de la web y los pagos. Base: interés legítimo (art. 6.1.f).</li>
-<li>Enviarte novedades y promociones por correo. Base: tu consentimiento (art. 6.1.a), que puedes retirar cuando quieras. Los avisos sobre tu pedido, cobro o envío no son comunicaciones comerciales.</li></ul>
+<ul><li>Gestionar tu suscripción, los cobros mensuales y la preparación y entrega de cada pack. Base: ejecución del contrato (art. 6.1.b RGPD).</li>
+<li>Emitir facturas y cumplir las obligaciones fiscales y contables. Base: obligación legal (art. 6.1.c RGPD).</li>
+<li>Atender tus consultas, incidencias, cambios, desistimientos y reclamaciones. Base: ejecución del contrato y obligación legal (art. 6.1.b y 6.1.c RGPD).</li>
+<li>Proteger la web y los pagos frente a usos fraudulentos o ataques. Base: interés legítimo (art. 6.1.f RGPD).</li></ul>
+<p>Solo te escribiremos para asuntos relacionados con tu suscripción (cobros, envíos, incidencias). No enviamos publicidad. Si en el futuro lo hiciéramos, te pediríamos antes tu consentimiento.</p>
 <h2>4. Plazo de conservación</h2>
-<p>Conservamos los datos mientras dure la suscripción y, después, durante los plazos legales de prescripción y de conservación de documentación fiscal y mercantil (con carácter general, entre 4 y 6 años). Los datos para comunicaciones comerciales se conservan hasta que te des de baja.</p>
-<h2>5. Destinatarios</h2>
-<p>Pueden acceder a tus datos, como encargados de tratamiento, los proveedores que necesitamos para prestar el servicio: proveedor de pagos (Stripe Payments Europe, Ltd.), proveedor de base de datos y autenticación (Supabase), operador logístico de envíos, alojamiento web y asesoría fiscal. También podremos comunicar datos a las autoridades cuando una ley lo exija. Si algún proveedor trata datos fuera del Espacio Económico Europeo, lo hará con garantías adecuadas (decisión de adecuación o cláusulas contractuales tipo). <mark>[Actualizar esta lista con los proveedores reales antes del lanzamiento]</mark></p>
+<p>Conservamos tus datos mientras dure la suscripción. Después, los mantenemos bloqueados durante los plazos legales: 6 años para la documentación mercantil (art. 30 del Código de Comercio) y 4 años para la tributaria (Ley General Tributaria), así como el tiempo necesario para atender posibles reclamaciones. Pasados esos plazos, se eliminan.</p>
+<h2>5. Destinatarios y proveedores</h2>
+<p>No vendemos ni cedemos tus datos. Solo acceden a ellos, como encargados del tratamiento y en la medida necesaria, estos proveedores:</p>
+<ul><li>Stripe Payments Europe, Ltd. (Irlanda): procesamiento de pagos y suscripciones, y portal de cliente.</li>
+<li>Supabase, Inc.: base de datos de clientes y pedidos, alojada en servidores de la Unión Europea (Fráncfort, Alemania).</li>
+<li>Render Services, Inc.: alojamiento de la web, en servidores de la Unión Europea (Fráncfort, Alemania).</li>
+<li>Google Ireland Ltd. (Gmail): gestión del correo electrónico de atención al cliente.</li>
+<li>La empresa de transporte que realice cada envío (por ejemplo, Correos Express, SEUR o MRW): recibe tu nombre, dirección y teléfono para entregarte el pack.</li>
+<li>Asesoría fiscal y contable, para cumplir las obligaciones legales.</li></ul>
+<p>Algunos de estos proveedores tienen su sede en Estados Unidos. Cuando pueda producirse una transferencia internacional de datos, se realiza con garantías adecuadas: el Marco de Privacidad de Datos UE-EE. UU. o las cláusulas contractuales tipo aprobadas por la Comisión Europea. También comunicaremos datos a las autoridades cuando una ley lo exija.</p>
 <h2>6. Tus derechos</h2>
-<p>Puedes ejercer los derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad, y retirar tu consentimiento, escribiendo al correo indicado en el apartado 1 e identificándote. Si consideras que no hemos tratado tus datos correctamente, puedes reclamar ante la Agencia Española de Protección de Datos (www.aepd.es).</p>
+<p>Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad escribiendo a <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a> e indicando qué derecho quieres ejercer. Si tenemos dudas razonables sobre tu identidad, podremos pedirte información adicional para confirmarla. Responderemos en el plazo de un mes. Si consideras que no hemos tratado tus datos correctamente, puedes presentar una reclamación ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>).</p>
 <h2>7. Menores de edad</h2>
-<p>La contratación del servicio está dirigida a personas mayores de 18 años.</p>
+<p>La contratación está reservada a personas mayores de 18 años. Si eres menor, no nos facilites datos personales.</p>
 <h2>8. Seguridad y decisiones automatizadas</h2>
-<p>Aplicamos medidas técnicas y organizativas adecuadas para proteger tus datos y comunicaremos las brechas de seguridad cuando la normativa lo exija. No tomamos decisiones automatizadas ni elaboramos perfiles con efectos jurídicos sobre ti.</p>
+<p>Aplicamos medidas técnicas y organizativas adecuadas para proteger tus datos: conexión cifrada (HTTPS), acceso restringido al panel de gestión, contraseñas cifradas y registro de accesos. Notificaremos las brechas de seguridad cuando la normativa lo exija. No tomamos decisiones automatizadas ni elaboramos perfiles con efectos jurídicos sobre ti.</p>
 <h2>9. Cambios en esta política</h2>
-<p>Podemos actualizar esta política. La versión vigente es siempre la publicada en esta página.</p></article>
+<p>Podemos actualizar esta política para adaptarla a cambios legales o del servicio. La versión vigente es siempre la publicada en esta página, con su fecha de actualización.</p></article>
 
 <article data-r="cookies" hidden><a class="back" href="#top">← Volver al inicio</a>
-<h1>Política de cookies</h1><p class="upd">Última actualización: 20 de octubre de 2026</p>
-<p>Esta política se ofrece conforme al artículo 22.2 de la LSSI-CE y al RGPD. Las cookies son pequeños archivos que un sitio web guarda en tu dispositivo para recordar información.</p>
-<h2>1. Qué usamos ahora</h2>
-<p>En su versión actual, esta web no instala cookies propias ni utiliza cookies analíticas, publicitarias o de seguimiento. La web carga tipografías desde Google Fonts: al hacerlo, tu navegador se conecta a servidores de Google, que reciben tu dirección IP. Según su proveedor, este servicio no instala cookies.</p>
-<h2>2. Cookies que usaremos al activar cuentas y pagos</h2>
-<p>Cuando se active el área de cliente y el pago online, se usarán cookies técnicas estrictamente necesarias, que no requieren consentimiento:</p>
-<ul><li>Cookies de sesión para mantener tu inicio de sesión y proteger tu cuenta.</li><li>Cookies del proveedor de pagos (Stripe) para procesar el pago de forma segura y prevenir el fraude.</li></ul>
-<p><mark>[Detallar nombre, finalidad y duración de cada cookie cuando se active]</mark></p>
+<h1>Política de cookies</h1><p class="upd">Última actualización: 24 de octubre de 2026</p>
+<p>Esta política se ofrece conforme al artículo 22.2 de la LSSI-CE y al RGPD. Las cookies son pequeños archivos que un sitio web guarda en tu dispositivo para recordar información entre visitas o entre páginas.</p>
+<h2>1. Resumen</h2>
+<p>PADEL DROP solo utiliza cookies técnicas, estrictamente necesarias para que la web y el pago funcionen. No usamos cookies analíticas, publicitarias, de personalización ni de seguimiento, y no compartimos datos de navegación con redes sociales ni anunciantes. Por eso no te mostramos un aviso para aceptar cookies: las cookies técnicas no requieren consentimiento (art. 22.2 LSSI-CE).</p>
+<p>Las tipografías de la web se sirven desde nuestro propio servidor, sin conectar con servicios de terceros como Google Fonts.</p>
+<h2>2. Cookies que utilizamos</h2>
+<ul><li><strong>Navegación por la web pública:</strong> la web de PADEL DROP no instala ninguna cookie mientras navegas por ella.</li>
+<li><strong>Sesión del panel de gestión</strong> (<code>__Host-pd_admin</code>, propia): solo se instala a las personas autorizadas que gestionan la tienda cuando inician sesión. Mantiene la sesión abierta de forma segura y caduca tras 8 horas sin actividad o al cerrar sesión. Los clientes no la reciben.</li>
+<li><strong>Pago y área de cliente</strong> (Stripe, de terceros): cuando pulsas «Contratar y pagar» o «Mi cuenta», pasas a las páginas seguras de Stripe (checkout.stripe.com, buy.stripe.com y billing.stripe.com). Allí, Stripe instala cookies técnicas necesarias para procesar el pago, mantener tu sesión y prevenir el fraude, por ejemplo <code>__stripe_mid</code> (prevención del fraude, 1 año) y <code>__stripe_sid</code> (sesión de pago, 30 minutos). Estas cookies las gestiona Stripe conforme a su <a href="https://stripe.com/es/legal/cookies-policy" target="_blank" rel="noopener">política de cookies</a>.</li></ul>
 <h2>3. Cookies opcionales</h2>
-<p>Si en el futuro usamos cookies analíticas, de personalización o publicitarias, te pediremos tu consentimiento previo con un aviso que permita aceptar o rechazar con la misma facilidad, y actualizaremos esta política.</p>
+<p>Si en el futuro usamos cookies analíticas o de otro tipo no necesario, te pediremos tu consentimiento antes de instalarlas, con un aviso que te permita aceptar o rechazar con la misma facilidad, y actualizaremos esta política.</p>
 <h2>4. Cómo gestionar o eliminar cookies</h2>
-<p>Puedes bloquear o borrar las cookies desde los ajustes de privacidad de tu navegador (Chrome, Firefox, Safari, Edge u otros). Bloquear las cookies técnicas puede impedir que funcionen el inicio de sesión o el pago.</p>
+<p>Puedes ver, bloquear o borrar las cookies desde los ajustes de privacidad de tu navegador (Chrome, Firefox, Safari, Edge u otros). Si bloqueas las cookies técnicas de Stripe, es posible que no puedas completar el pago ni acceder a «Mi cuenta».</p>
 <h2>5. Responsable y contacto</h2>
-<p>Èric Puig Rialp, NIF 78102888V. Contacto: <mark>[CORREO ELECTRÓNICO]</mark>.</p></article>
+<p>Èric Puig Rialp (PADEL DROP), NIF 78102888V. Contacto: <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a>. Más información en la <a href="#/privacidad">Política de privacidad</a>.</p></article>
+
 <article data-r="condiciones" hidden><a class="back" href="#top">← Volver al inicio</a>
-<h1>Condiciones de contratación</h1><p class="upd">Última actualización: 20 de octubre de 2026</p>
-<h2>1. Objeto</h2>
-<p>PADEL DROP, de Èric Puig Rialp (NIF 78102888V), ofrece una suscripción mensual de packs de botes de pelotas de pádel y grips en tres modalidades: START, PLAYER y PRO. El contenido y el precio de cada pack son los mostrados en la web en el momento de contratar.</p>
-<h2>2. Precio, pago y renovación</h2>
-<p>Los precios incluyen IVA. El envío cuesta 3,50 € por pack y se añade al total en el checkout (España peninsular). El primer cobro se realiza al contratar y la suscripción se renueva automáticamente cada mes por el mismo importe hasta que la canceles. El pago se hace con tarjeta a través de Stripe. Si el precio cambiara, te avisaremos con antelación <mark>[PLAZO DE AVISO]</mark>.</p>
-<h2>3. Envío</h2>
-<p>Enviamos un pack al mes a la dirección que indiques al pagar. Plazo estimado de entrega: <mark>[PLAZO]</mark>. Por ahora no se realizan envíos fuera de la España peninsular <mark>[CONFIRMAR]</mark>.</p>
-<h2>4. Cancelación y pausa</h2>
-<p>Puedes cancelar la suscripción antes de la siguiente renovación para evitar cobros futuros, desde «Mi cuenta» o escribiendo a <mark>[CORREO ELECTRÓNICO]</mark>. También puedes cambiar de pack desde «Mi cuenta»; el nuevo precio se aplica a partir de la siguiente renovación. Para pausar la suscripción, escríbenos antes de la siguiente renovación. <mark>[Confirmar condiciones de pausa]</mark></p>
-<h2>5. Derecho de desistimiento</h2>
-<p>Si eres consumidor, tienes derecho a desistir del contrato en 14 días naturales desde la recepción del primer pack, sin necesidad de justificación, comunicándolo al correo de contacto. Te reembolsaremos los pagos en un máximo de 14 días desde que tengamos constancia de tu decisión. <mark>[Revisar gastos de devolución y excepciones, como productos desprecintados]</mark></p>
-<h2>6. Garantía legal</h2>
-<p>Los productos tienen la garantía legal de conformidad que establece la normativa de consumidores. Si recibes un producto defectuoso o un envío incorrecto, escríbenos y lo resolveremos.</p>
-<h2>7. Atención al cliente y ley aplicable</h2>
-<p>Contacto: <mark>[CORREO ELECTRÓNICO]</mark>. Estas condiciones se rigen por la legislación española.</p></article>
+<h1>Condiciones de contratación</h1><p class="upd">Última actualización: 24 de octubre de 2026</p>
+<h2>1. Quiénes somos y objeto</h2>
+<p>Estas condiciones regulan la contratación de las suscripciones de PADEL DROP, titularidad de Èric Puig Rialp, NIF 78102888V, con domicilio en Plaza Vell Pla, 3, 25210 Guissona (Lleida), y correo electrónico <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a>. PADEL DROP ofrece una suscripción mensual de packs de botes de pelotas de pádel y overgrips en tres modalidades: START (Pack Básico), PLAYER (Pack Intermedio) y PRO (Pack Premium). El contenido y el precio de cada pack son los mostrados en la web en el momento de contratar.</p>
+<h2>2. Cómo se contrata</h2>
+<p>Eliges el pack, aceptas estas condiciones y pagas en la página segura de Stripe, donde indicas tus datos y la dirección de envío. Al completar el pago, el contrato queda formalizado y recibirás la confirmación por correo electrónico. El contrato se celebra en español. Para contratar debes ser mayor de 18 años.</p>
+<h2>3. Precio, pago y renovación</h2>
+<p>Los precios incluyen el IVA. El envío cuesta 3,50 € al mes y se suma al precio del pack, mostrándose el total antes de pagar. El primer cobro se realiza al contratar y la suscripción se renueva automáticamente cada mes, en la misma fecha, por el mismo importe, hasta que la canceles. El pago se realiza a través de Stripe con los medios de pago que aparezcan en la página de pago. Si un cobro mensual no se puede realizar, Stripe lo reintentará; si finalmente no se consigue, la suscripción podrá cancelarse.</p>
+<p>Si modificamos el precio de los packs, te lo comunicaremos por correo electrónico con al menos 30 días de antelación. El nuevo precio se aplicará a partir de la siguiente renovación tras ese plazo, y podrás cancelar la suscripción antes si no estás de acuerdo.</p>
+<h2>4. Envíos</h2>
+<p>Enviamos un pack al mes a la dirección que indiques. Solo realizamos envíos a la España peninsular; si indicas una dirección de Baleares, Canarias, Ceuta o Melilla, te contactaremos y, si no es posible enviar, cancelaremos la suscripción y te devolveremos el importe íntegro. El primer pack se prepara tras el pago y los siguientes, tras cada cobro mensual. El plazo de entrega habitual es de 2 a 5 días laborables desde el envío, y te facilitaremos el número de seguimiento. Si en el momento de la entrega no hay nadie, la empresa de transporte aplicará su procedimiento habitual (segundo intento o recogida en oficina). Si la dirección facilitada es incorrecta, los gastos de un nuevo envío correrán a tu cargo. Puedes cambiar tu dirección desde «Mi cuenta» o escribiéndonos antes del siguiente cobro.</p>
+<h2>5. Sin permanencia: cancelación, pausa y cambio de pack</h2>
+<p>La suscripción no tiene permanencia. Puedes cancelarla o pausarla cuando quieras, sin coste, siempre que lo hagas como mínimo 3 días antes de la fecha del siguiente cobro mensual:</p>
+<ul><li><strong>Cancelar:</strong> desde «Mi cuenta» (portal de cliente de Stripe, con el correo con el que te suscribiste) o escribiendo a <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a>. La cancelación tiene efecto al final del mes ya pagado: recibirás el pack correspondiente a ese mes y no se te volverá a cobrar.</li>
+<li><strong>Pausar:</strong> escribiendo a <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a> e indicando durante cuántos meses quieres pausarla. Durante la pausa no se realizan cobros ni envíos.</li>
+<li><strong>Cambiar de pack:</strong> escribiendo a <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a>. El cambio se aplicará a partir del siguiente cobro.</li></ul>
+<p>Las solicitudes recibidas con menos de 3 días de antelación se aplicarán a partir del mes siguiente.</p>
+<h2>6. Derecho de desistimiento</h2>
+<p>Si eres consumidor, puedes desistir del contrato en un plazo de 14 días naturales sin necesidad de justificación. Al tratarse de entregas periódicas, el plazo empieza a contar desde el día en que recibes el primer pack (art. 104 TRLGDCU).</p>
+<p><strong>Cómo ejercerlo:</strong> envíanos una declaración clara de tu decisión a <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a> o por correo postal a la dirección indicada en el apartado 1. Puedes usar el formulario de desistimiento que encontrarás al final de estas condiciones, aunque no es obligatorio. Basta con que envíes tu comunicación antes de que acabe el plazo.</p>
+<p><strong>Productos precintados:</strong> por motivos de protección de la salud y de higiene, el derecho de desistimiento no se aplica a los productos precintados que hayan sido desprecintados tras la entrega (art. 103.e TRLGDCU). Por tanto, solo pueden devolverse los botes de pelotas que no se hayan abierto y los overgrips que conserven su precinto y su embalaje original.</p>
+<p><strong>Devolución y reembolso:</strong> debes devolvernos los productos sin demora y, como máximo, en 14 días naturales desde que nos comuniques el desistimiento, a la dirección que te indiquemos. Los gastos directos de la devolución corren a tu cargo. Te reembolsaremos todos los pagos recibidos, incluidos los gastos de envío inicial, en un plazo máximo de 14 días naturales desde que nos comuniques tu decisión, usando el mismo medio de pago que utilizaste. Podremos retener el reembolso hasta haber recibido los productos o hasta que nos acredites su devolución. Si los productos se devuelven abiertos o con un uso mayor del necesario para comprobar su naturaleza, podremos descontar su pérdida de valor.</p>
+<h2>7. Garantía legal y productos defectuosos</h2>
+<p>Los productos tienen la garantía legal de conformidad de 3 años desde la entrega (arts. 114 y siguientes del TRLGDCU). Si recibes un producto defectuoso, dañado o un envío incorrecto, escríbenos a <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a>, a ser posible con una foto, en los días siguientes a la recepción. Te enviaremos un producto correcto sin coste o, si no es posible, te devolveremos el importe correspondiente. Esta garantía no se aplica al desgaste normal por el uso de las pelotas y los grips.</p>
+<h2>8. Atención al cliente, reclamaciones y ley aplicable</h2>
+<p>Puedes contactarnos en <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a> para cualquier consulta, incidencia o reclamación. Responderemos lo antes posible y, en todo caso, en el plazo máximo de un mes. Si no quedas satisfecho, puedes acudir a los servicios de consumo de tu comunidad autónoma (en Cataluña, la Agència Catalana del Consum). Estas condiciones se rigen por la legislación española. Si eres consumidor, serán competentes los juzgados y tribunales de tu domicilio.</p>
+<h2>Formulario de desistimiento</h2>
+<p>(Solo debes cumplimentar y enviar este formulario si quieres desistir del contrato.)</p>
+<p>A la atención de: Èric Puig Rialp (PADEL DROP), Plaza Vell Pla, 3, 25210 Guissona (Lleida). Correo electrónico: padeldropp@gmail.com.</p>
+<p>Por la presente le comunico que desisto de mi contrato de suscripción PADEL DROP y de la compra de los siguientes bienes: ______.<br>Pedido el / recibido el: ______.<br>Nombre del consumidor: ______.<br>Dirección del consumidor: ______.<br>Correo electrónico con el que se suscribió: ______.<br>Firma (solo si el formulario se presenta en papel): ______.<br>Fecha: ______.</p></article>
 </main>
 
 <footer><div class="wrap fg">
 <div><a href="#top" class="lg" aria-label="PADEL DROP" style="height:58px;width:150px"></a><p style="margin-top:6px">Tu pádel. Siempre a punto.</p></div>
 <div class="fl"><a href="#/aviso-legal">Aviso legal</a><a href="#/privacidad">Política de privacidad</a><a href="#/cookies">Política de cookies</a><a href="#/condiciones">Condiciones de contratación</a></div>
-<p style="width:100%;font-size:12px">© 2026 PADEL DROP. Èric Puig Rialp, NIF 78102888V. Textos legales pendientes de revisión.</p>
+<p style="width:100%;font-size:12px">© 2026 PADEL DROP · Èric Puig Rialp · NIF 78102888V · Plaza Vell Pla, 3, 25210 Guissona (Lleida) · padeldropp@gmail.com</p>
 </div></footer>
 
 <dialog id="dlg" aria-labelledby="dt">
