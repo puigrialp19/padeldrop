@@ -52,6 +52,11 @@ app.get('/admin/login', (req, res) => {
 });
 app.use('/admin/css', express.static(path.join(adminDir, 'css')));
 app.get('/admin/js/login.js', (req, res) => res.sendFile(path.join(adminDir, 'js', 'login.js')));
+// Archivos de la app instalable (PWA): el móvil los lee antes de iniciar sesión. No contienen datos.
+app.use('/admin/icons', express.static(path.join(adminDir, 'icons')));
+app.get('/admin/manifest.webmanifest', (req, res) => res.type('application/manifest+json').sendFile(path.join(adminDir, 'manifest.webmanifest')));
+app.get('/admin/sw.js', (req, res) => res.type('text/javascript').sendFile(path.join(adminDir, 'sw.js')));
+app.get('/admin/offline.html', (req, res) => res.sendFile(path.join(adminDir, 'offline.html')));
 app.use('/admin', requireAdminPage, express.static(adminDir, { index: 'index.html', extensions: ['html'] }));
 
 // 4) Web pública (la de siempre).

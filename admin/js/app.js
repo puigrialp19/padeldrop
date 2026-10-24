@@ -58,5 +58,19 @@ document.getElementById('logout').addEventListener('click', async () => {
 
 api.me().then(({ user }) => { document.getElementById('me').textContent = user.email; }).catch(() => toast('No se ha podido cargar tu usuario.', true));
 
+// App instalable (PWA): registra el service worker y muestra "Instalar app" cuando el navegador lo permite.
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/admin/sw.js', { scope: '/admin/' }).catch(() => {});
+const installBtn = document.getElementById('install');
+let installPrompt = null;
+addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); installPrompt = e; installBtn.hidden = false; });
+addEventListener('appinstalled', () => { installBtn.hidden = true; toast('App instalada. Ya la tienes en tu pantalla de inicio.'); });
+installBtn.addEventListener('click', async () => {
+  if (!installPrompt) return;
+  installPrompt.prompt();
+  await installPrompt.userChoice;
+  installPrompt = null;
+  installBtn.hidden = true;
+});
+
 addEventListener('hashchange', route);
 route();

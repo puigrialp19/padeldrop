@@ -38,3 +38,6 @@ form.addEventListener('submit', async (e) => {
     submit.textContent = 'Entrar';
   }
 });
+
+// App instalable (PWA): el service worker también se registra desde el login.
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/admin/sw.js', { scope: '/admin/' }).catch(() => {});

@@ -1,0 +1,22 @@
+{
+  "name": "PADEL DROP · Administración",
+  "short_name": "Padel Drop",
+  "description": "Panel de administración de PADEL DROP: ventas, clientes, pedidos y envíos.",
+  "id": "/admin/",
+  "start_url": "/admin/#/dashboard",
+  "scope": "/admin/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "es",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    { "src": "/admin/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/admin/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/admin/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Pedidos pendientes", "url": "/admin/#/pedidos", "icons": [{ "src": "/admin/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Clientes", "url": "/admin/#/clientes", "icons": [{ "src": "/admin/icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
