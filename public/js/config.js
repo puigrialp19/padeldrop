@@ -2,7 +2,7 @@
 /* CONFIGURACIÓN EDITABLE. Precios orientativos, pendientes de validar comercialmente.
    checkoutUrl: pega aquí un Payment Link de Stripe (modo prueba) por plan para activar el pago. */
 var CONFIG={
-  checkoutUrl:{start:"https://buy.stripe.com/7sY28t0Ja8Ca88jgRgeZ200",player:"https://buy.stripe.com/cNifZj4Zq9Ge3S36cCeZ201",pro:"https://buy.stripe.com/bJe4gB63u9Ge9cn9oOeZ202"},interpadel:{enabled:true,subDiscount:"10 % el primer mes",productDiscount:"",codes:["INTERPADEL-GUISSONA-TARREGA-GOLMES-3"],conditions:"Descuento del 10 % en el primer mes para nuevos suscriptores socios de Interpàdel. Introduce el código al pagar."},
+  checkoutUrl:{start:"https://buy.stripe.com/dRm9AVdvWg4C88jfNceZ203",player:"https://buy.stripe.com/8x200l63u3hQ9cndF4eZ204",pro:"https://buy.stripe.com/fZu5kF9fG6u260bfNceZ205"},interpadel:{enabled:true,subDiscount:"10 % el primer mes",productDiscount:"",codes:["INTERPADEL-GUISSONA-TARREGA-GOLMES-3"],conditions:"Descuento del 10 % en el primer mes para nuevos suscriptores socios de Interpàdel. Introduce el código al pagar."},
   portalUrl:"https://billing.stripe.com/p/login/7sY28t0Ja8Ca88jgRgeZ200",
   shipping:0.9,
   shippingNote:""
