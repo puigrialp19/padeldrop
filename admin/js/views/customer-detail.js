@@ -1,5 +1,5 @@
 import { api } from '../api.js';
-import { esc, eur, date, monthName, packBadge, statusBadge, SUB_STATUS, ORDER_STATUS, userAddress, loading, errorBox, toast } from '../ui.js';
+import { esc, eur, botes, date, monthName, packBadge, statusBadge, SUB_STATUS, ORDER_STATUS, userAddress, loading, errorBox, toast } from '../ui.js';
 
 const field = (label, value) => `<div><dt class="label">${esc(label)}</dt><dd class="text-sm">${value || '<span class="text-muted">—</span>'}</dd></div>`;
 
@@ -51,7 +51,7 @@ export async function renderCustomerDetail(view, { args: [id], isStale }) {
         ${s ? `
           <div class="mb-4">${packBadge(s.pack_slug, s.pack_name)}</div>
           <dl class="grid grid-cols-2 gap-4">
-            ${field('Contenido', `${s.cans} botes + ${s.grips} grips`)}
+            ${field('Contenido', `${botes(s.cans)} + ${s.grips} grips`)}
             ${field('Cuota', `${eur(s.price_cents)}/mes`)}
             ${field('Alta', date(s.started_at))}
             ${s.status === 'canceled' ? field('Cancelada', date(s.canceled_at)) : field('Próxima renovación', `<strong>${date(s.current_period_end)}</strong>`)}

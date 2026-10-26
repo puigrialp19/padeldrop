@@ -25,6 +25,8 @@ const DAY = 86400;
 let failures = 0;
 const check = (name, cond, extra = '') => { console.log(`${cond ? '  OK ' : '  FALLO'}  ${name}${extra ? `  (${extra})` : ''}`); if (!cond) failures++; };
 
+// Si los packs aún no tienen Price ID de Stripe (instalación nueva), se ponen unos temporales y se quitan al acabar
+const tempPrice = await sql`UPDATE packs SET stripe_price_id = 'price_prueba_' || slug || ${'_' + T} WHERE stripe_price_id IS NULL RETURNING slug`;
 const packs = Object.fromEntries((await sql`SELECT slug, id, stripe_price_id FROM packs`).map((p) => [p.slug, p]));
 const SHIP = config.stripe.shippingPriceId || 'price_envio';
 
@@ -148,6 +150,7 @@ try {
 } finally {
   // Limpieza: todo lo creado lleva el sufijo único de esta prueba (pedidos y suscripciones caen en cascada).
   await sql`DELETE FROM users WHERE stripe_customer_id LIKE ${`%${T}`} OR email = ${`push.${T}@example.com`}`;
+  if (tempPrice.length) await sql`UPDATE packs SET stripe_price_id = NULL WHERE stripe_price_id LIKE ${`%_${T}`}`;
   console.log(failures ? `\n${failures} comprobaciones FALLIDAS.` : '\nTodo correcto: el webhook funciona. Datos de prueba borrados.');
   process.exitCode = failures ? 1 : 0;
   await closeDb();

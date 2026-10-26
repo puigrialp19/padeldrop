@@ -1,7 +1,7 @@
 import { api } from '../api.js';
 import { barChart } from '../charts.js';
 import { setQuery } from '../app.js';
-import { esc, eur, eur0, pct, int, monthName, currentMonth, PACK_CLASS, pageHeader, monthInput, loading, errorBox, applyWidths } from '../ui.js';
+import { esc, eur, eur0, botes, pct, int, monthName, currentMonth, PACK_CLASS, pageHeader, monthInput, loading, errorBox, applyWidths } from '../ui.js';
 
 // Variación respecto al mes anterior. goodWhenUp=false para métricas donde subir es malo (churn).
 function delta(cur, prev, { goodWhenUp = true, asPoints = false } = {}) {
@@ -63,7 +63,7 @@ export async function renderDashboard(view, { params, isStale }) {
           <div class="flex items-start justify-between gap-3">
             <div>
               <h3 class="flex items-center gap-2 font-semibold"><span class="size-3 rounded-full ${PACK_CLASS[p.slug].bg}" aria-hidden="true"></span>${esc(p.name)}</h3>
-              <p class="text-xs text-muted">${esc(p.commercialName)} · ${p.cans} botes + ${p.grips} grips · ${eur(p.priceCents)}/mes</p>
+              <p class="text-xs text-muted">${esc(p.commercialName)} · ${botes(p.cans)} + ${p.grips} grips · ${eur(p.priceCents)}/mes</p>
             </div>
           </div>
           <div class="mt-4 flex items-end justify-between">

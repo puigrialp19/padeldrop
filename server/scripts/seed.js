@@ -42,7 +42,7 @@ async function main() {
   ];
   const STREETS = ['Carrer Major', 'Avinguda Catalunya', 'Carrer de la Pau', 'Carrer Sant Jaume', 'Plaça de l\'Església', 'Carrer Nou', 'Avinguda Lleida', 'Carrer del Raval', 'Calle Mayor', 'Avenida de la Constitución', 'Carrer de Ponent', 'Carrer Barcelona'];
   const CARRIERS = ['Correos Express', 'SEUR', 'MRW'];
-  const SHIPPING_CENTS = 350;
+  const SHIPPING_CENTS = 90;
 
   const today = new Date();
   const addMonths = (d, n) => { const x = new Date(d); x.setUTCMonth(x.getUTCMonth() + n); return x; };

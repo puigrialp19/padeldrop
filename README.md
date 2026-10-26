@@ -67,7 +67,7 @@ users ──< sessions          users ──< audit_log
 | Tabla | Contenido clave |
 |---|---|
 | `users` | email, `password_hash` (bcrypt), **`role` ADMIN o CUSTOMER**, nombre, apellidos, teléfono, dirección de envío desglosada, `stripe_customer_id` |
-| `packs` | Básico = START (11,90 €) · Intermedio = PLAYER (15,90 €) · Premium = PRO (23,90 €), botes, grips, **`stripe_price_id`** |
+| `packs` | Básico = START (1 bote + 2 grips, 8,90 €) · Intermedio = PLAYER (2 botes + 3 grips, 12,90 €) · Premium = PRO (3 botes + 3 grips, 15,90 €) · envío 0,90 €/mes · **`stripe_price_id`** |
 | `subscriptions` | usuario, pack, **estado `active`/`paused`/`canceled`**, precio, alta, **`current_period_end` (próximo cobro)**, pausa y baja |
 | `orders` | envío mensual: periodo `AAAA-MM`, importes, **estado `pending`/`shipped`/`delivered`**, transportista, **nº de seguimiento**, copia de la dirección |
 | `sessions` · `audit_log` | sesiones del panel (solo hash del token) y registro de acciones de los administradores |

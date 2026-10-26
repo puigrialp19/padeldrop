@@ -6,13 +6,13 @@ const T = {
   es: {
     kicker: 'Suscripción mensual de pádel', title: 'Pelotas y grips nuevos cada mes, en tu casa',
     scan: 'Escanea y suscríbete', members: (n) => `Socios de ${n}`, code: (c) => `Código ${c}: se aplica solo al escanear`,
-    foot: 'Sin permanencia · Envío a domicilio 3,50 €/mes', per: '/mes', content: (c, g) => `${c} botes de pelotas + ${g} grips`,
+    foot: 'Sin permanencia · Envío a domicilio 0,90 €/mes', per: '/mes', content: (c, g) => `${c === 1 ? '1 bote' : `${c} botes`} de pelotas + ${g} overgrips`,
     packs: { start: 'Pack Básico', player: 'Pack Intermedio', pro: 'Pack Premium' }, short: 'Pelotas y grips cada mes, en casa',
   },
   ca: {
     kicker: 'Subscripció mensual de pàdel', title: 'Pilotes i grips nous cada mes, a casa teva',
     scan: 'Escaneja i subscriu-te', members: (n) => `Socis de ${n}`, code: (c) => `Codi ${c}: s'aplica sol en escanejar`,
-    foot: 'Sense permanència · Enviament a domicili 3,50 €/mes', per: '/mes', content: (c, g) => `${c} pots de pilotes + ${g} grips`,
+    foot: 'Sense permanència · Enviament a domicili 0,90 €/mes', per: '/mes', content: (c, g) => `${c === 1 ? '1 pot' : `${c} pots`} de pilotes + ${g} overgrips`,
     packs: { start: 'Pack Bàsic', player: 'Pack Intermedi', pro: 'Pack Prèmium' }, short: 'Pilotes i grips cada mes, a casa',
   },
 };

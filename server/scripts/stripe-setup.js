@@ -19,11 +19,12 @@ import Stripe from 'stripe';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 const PACKS = [
-  { slug: 'start', name: 'PADEL DROP START', cans: 2, grips: 2, cents: 1190, who: 'Pack Básico' },
-  { slug: 'player', name: 'PADEL DROP PLAYER', cans: 3, grips: 3, cents: 1590, who: 'Pack Intermedio' },
-  { slug: 'pro', name: 'PADEL DROP PRO', cans: 5, grips: 5, cents: 2390, who: 'Pack Premium' },
+  { slug: 'start', name: 'PADEL DROP START', cans: 1, grips: 2, cents: 890, who: 'Pack Básico' },
+  { slug: 'player', name: 'PADEL DROP PLAYER', cans: 2, grips: 3, cents: 1290, who: 'Pack Intermedio' },
+  { slug: 'pro', name: 'PADEL DROP PRO', cans: 3, grips: 3, cents: 1590, who: 'Pack Premium' },
 ];
-const SHIPPING = { slug: 'envio', name: 'Envío mensual a domicilio', cents: 350 };
+const SHIPPING = { slug: 'envio', name: 'Envío mensual a domicilio', cents: 90 };
+const botes = (n) => (n === 1 ? '1 bote' : `${n} botes`);
 const COUPON_ID = 'INTERPADEL10';
 const PROMO_CODE = 'INTERPADEL-GUISSONA-TARREGA-GOLMES-3';
 const EVENTS = ['checkout.session.completed', 'customer.subscription.created', 'customer.subscription.updated', 'customer.subscription.deleted', 'invoice.paid'];
@@ -65,7 +66,9 @@ async function ensurePrice(stripe, product, slug, cents, nickname) {
     tax_behavior: 'inclusive', nickname, lookup_key: lookup, transfer_lookup_key: true, metadata: { pd_slug: slug },
   });
   await stripe.products.update(product.id, { default_price: price.id });
-  ok(`precio ${eur(cents)} €/mes: creado (${price.id})`);
+  // El precio anterior se archiva: las suscripciones que ya lo usan siguen igual, pero no se ofrece a nuevos clientes
+  if (data[0] && data[0].id !== price.id) await stripe.prices.update(data[0].id, { active: false });
+  ok(`precio ${eur(cents)} €/mes: creado (${price.id})${data[0] ? ` · archivado el anterior de ${eur(data[0].unit_amount)} €` : ''}`);
   return price;
 }
 
@@ -102,7 +105,7 @@ async function ensurePaymentLink(stripe, pack, price, shippingPrice) {
     phone_number_collection: { enabled: true },
     shipping_address_collection: { allowed_countries: ['ES'] },
     custom_text: { submit: { message: `Suscripción mensual con renovación automática. El total incluye el pack y ${eur(SHIPPING.cents)} € de envío mensual. Puedes cancelarla antes de la siguiente renovación para evitar cobros futuros.` } },
-    subscription_data: { description: `${pack.name}: ${pack.cans} botes + ${pack.grips} overgrips al mes`, metadata: { plan: pack.slug } },
+    subscription_data: { description: `${pack.name}: ${botes(pack.cans)} + ${pack.grips} overgrips al mes`, metadata: { plan: pack.slug } },
     metadata: { plan: pack.slug, pd_slug: pack.slug },
     after_completion: { type: 'hosted_confirmation', hosted_confirmation: { custom_message: '¡Gracias por suscribirte a PADEL DROP! Recibirás la confirmación por correo electrónico.' } },
   });
@@ -179,7 +182,7 @@ async function main() {
   for (const p of PACKS) {
     const product = await ensureProduct(stripe, p.slug, {
       name: p.name,
-      description: `Suscripción mensual: ${p.cans} botes de pelotas de pádel + ${p.grips} overgrips. Envío aparte (${eur(SHIPPING.cents)} €/mes).`,
+      description: `Suscripción mensual: ${botes(p.cans)} de pelotas de pádel + ${p.grips} overgrips. Envío aparte (${eur(SHIPPING.cents)} €/mes).`,
       metadata: { plan: p.slug, botes: String(p.cans), grips: String(p.grips) },
     });
     prices[p.slug] = await ensurePrice(stripe, product, p.slug, p.cents, `${p.slug.toUpperCase()} mensual ${eur(p.cents)}`);
@@ -206,7 +209,7 @@ async function main() {
   updateSiteConfig(links, portal.login_page.url);
   ok('hecho');
 
-  const sqlLines = PACKS.map((p) => `UPDATE packs SET stripe_price_id = '${prices[p.slug].id}' WHERE slug = '${p.slug}';`);
+  const sqlLines = PACKS.map((p) => `UPDATE packs SET stripe_price_id = '${prices[p.slug].id}', cans = ${p.cans}, grips = ${p.grips}, price_cents = ${p.cents} WHERE slug = '${p.slug}';`);
   const doc = [
     `# Stripe de PADEL DROP (${live ? 'MODO REAL' : 'modo prueba'})`, '',
     `Cuenta: ${account?.id || '?'} · generado ${new Date().toISOString().slice(0, 10)} con server/scripts/stripe-setup.js`, '',

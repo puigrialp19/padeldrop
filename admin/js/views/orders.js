@@ -1,6 +1,6 @@
 import { api } from '../api.js';
 import { setQuery } from '../app.js';
-import { esc, int, date, monthName, currentMonth, packBadge, statusBadge, ORDER_STATUS, orderAddress, pageHeader, monthInput, loading, errorBox, toast, debounce } from '../ui.js';
+import { esc, int, botes, date, monthName, currentMonth, packBadge, statusBadge, ORDER_STATUS, orderAddress, pageHeader, monthInput, loading, errorBox, toast, debounce } from '../ui.js';
 
 const TABS = [['', 'Todos'], ['pending', 'Pendientes'], ['shipped', 'Enviados'], ['delivered', 'Entregados']];
 const PACK_OPTIONS = [['', 'Todos los packs'], ['start', 'Pack Básico'], ['player', 'Pack Intermedio'], ['pro', 'Pack Premium']];
@@ -27,7 +27,7 @@ function orderCard(o) {
       </div>
       <div class="rounded-xl bg-soft p-3 text-sm">
         <p class="label mb-0.5">Preparar</p>
-        <p class="font-semibold">${o.cans} botes + ${o.grips} grips</p>
+        <p class="font-semibold">${botes(o.cans)} + ${o.grips} grips</p>
         <p class="mt-1 text-xs text-muted">PD-${o.id} · cobrado ${date(o.paid_at)}${o.shipped_at ? ` · enviado ${date(o.shipped_at)}` : ''}${o.delivered_at ? ` · entregado ${date(o.delivered_at)}` : ''}</p>
       </div>
     </div>

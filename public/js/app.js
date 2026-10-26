@@ -1,3 +1,4 @@
+var botes=function(n){return n===1?'1 bote':n+' botes'};
 var eur=function(n){return new Intl.NumberFormat("es-ES",{style:"currency",currency:"EUR"}).format(n)};
 var pl=document.getElementById("pl");
 PLANS.forEach(function(p){
@@ -6,7 +7,7 @@ PLANS.forEach(function(p){
   '<h3>'+p.name+'</h3>'+(p.who?'<p class="who">'+p.who+'</p>':'')+
   '<div class="price">'+eur(p.price)+' <small>/ mes</small></div>'+
   '<p class="eq">'+p.eq+'</p>'+
-  '<ul><li>'+p.cans+' botes de pelotas de pádel al mes</li><li>'+p.grips+' overgrips incluidos al mes</li><li>Envío mensual a domicilio</li><li>Renovación automática sin permanencia</li></ul>'+
+  '<ul><li>'+botes(p.cans)+' de pelotas de pádel al mes</li><li>'+p.grips+' overgrips incluidos al mes</li><li>Envío mensual a domicilio</li><li>Renovación automática sin permanencia</li></ul>'+
   '<button class="btn b1" data-id="'+p.id+'">Suscribirme a '+p.name.split(" ")[2]+'</button>';
   pl.appendChild(d);
 });
@@ -20,7 +21,7 @@ function drawCart(){
   cn.hidden=!cart;
   if(!cart){cb.innerHTML='<p>Tu cesta está vacía. Elige un pack para empezar.</p><a class="btn b1" style="width:100%;margin-top:12px" href="#planes" data-close>Ver packs</a>';return}
   var p=planOf(cart);
-  cb.innerHTML='<div class="sum"><strong>'+p.name+'</strong><br>'+p.cans+' botes de pelotas + '+p.grips+' grips cada mes<br><strong>'+eur(p.price)+' / mes</strong> + '+eur(CONFIG.shipping)+' de envío al mes (se añade en el checkout). IVA incluido.</div>'+
+  cb.innerHTML='<div class="sum"><strong>'+p.name+'</strong><br>'+botes(p.cans)+' de pelotas + '+p.grips+' overgrips cada mes<br><strong>'+eur(p.price)+' / mes</strong> + '+eur(CONFIG.shipping)+' de envío al mes (se añade en el checkout). IVA incluido.</div>'+
   '<p>Total a pagar hoy: <strong>'+eur(p.price+CONFIG.shipping)+'</strong> ('+eur(p.price)+' del pack + '+eur(CONFIG.shipping)+' de envío). La suscripción se renueva cada mes por el mismo importe hasta que la canceles.</p>'+
   '<div class="row"><label><input type="checkbox" id="k1"><span>He leído y acepto las <a href="#/condiciones" data-close>condiciones de contratación</a>, el <a href="#/aviso-legal" data-close>aviso legal</a> y la <a href="#/privacidad" data-close>política de privacidad</a>.</span></label>'+
   '<label><input type="checkbox" id="k2"><span>Entiendo que es una suscripción con renovación automática mensual y que tengo derecho de desistimiento según la ley.</span></label></div>'+

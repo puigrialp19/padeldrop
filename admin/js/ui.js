@@ -10,6 +10,7 @@ export const eur = (cents) => eurFmt.format((cents || 0) / 100);
 export const eur0 = (cents) => eur0Fmt.format((cents || 0) / 100);
 export const pct = (x, digits = 1) => `${((x || 0) * 100).toLocaleString('es-ES', { minimumFractionDigits: digits, maximumFractionDigits: digits })} %`;
 export const int = (n) => intFmt.format(n || 0);
+export const botes = (n) => (n === 1 ? '1 bote' : `${int(n)} botes`);
 
 export const date = (iso) => (iso ? new Date(iso).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }) : '—');
 export const monthName = (ym, style = 'long', capital = false) => {
