@@ -6,10 +6,12 @@ var CONFIG={
   /* Reseñas: photo = ruta en assets/img/resenas/ (foto real del cliente, con su permiso). name, city, rating (1-5) y date
      solo si son reales. demo:true = ejemplo: nunca se publica, solo se ve en la vista previa (#preview-resenas). */
   reviews:{enabled:false,items:[
-    {demo:true,photo:"",text:"Me llegó el jueves y el sábado ya estrené pelotas. Lo mejor es no tener que acordarme de comprarlas."},
-    {demo:true,photo:"",text:"Juego dos veces por semana y con el PLAYER voy justo. Los grips los cambio más que antes, la verdad."},
-    {demo:true,photo:"",text:"Lo pedí para probar un mes y sigo. La caja llega bien y el seguimiento funciona."},
-    {demo:true,photo:"",text:"Mi pareja también juega, así que el PRO nos sale mejor que ir comprando botes sueltos."}
+    {demo:true,photo:"assets/img/resenas/recibido-entrada.jpg",text:"Me llegó el jueves y el sábado ya estrené pelotas. Lo mejor es no tener que acordarme de comprarlas."},
+    {demo:true,text:"Juego dos veces por semana y con el PLAYER voy justo. Los grips los cambio más que antes, la verdad."},
+    {demo:true,photo:"assets/img/resenas/caja-sofa.jpg",text:"Lo pedí para probar un mes y sigo. Llega bien embalado y te pasan el seguimiento."},
+    {demo:true,text:"Mi pareja también juega, así que el PRO nos sale mejor que ir comprando botes sueltos."},
+    {demo:true,text:"Cómodo. Me llega a casa y listo, no tengo que pasar por la tienda del club."},
+    {demo:true,text:"El primer envío tardó un día más de lo que pensaba, pero bien. Las pelotas, buenas."}
   ]},
   portalUrl:"https://billing.stripe.com/p/login/7sY28t0Ja8Ca88jgRgeZ200",
   shipping:0.9,
