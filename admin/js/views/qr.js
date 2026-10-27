@@ -25,17 +25,17 @@ function poster(s, packs, qr, link) {
   <article class="poster mx-auto flex aspect-[210/297] w-full max-w-[210mm] flex-col overflow-hidden bg-white text-black print:aspect-auto print:h-[297mm] print:max-w-none print:w-[210mm]">
     <header class="flex items-center justify-center bg-black px-[8%] py-[3%]"><img src="/assets/img/logo-padel-drop.png" alt="PADEL DROP" class="w-[48%]"></header>
     <div class="flex flex-1 flex-col items-center px-[8%] pt-[4%] text-center">
-      <p class="text-[clamp(10px,2.2vw,15pt)] font-semibold uppercase tracking-[0.18em] text-neutral-600 print:text-[13pt]">${esc(t.kicker)}</p>
-      <h1 class="mt-[2%] font-display text-[clamp(26px,6.4vw,46pt)] font-extrabold uppercase leading-[0.95] print:text-[40pt]">${esc(t.title)}</h1>
-      <ul class="mt-[4%] w-full space-y-[1.2%] text-[clamp(11px,2.3vw,15pt)] print:text-[15pt]">
-        ${packs.map((p) => `<li class="flex items-baseline justify-between gap-3 border-b border-neutral-300 pb-[1%]"><span><b>${esc(t.packs[p.slug] || p.name)}</b> · ${esc(t.content(p.cans, p.grips))}</span><b class="whitespace-nowrap">${eur(p.priceCents)}${t.per}</b></li>`).join('')}
+      <p class="text-[clamp(11px,2.5vw,17pt)] font-semibold uppercase tracking-[0.18em] text-neutral-600 print:text-[15pt]">${esc(t.kicker)}</p>
+      <h1 class="mt-[2%] font-display text-[clamp(30px,7.6vw,54pt)] font-extrabold uppercase leading-[0.93] print:text-[46pt]">${esc(t.title)}</h1>
+      <ul class="mt-[3.5%] w-full space-y-[1.4%] text-left text-[clamp(13px,3vw,20pt)] print:text-[20pt]">
+        ${packs.map((p) => `<li class="flex items-center justify-between gap-3 border-b border-neutral-300 pb-[1.2%]"><span class="min-w-0 leading-tight"><b class="block font-display text-[1.25em] font-extrabold uppercase leading-none">${esc(t.packs[p.slug] || p.name)}</b><span class="block text-[0.75em] text-neutral-600">${esc(t.content(p.cans, p.grips))}</span></span><b class="whitespace-nowrap font-display text-[1.35em] font-extrabold">${eur(p.priceCents)}<small class="text-[0.6em] font-semibold">${t.per}</small></b></li>`).join('')}
       </ul>
-      ${s.code || s.offer ? `<div class="mt-[4%] w-full rounded-[14px] border-[3px] border-black bg-lime px-[4%] py-[2.5%] print:[print-color-adjust:exact]">
-        <p class="font-display text-[clamp(18px,4.2vw,30pt)] font-extrabold uppercase leading-none print:text-[24pt]">${esc(s.name && s.code ? t.members(s.name) : '')}${s.name && s.code && s.offer ? ': ' : ''}${esc(s.offer)}</p>
+      ${s.code || s.offer ? `<div class="mt-[3.5%] w-full rounded-[14px] border-[3px] border-black bg-lime px-[4%] py-[2%] print:[print-color-adjust:exact]">
+        <p class="font-display text-[clamp(18px,4.2vw,30pt)] font-extrabold uppercase leading-none print:text-[21pt]">${esc(s.name && s.code ? t.members(s.name) : '')}${s.name && s.code && s.offer ? ': ' : ''}${esc(s.offer)}</p>
         ${s.code ? `<p class="mt-[1.5%] text-[clamp(10px,2vw,13pt)] font-semibold print:text-[12pt]">${esc(t.code(s.code))}</p>` : ''}
       </div>` : ''}
-      <div class="mt-[4%] flex flex-1 flex-col items-center justify-center">
-        <img src="${esc(qr)}" alt="Código QR" class="aspect-square w-[38%] min-w-[110px] print:w-[62mm]">
+      <div class="mt-[3%] flex flex-1 flex-col items-center justify-center pb-[1%]">
+        <img src="${esc(qr)}" alt="Código QR" class="aspect-square min-w-[90px] ${s.code ? 'w-[20%] print:w-[35mm]' : 'w-[26%] print:w-[48mm]'}">
         <p class="mt-[2%] font-display text-[clamp(18px,4vw,28pt)] font-extrabold uppercase print:text-[26pt]">${esc(t.scan)}</p>
         <p class="text-[clamp(9px,1.7vw,11pt)] text-neutral-600 print:text-[11pt]">${esc(link.replace(/^https?:\/\//, '').replace(/\?.*$/, ''))}</p>
       </div>
