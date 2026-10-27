@@ -31,7 +31,7 @@ function poster(s, packs, qr, link) {
         ${packs.map((p) => `<li class="flex items-baseline justify-between gap-3 border-b border-neutral-300 pb-[1%]"><span><b>${esc(t.packs[p.slug] || p.name)}</b> · ${esc(t.content(p.cans, p.grips))}</span><b class="whitespace-nowrap">${eur(p.priceCents)}${t.per}</b></li>`).join('')}
       </ul>
       ${s.code || s.offer ? `<div class="mt-[4%] w-full rounded-[14px] border-[3px] border-black bg-lime px-[4%] py-[2.5%] print:[print-color-adjust:exact]">
-        <p class="font-display text-[clamp(18px,4.2vw,30pt)] font-extrabold uppercase leading-none print:text-[24pt]">${esc(s.name ? t.members(s.name) : '')}${s.name && s.offer ? ': ' : ''}${esc(s.offer)}</p>
+        <p class="font-display text-[clamp(18px,4.2vw,30pt)] font-extrabold uppercase leading-none print:text-[24pt]">${esc(s.name && s.code ? t.members(s.name) : '')}${s.name && s.code && s.offer ? ': ' : ''}${esc(s.offer)}</p>
         ${s.code ? `<p class="mt-[1.5%] text-[clamp(10px,2vw,13pt)] font-semibold print:text-[12pt]">${esc(t.code(s.code))}</p>` : ''}
       </div>` : ''}
       <div class="mt-[4%] flex flex-1 flex-col items-center justify-center">
@@ -52,7 +52,7 @@ function card(s, qr) {
     <div class="min-w-0">
       <p class="font-display text-[17pt] font-extrabold uppercase leading-none">Padel <span class="rounded bg-lime px-1 [print-color-adjust:exact]">Drop</span></p>
       <p class="mt-[2mm] text-[9.5pt] font-semibold leading-tight">${esc(t.short)}</p>
-      ${s.offer ? `<p class="mt-[2mm] text-[9pt] leading-tight"><b>${esc(s.name ? t.members(s.name) + ': ' : '')}${esc(s.offer)}</b></p>` : ''}
+      ${s.offer ? `<p class="mt-[2mm] text-[9pt] leading-tight"><b>${esc(s.name && s.code ? t.members(s.name) + ': ' : '')}${esc(s.offer)}</b></p>` : ''}
       <p class="mt-[2mm] font-display text-[11pt] font-extrabold uppercase">${esc(t.scan)}</p>
     </div>
   </div>`;
