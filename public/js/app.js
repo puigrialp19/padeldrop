@@ -76,7 +76,7 @@ return '<figure class="rcard'+(big?' rf':'')+(r.photo?'':' rtx')+'">'+
 function rsShow(){var pv=location.hash==="#preview-resenas",its=RV.items.filter(function(r){return pv||!r.demo});
 document.getElementById("preview-resenas").hidden=!pv;document.getElementById("resenas").hidden=!((RV.enabled||pv)&&its.length);
 var f=its.filter(function(r){return r.photo})[0],rest=its.filter(function(r){return r!==f});
-rsg.innerHTML=(f?rsCard(f,true):'')+'<div class="rsm">'+rest.map(function(r){return rsCard(r)}).join("")+'</div>'}
+rsg.innerHTML=(f?rsCard(f,true):'')+'<div class="rsm'+(rest.length<4?' rs2':'')+'">'+rest.map(function(r){return rsCard(r)}).join("")+'</div>'}
 var T={condiciones:"Condiciones de contratación",privacidad:"Política de privacidad",cookies:"Política de cookies","aviso-legal":"Aviso legal"};
 function route(){ipShow();rsShow();var h=location.hash,r=h.indexOf("#/")===0?h.slice(2):"",on=!!T[r],m=document.getElementById("top");
 document.getElementById("legal").hidden=!on;m.hidden=on;

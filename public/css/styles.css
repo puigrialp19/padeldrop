@@ -126,6 +126,7 @@ dialog{max-height:90vh;overflow:auto}dialog a:not(.btn){color:var(--fg);text-dec
 .rf .rph{flex:0 0 40%;aspect-ratio:4/5}
 .rf figcaption{padding:clamp(24px,4vw,48px);justify-content:center}
 .rf blockquote{flex:0;font:800 clamp(26px,3.2vw,38px)/1.05 var(--hd);text-transform:uppercase;letter-spacing:.01em}
-.rsc{text-align:center;margin-top:34px}.rsc .btn{width:auto}
+.rs2{grid-template-columns:repeat(2,minmax(0,1fr))}.rs2 .rcard:not(.rtx){grid-column:auto;grid-row:auto}.rs2 .rcard:not(.rtx) .rph{flex:none;aspect-ratio:4/3}.rs2 .rtx figcaption{justify-content:center}.rs2 .rtx{background:#0a0a0a;border-color:#0a0a0a}.rs2 .rtx figcaption{padding:clamp(24px,4vw,44px)}.rs2 .rtx blockquote{flex:0;color:#fff;font:800 clamp(24px,2.6vw,32px)/1.08 var(--hd);text-transform:uppercase}.rs2 .rtx .rst{color:var(--lime)}.rs2 .rtx .rst i{color:#333}.rs2 .rtx .rwho{color:#a3a3a0}.rs2 .rtx .rwho b{color:#fff}
+.rs .note{margin-top:18px}.rsc{text-align:center;margin-top:22px}.rsc .btn{width:auto}
 @media (max-width:900px){.rsm{grid-template-columns:repeat(2,minmax(0,1fr))}.rsm .rcard:not(.rtx){grid-column:auto}.rf{flex-direction:column}.rf .rph{flex:none;aspect-ratio:4/5}}
 @media (max-width:560px){.rsm{grid-template-columns:1fr}.rsm .rcard:not(.rtx){grid-row:auto}.rsm .rcard:not(.rtx) .rph{flex:none;aspect-ratio:4/3}.rsg{max-width:460px;margin-inline:auto}.rsc .btn{width:100%}}
