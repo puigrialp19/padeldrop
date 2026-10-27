@@ -147,8 +147,9 @@ export async function renderQr(view, { isStale }) {
     const waits = imgs.map((i) => (i.complete ? null : new Promise((r) => { i.onload = r; i.onerror = r; })));
     if (css) waits.push(new Promise((r) => { css.onload = r; css.onerror = r; }));
     Promise.all(waits).then(() => {
-      // Se quita al terminar la impresión (en iPhone el diálogo no espera: quitarlo antes saldría en blanco)
-      addEventListener('afterprint', () => { root.remove(); css?.remove(); }, { once: true });
+      // No se quita al terminar: el diálogo del sistema o las preferencias de la impresora (y el iPhone) vuelven a
+      // pedir el contenido después de cerrar el de Chrome y saldría en blanco. Se sustituye en la siguiente impresión
+      // y en pantalla está oculto.
       window.print();
     });
   }

@@ -107,5 +107,9 @@ async function updateLiveBadge() {
 }
 updateLiveBadge();
 setInterval(updateLiveBadge, 15_000);
-addEventListener('hashchange', () => { lastRefresh = Date.now(); route(); });
+addEventListener('hashchange', () => {
+  // Al salir de Material para clubs se quita lo preparado para imprimir (allí se deja por si la impresora lo vuelve a pedir)
+  if (!location.hash.startsWith('#/clubs')) { document.getElementById('print-root')?.remove(); document.getElementById('print-a3')?.remove(); }
+  lastRefresh = Date.now(); route();
+});
 route();
