@@ -23,6 +23,8 @@ const slugify = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowe
 // en una sola página, tanto en A4 como en A3.
 function poster(s, packs, qr, link) {
   const t = T[s.lang];
+  // La web pública (sin /admin ni ?ref) para que se pueda teclear a mano.
+  const web = link ? new URL(link).host : location.host;
   return `
   <article class="poster mx-auto flex aspect-[210/297] w-full max-w-[210mm] flex-col overflow-hidden bg-white text-black print:aspect-auto print:h-[100vh] print:max-w-none print:w-full">
     <header class="flex items-center justify-center bg-black px-[8%] py-[3%]"><img src="/assets/img/logo-padel-drop.png" alt="PADEL DROP" class="w-[48%]"></header>
@@ -41,7 +43,7 @@ function poster(s, packs, qr, link) {
         <p class="mt-[2%] font-display text-[clamp(18px,4vw,28pt)] font-extrabold uppercase print:text-[3.09vh]">${esc(t.scan)}</p>
       </div>
     </div>
-    <footer class="bg-black px-[6%] py-[2.5%] text-center text-[clamp(9px,1.8vw,12pt)] font-semibold text-white print:text-[1.43vh] print:[print-color-adjust:exact]">${esc(t.foot)}</footer>
+    <footer class="bg-black px-[6%] py-[2.5%] text-center text-[clamp(9px,1.8vw,12pt)] font-semibold text-white print:text-[1.43vh] print:[print-color-adjust:exact]"><span class="block font-display text-[1.45em] font-extrabold tracking-wide">${esc(web)}</span>${esc(t.foot)}</footer>
   </article>`;
 }
 
@@ -151,6 +153,11 @@ export async function renderQr(view, { isStale }) {
       // No se quita al terminar: el diálogo del sistema o las preferencias de la impresora (y el iPhone) vuelven a
       // pedir el contenido después de cerrar el de Chrome y saldría en blanco. Se sustituye en la siguiente impresión
       // y en pantalla está oculto.
+      // Si la impresora añade encabezado, que muestre la web pública y no la dirección del panel.
+      const [url, title] = [location.href, document.title];
+      history.replaceState(history.state, '', '/');
+      document.title = 'PADEL DROP';
+      window.addEventListener('afterprint', () => { history.replaceState(history.state, '', url); document.title = title; }, { once: true });
       window.print();
     });
   }
