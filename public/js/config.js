@@ -6,9 +6,9 @@ var CONFIG={
   /* Reseñas: photo = ruta en assets/img/resenas/ (foto real del cliente, con su permiso). name, city, rating (1-5) y date
      solo si son reales. demo:true = ejemplo: nunca se publica, solo se ve en la vista previa (#preview-resenas). */
   reviews:{enabled:true,items:[
-    {photo:"assets/img/resenas/recibido-entrada.jpg",name:"Marc",city:"Guissona",rating:5,text:"Me llegó la caja súper rápido y la presentación es brutal. Las bolas son de primera y el paquete venía impecable."},
+    {photo:"assets/img/resenas/caja-sofa.jpg",name:"Marc",city:"Guissona",rating:5,text:"Me llegó la caja súper rápido y la presentación es brutal. Las bolas son de primera y el paquete venía impecable."},
     {name:"Álex M.",city:"Barcelona",rating:5,text:"Súper cómodo no tener que ir a buscar botes de bolas antes de los partidos del finde. La caja mola un huevo y los overgrips se notan de buena calidad."},
-    {photo:"assets/img/resenas/caja-sofa.jpg",name:"Dani",city:"Girona",rating:5,text:"El envío fue rapidísimo. Todo venía perfectamente colocado y la caja llegó en perfecto estado. Repetiré seguro el mes que viene."}
+    {photo:"assets/img/resenas/recibido-entrada.jpg",name:"Dani",city:"Girona",rating:5,text:"El envío fue rapidísimo. Todo venía perfectamente colocado y la caja llegó en perfecto estado. Repetiré seguro el mes que viene."}
   ]},
   portalUrl:"https://billing.stripe.com/p/login/7sY28t0Ja8Ca88jgRgeZ200",
   shipping:0.9,
