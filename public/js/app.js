@@ -61,8 +61,22 @@ document.getElementById("ipform").addEventListener("submit",function(e){e.preven
   if(!IP.codes.length){m.textContent="Las ofertas para socios se publicarán muy pronto."}
   else if(IP.codes.map(function(c){return c.toUpperCase()}).indexOf(v)>-1){m.textContent="Código válido. Introdúcelo en el campo de código promocional al pagar: "+v}
   else{m.textContent="Ese código no es válido. Revisa que esté bien escrito."}});
+/* Reseñas: las de ejemplo (demo) solo se ven en la vista previa #preview-resenas */
+var RV=CONFIG.reviews||{items:[]},rsg=document.getElementById("rsg");
+function rsEsc(t){var d=document.createElement("div");d.textContent=t==null?"":String(t);return d.innerHTML.replace(/"/g,"&quot;")}
+function rsDate(d){var t=new Date(d);return isNaN(t)?rsEsc(d):t.toLocaleDateString("es-ES",{month:"long",year:"numeric"})}
+function rsShow(){var pv=location.hash==="#preview-resenas",its=RV.items.filter(function(r){return pv||!r.demo});
+document.getElementById("preview-resenas").hidden=!pv;document.getElementById("resenas").hidden=!((RV.enabled||pv)&&its.length);
+rsg.innerHTML=its.map(function(r,i){var st=r.rating>0?Math.min(5,Math.round(r.rating)):0;
+return '<figure class="rcard'+(i===0?' rf':'')+'">'+
+'<div class="rph">'+(r.photo?'<img src="'+rsEsc(r.photo)+'" alt="'+rsEsc(r.alt||("Foto de "+(r.name||"un cliente")+" con su caja PADEL DROP"))+'" loading="lazy" decoding="async">':'<div class="rph0" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg><span>Foto del cliente</span></div>')+
+(r.demo?'<span class="rdemo">Ejemplo</span>':'')+'</div>'+
+'<figcaption>'+(st?'<p class="rst" role="img" aria-label="'+st+' de 5 estrellas">'+'★★★★★'.slice(0,st)+'<i>'+'★★★★★'.slice(st)+'</i></p>':'')+
+'<blockquote>'+rsEsc(r.text)+'</blockquote>'+
+'<p class="rwho">'+(r.demo?'<span>Reseña de ejemplo</span>':'<span>'+(r.name?'<b>'+rsEsc(r.name)+'</b>':'')+(r.city?(r.name?' · ':'')+rsEsc(r.city):'')+'</span>')+(r.date&&!r.demo?'<span>'+rsDate(r.date)+'</span>':'')+'</p>'+
+'</figcaption></figure>'}).join("")}
 var T={condiciones:"Condiciones de contratación",privacidad:"Política de privacidad",cookies:"Política de cookies","aviso-legal":"Aviso legal"};
-function route(){ipShow();var h=location.hash,r=h.indexOf("#/")===0?h.slice(2):"",on=!!T[r],m=document.getElementById("top");
+function route(){ipShow();rsShow();var h=location.hash,r=h.indexOf("#/")===0?h.slice(2):"",on=!!T[r],m=document.getElementById("top");
 document.getElementById("legal").hidden=!on;m.hidden=on;
 document.querySelectorAll("[data-r]").forEach(function(a){a.hidden=a.dataset.r!==r});
 document.title=on?T[r]+" · PADEL DROP":"PADEL DROP · Suscripción mensual de grips y pelotas de pádel";

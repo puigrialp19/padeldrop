@@ -3,6 +3,14 @@
    checkoutUrl: pega aquí un Payment Link de Stripe (modo prueba) por plan para activar el pago. */
 var CONFIG={
   checkoutUrl:{start:"https://buy.stripe.com/dRm9AVdvWg4C88jfNceZ203",player:"https://buy.stripe.com/8x200l63u3hQ9cndF4eZ204",pro:"https://buy.stripe.com/fZu5kF9fG6u260bfNceZ205"},interpadel:{enabled:true,subDiscount:"10 % el primer mes",productDiscount:"",codes:["INTERPADEL-GUISSONA-TARREGA-GOLMES-3"],conditions:"Descuento del 10 % en el primer mes para nuevos suscriptores socios de Interpàdel. Introduce el código al pagar."},
+  /* Reseñas: photo = ruta en assets/img/resenas/ (foto real del cliente, con su permiso). name, city, rating (1-5) y date
+     solo si son reales. demo:true = ejemplo: nunca se publica, solo se ve en la vista previa (#preview-resenas). */
+  reviews:{enabled:false,items:[
+    {demo:true,photo:"",text:"Me llegó el jueves y el sábado ya estrené pelotas. Lo mejor es no tener que acordarme de comprarlas."},
+    {demo:true,photo:"",text:"Juego dos veces por semana y con el PLAYER voy justo. Los grips los cambio más que antes, la verdad."},
+    {demo:true,photo:"",text:"Lo pedí para probar un mes y sigo. La caja llega bien y el seguimiento funciona."},
+    {demo:true,photo:"",text:"Mi pareja también juega, así que el PRO nos sale mejor que ir comprando botes sueltos."}
+  ]},
   portalUrl:"https://billing.stripe.com/p/login/7sY28t0Ja8Ca88jgRgeZ200",
   shipping:0.9,
   shippingNote:""
