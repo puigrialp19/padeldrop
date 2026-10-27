@@ -45,6 +45,23 @@ liveRouter.get('/source/:source', async (req, res, next) => {
   try { res.json(await sourceStats(req.params.source)); } catch (err) { next(err); }
 });
 
+// QR dibujado con cuadros rellenos (no con líneas): al imprimir o en las vistas previas no salen rayas entre filas
+function qrSvg(text, margin = 2) {
+  const { modules } = QRCode.create(text, { errorCorrectionLevel: 'M' });
+  const n = modules.size, size = n + margin * 2;
+  let d = '';
+  for (let y = 0; y < n; y++) {
+    for (let x = 0; x < n; x++) {
+      if (!modules.get(y, x)) continue;
+      let w = 1;
+      while (x + w < n && modules.get(y, x + w)) w++;
+      d += `M${x + margin} ${y + margin}h${w}v1h-${w}z`;
+      x += w - 1;
+    }
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges"><rect width="${size}" height="${size}" fill="#fff"/><path fill="#000" d="${d}"/></svg>`;
+}
+
 // QR en SVG para los carteles. Solo para enlaces a la propia web.
 liveRouter.get('/qr.svg', async (req, res, next) => {
   try {
@@ -53,7 +70,6 @@ liveRouter.get('/qr.svg', async (req, res, next) => {
     if (text.length > 400 || !(text.startsWith(`${host}/`) || text.startsWith(`${config.publicUrl}/`))) {
       return res.status(400).json({ error: 'El QR solo puede apuntar a tu web.' });
     }
-    const svg = await QRCode.toString(text, { type: 'svg', errorCorrectionLevel: 'M', margin: 1, color: { dark: '#000000', light: '#ffffff' } });
-    res.type('image/svg+xml').send(svg);
+    res.type('image/svg+xml').send(qrSvg(text));
   } catch (err) { next(err); }
 });

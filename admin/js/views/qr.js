@@ -35,9 +35,8 @@ function poster(s, packs, qr, link) {
         ${s.code ? `<p class="mt-[1.5%] text-[clamp(10px,2vw,13pt)] font-semibold print:text-[12pt]">${esc(t.code(s.code))}</p>` : ''}
       </div>` : ''}
       <div class="mt-[3%] flex flex-1 flex-col items-center justify-center pb-[1%]">
-        <img src="${esc(qr)}" alt="Código QR" class="aspect-square min-w-[90px] ${s.code ? 'w-[20%] print:w-[35mm]' : 'w-[26%] print:w-[48mm]'}">
+        <img src="${esc(qr)}" alt="" class="aspect-square min-w-[90px] ${s.code ? 'w-[20%] print:w-[35mm]' : 'w-[26%] print:w-[48mm]'}">
         <p class="mt-[2%] font-display text-[clamp(18px,4vw,28pt)] font-extrabold uppercase print:text-[26pt]">${esc(t.scan)}</p>
-        <p class="text-[clamp(9px,1.7vw,11pt)] text-neutral-600 print:text-[11pt]">${esc(link.replace(/^https?:\/\//, '').replace(/\?.*$/, ''))}</p>
       </div>
     </div>
     <footer class="bg-black px-[6%] py-[2.5%] text-center text-[clamp(9px,1.8vw,12pt)] font-semibold text-white print:text-[12pt] print:[print-color-adjust:exact]">${esc(t.foot)}</footer>
