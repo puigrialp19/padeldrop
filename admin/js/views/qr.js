@@ -77,7 +77,8 @@ export async function renderQr(view, { isStale }) {
         </div>
         <div class="rounded-xl bg-soft p-3 text-sm" id="q-stats"></div>
         <div class="flex flex-wrap gap-2">
-          <button type="button" class="btn-primary" id="p-poster">Imprimir cartel A4</button>
+          <button type="button" class="btn-primary" id="p-poster-a3">Imprimir cartel A3</button>
+          <button type="button" class="btn-ghost" id="p-poster">Imprimir cartel A4</button>
           <button type="button" class="btn-ghost" id="p-cards">Imprimir 8 tarjetas</button>
           <a class="btn-ghost" id="q-download" download>Descargar QR</a>
         </div>
@@ -129,20 +130,30 @@ export async function renderQr(view, { isStale }) {
   });
 
   // Impresión: se monta lo que se va a imprimir fuera del panel y se imprime solo eso
-  function printWith(html) {
+  // A3: se carga una hoja de estilo que cambia el papel a A3 y amplía el cartel (la CSP del panel no permite estilos en línea)
+  function printWith(html, a3 = false) {
     document.getElementById('print-root')?.remove();
+    document.getElementById('print-a3')?.remove();
     const root = document.createElement('div');
     root.id = 'print-root';
     root.innerHTML = html;
     document.body.appendChild(root);
+    let css = null;
+    if (a3) {
+      css = Object.assign(document.createElement('link'), { id: 'print-a3', rel: 'stylesheet', href: '/admin/css/print-a3.css' });
+      document.head.appendChild(css);
+    }
     const imgs = [...root.querySelectorAll('img')];
-    Promise.all(imgs.map((i) => (i.complete ? null : new Promise((r) => { i.onload = r; i.onerror = r; })))).then(() => {
+    const waits = imgs.map((i) => (i.complete ? null : new Promise((r) => { i.onload = r; i.onerror = r; })));
+    if (css) waits.push(new Promise((r) => { css.onload = r; css.onerror = r; }));
+    Promise.all(waits).then(() => {
       // Se quita al terminar la impresión (en iPhone el diálogo no espera: quitarlo antes saldría en blanco)
-      addEventListener('afterprint', () => root.remove(), { once: true });
+      addEventListener('afterprint', () => { root.remove(); css?.remove(); }, { once: true });
       window.print();
     });
   }
   $('#p-poster').addEventListener('click', () => printWith(poster(s, packs, qrSrc(), link())));
+  $('#p-poster-a3').addEventListener('click', () => printWith(poster(s, packs, qrSrc(), link()), true));
   $('#p-cards').addEventListener('click', () => printWith(`<div class="grid h-[297mm] w-[210mm] grid-cols-2 grid-rows-4 gap-[4mm] bg-white p-[8mm]">${Array.from({ length: 8 }, () => card(s, qrSrc())).join('')}</div>`));
 
   paint();
