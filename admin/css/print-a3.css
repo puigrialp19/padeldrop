@@ -1,5 +1,4 @@
-/* Cartel en A3: el mismo diseño A4 ampliado ×1,414 (A4 → A3). Solo se carga mientras se imprime en A3. */
+/* Cartel en A3: solo cambia el papel. El cartel se mide en vh (alto de la hoja), así que crece solo. */
 @media print {
   @page { size: A3; margin: 0; }
-  #print-root { zoom: 1.41421; }
 }

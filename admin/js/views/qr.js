@@ -19,27 +19,29 @@ const T = {
 
 const slugify = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 34);
 
+// Al imprimir, las medidas van en vh (alto de la hoja): el cartel se adapta al papel y a los márgenes y siempre cabe
+// en una sola página, tanto en A4 como en A3.
 function poster(s, packs, qr, link) {
   const t = T[s.lang];
   return `
-  <article class="poster mx-auto flex aspect-[210/297] w-full max-w-[210mm] flex-col overflow-hidden bg-white text-black print:aspect-auto print:h-[297mm] print:max-w-none print:w-[210mm]">
+  <article class="poster mx-auto flex aspect-[210/297] w-full max-w-[210mm] flex-col overflow-hidden bg-white text-black print:aspect-auto print:h-[100vh] print:max-w-none print:w-full">
     <header class="flex items-center justify-center bg-black px-[8%] py-[3%]"><img src="/assets/img/logo-padel-drop.png" alt="PADEL DROP" class="w-[48%]"></header>
     <div class="flex flex-1 flex-col items-center px-[8%] pt-[4%] text-center">
-      <p class="text-[clamp(11px,2.5vw,17pt)] font-semibold uppercase tracking-[0.18em] text-neutral-600 print:text-[15pt]">${esc(t.kicker)}</p>
-      <h1 class="mt-[2%] font-display text-[clamp(30px,7.6vw,54pt)] font-extrabold uppercase leading-[0.93] print:text-[46pt]">${esc(t.title)}</h1>
-      <ul class="mt-[3.5%] w-full space-y-[1.4%] text-left text-[clamp(13px,3vw,20pt)] print:text-[20pt]">
+      <p class="text-[clamp(11px,2.5vw,17pt)] font-semibold uppercase tracking-[0.18em] text-neutral-600 print:text-[1.78vh]">${esc(t.kicker)}</p>
+      <h1 class="mt-[2%] font-display text-[clamp(30px,7.6vw,54pt)] font-extrabold uppercase leading-[0.93] print:text-[5.46vh]">${esc(t.title)}</h1>
+      <ul class="mt-[3.5%] w-full space-y-[1.4%] text-left text-[clamp(13px,3vw,20pt)] print:text-[2.38vh]">
         ${packs.map((p) => `<li class="flex items-center justify-between gap-3 border-b border-neutral-300 pb-[1.2%]"><span class="min-w-0 leading-tight"><b class="block font-display text-[1.25em] font-extrabold uppercase leading-none">${esc(t.packs[p.slug] || p.name)}</b><span class="block text-[0.75em] text-neutral-600">${esc(t.content(p.cans, p.grips))}</span></span><b class="whitespace-nowrap font-display text-[1.35em] font-extrabold">${eur(p.priceCents)}<small class="text-[0.6em] font-semibold">${t.per}</small></b></li>`).join('')}
       </ul>
       ${s.code || s.offer ? `<div class="mt-[3.5%] w-full rounded-[14px] border-[3px] border-black bg-lime px-[4%] py-[2%] print:[print-color-adjust:exact]">
-        <p class="font-display text-[clamp(18px,4.2vw,30pt)] font-extrabold uppercase leading-none print:text-[21pt]">${esc(s.name && s.code ? t.members(s.name) : '')}${s.name && s.code && s.offer ? ': ' : ''}${esc(s.offer)}</p>
-        ${s.code ? `<p class="mt-[1.5%] text-[clamp(10px,2vw,13pt)] font-semibold print:text-[12pt]">${esc(t.code(s.code))}</p>` : ''}
+        <p class="font-display text-[clamp(18px,4.2vw,30pt)] font-extrabold uppercase leading-none print:text-[2.49vh]">${esc(s.name && s.code ? t.members(s.name) : '')}${s.name && s.code && s.offer ? ': ' : ''}${esc(s.offer)}</p>
+        ${s.code ? `<p class="mt-[1.5%] text-[clamp(10px,2vw,13pt)] font-semibold print:text-[1.43vh]">${esc(t.code(s.code))}</p>` : ''}
       </div>` : ''}
       <div class="mt-[3%] flex flex-1 flex-col items-center justify-center pb-[1%]">
-        <img src="${esc(qr)}" alt="" class="aspect-square min-w-[90px] ${s.code ? 'w-[20%] print:w-[35mm]' : 'w-[26%] print:w-[48mm]'}">
-        <p class="mt-[2%] font-display text-[clamp(18px,4vw,28pt)] font-extrabold uppercase print:text-[26pt]">${esc(t.scan)}</p>
+        <img src="${esc(qr)}" alt="" class="aspect-square min-w-[90px] print:min-w-0 ${s.code ? 'w-[20%] print:w-[11.8vh]' : 'w-[26%] print:w-[16.2vh]'}">
+        <p class="mt-[2%] font-display text-[clamp(18px,4vw,28pt)] font-extrabold uppercase print:text-[3.09vh]">${esc(t.scan)}</p>
       </div>
     </div>
-    <footer class="bg-black px-[6%] py-[2.5%] text-center text-[clamp(9px,1.8vw,12pt)] font-semibold text-white print:text-[12pt] print:[print-color-adjust:exact]">${esc(t.foot)}</footer>
+    <footer class="bg-black px-[6%] py-[2.5%] text-center text-[clamp(9px,1.8vw,12pt)] font-semibold text-white print:text-[1.43vh] print:[print-color-adjust:exact]">${esc(t.foot)}</footer>
   </article>`;
 }
 
@@ -154,7 +156,7 @@ export async function renderQr(view, { isStale }) {
   }
   $('#p-poster').addEventListener('click', () => printWith(poster(s, packs, qrSrc(), link())));
   $('#p-poster-a3').addEventListener('click', () => printWith(poster(s, packs, qrSrc(), link()), true));
-  $('#p-cards').addEventListener('click', () => printWith(`<div class="grid h-[297mm] w-[210mm] grid-cols-2 grid-rows-4 gap-[4mm] bg-white p-[8mm]">${Array.from({ length: 8 }, () => card(s, qrSrc())).join('')}</div>`));
+  $('#p-cards').addEventListener('click', () => printWith(`<div class="grid h-[100vh] w-full grid-cols-2 grid-rows-4 gap-[4mm] bg-white p-[8mm]">${Array.from({ length: 8 }, () => card(s, qrSrc())).join('')}</div>`));
 
   paint();
 }

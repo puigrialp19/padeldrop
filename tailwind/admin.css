@@ -83,6 +83,6 @@
   @page { size: A4; margin: 0; }
   html, body { background: #fff !important; }
   body > *:not(#print-root) { display: none !important; }
-  #print-root { display: block; }
+  #print-root { display: block; height: 100vh; overflow: hidden; break-inside: avoid; }
   #print-root, #print-root * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
