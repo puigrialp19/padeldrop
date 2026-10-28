@@ -18,13 +18,13 @@ function filters(query) {
     ${status ? sql`AND o.status = ${status}` : sql``}
     ${pack ? sql`AND p.slug = ${pack}` : sql``}
     ${q ? sql`AND (o.ship_name ILIKE ${like} OR u.email ILIKE ${like} OR o.ship_city ILIKE ${like}
-               OR o.ship_postal_code ILIKE ${like} OR o.tracking_number ILIKE ${like})` : sql``}`;
+               OR o.ship_postal_code ILIKE ${like} OR o.tracking_number ILIKE ${like} OR o.pickup_club ILIKE ${like})` : sql``}`;
   return { month, status, where };
 }
 
 const select = () => sql`
   SELECT o.id, o.user_id, o.period, o.amount_cents, o.shipping_cents, o.status, o.carrier, o.tracking_number,
-         o.ship_name, o.ship_phone, o.ship_street, o.ship_number, o.ship_floor_door, o.ship_postal_code, o.ship_city, o.ship_province, o.ship_country,
+         o.ship_name, o.ship_phone, o.ship_street, o.ship_number, o.ship_floor_door, o.ship_postal_code, o.ship_city, o.ship_province, o.ship_country, o.pickup_club,
          o.paid_at, o.shipped_at, o.delivered_at, u.email, p.slug AS pack_slug, p.name AS pack_name, p.cans, p.grips
   FROM orders o JOIN users u ON u.id = o.user_id JOIN packs p ON p.id = o.pack_id`;
 
@@ -77,11 +77,11 @@ ordersRouter.patch('/:id', async (req, res, next) => {
 ordersRouter.get('/export.csv', async (req, res, next) => {
   try {
     const f = filters(req.query);
-    const rows = await sql`${select()} WHERE ${f.where} ORDER BY o.ship_postal_code, o.ship_name`;
-    const header = ['Pedido', 'Mes', 'Nombre', 'Teléfono', 'Email', 'Calle', 'Número', 'Piso/Puerta', 'Código postal', 'Ciudad', 'Provincia', 'País',
+    const rows = await sql`${select()} WHERE ${f.where} ORDER BY o.pickup_club, o.ship_postal_code, o.ship_name`;
+    const header = ['Pedido', 'Mes', 'Entrega', 'Nombre', 'Teléfono', 'Email', 'Calle', 'Número', 'Piso/Puerta', 'Código postal', 'Ciudad', 'Provincia', 'País',
       'Pack', 'Botes', 'Grips', 'Bultos', 'Estado', 'Transportista', 'Nº seguimiento', 'Fecha de cobro'];
     const csv = toCsv(header, rows.map((o) => [
-      `PD-${o.id}`, o.period, o.ship_name, o.ship_phone, o.email, o.ship_street, o.ship_number, o.ship_floor_door, o.ship_postal_code,
+      `PD-${o.id}`, o.period, o.pickup_club ? `Recogida: ${o.pickup_club}` : 'A domicilio', o.ship_name, o.ship_phone, o.email, o.ship_street, o.ship_number, o.ship_floor_door, o.ship_postal_code,
       o.ship_city, o.ship_province, o.ship_country, o.pack_name, o.cans, o.grips, 1, STATUS_LABEL[o.status], o.carrier, o.tracking_number,
       o.paid_at.toLocaleDateString('sv-SE', { timeZone: TZ }), // AAAA-MM-DD en hora de España
     ]));

@@ -2,6 +2,7 @@
 //   - 3 packs (START/PLAYER/PRO) + envío mensual, con sus precios (IVA incluido)
 //   - cupón y código de socio de Interpàdel (10 % el primer mes, solo clientes nuevos)
 //   - 3 enlaces de pago (pack + envío, pide nombre, teléfono y dirección en España)
+//   - 3 enlaces de recogida gratis en club (solo el pack; el cliente elige Guissona, Tàrrega o Golmés)
 //   - portal de cliente (facturas, tarjeta, datos y cancelación)
 //   - webhook hacia tu web
 // Después actualiza public/js/config.js y te da el SQL para Supabase y las variables para Render.
@@ -14,6 +15,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import Stripe from 'stripe';
+import { PICKUP_CLUBS } from '../services/clubs.js';
 
 // No usa la base de datos: no importa server/config.js (que exige DATABASE_URL).
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -113,6 +115,35 @@ async function ensurePaymentLink(stripe, pack, price, shippingPrice) {
   return link;
 }
 
+/** Enlace de recogida en club: solo el pack (sin envío ni dirección) y un desplegable obligatorio con el club. */
+async function ensurePickupLink(stripe, pack, price) {
+  const slug = `${pack.slug}-club`;
+  const clubs = Object.entries(PICKUP_CLUBS);
+  const links = await stripe.paymentLinks.list({ active: true, limit: 100 });
+  for (const l of links.data.filter((x) => x.metadata?.pd_slug === slug)) {
+    const items = await stripe.paymentLinks.listLineItems(l.id, { limit: 10 });
+    const sameClubs = (l.custom_fields?.[0]?.dropdown?.options || []).map((o) => o.value).join() === clubs.map(([v]) => v).join();
+    if (items.data.length === 1 && items.data[0].price.id === price.id && sameClubs) {
+      ok(`enlace ${pack.name} (recogida en club): ya existía`);
+      return l;
+    }
+    await stripe.paymentLinks.update(l.id, { active: false });
+  }
+  const link = await stripe.paymentLinks.create({
+    line_items: [{ price: price.id, quantity: 1 }],
+    allow_promotion_codes: true,
+    billing_address_collection: 'auto',
+    phone_number_collection: { enabled: true },
+    custom_fields: [{ key: 'club', label: { type: 'custom', custom: 'Club donde recogerás tu caja' }, type: 'dropdown', dropdown: { options: clubs.map(([value, label]) => ({ value, label })) } }],
+    custom_text: { submit: { message: 'Suscripción mensual con renovación automática. Recoges tu caja gratis cada mes en el club que elijas (sin gastos de envío). Puedes cancelarla antes de la siguiente renovación para evitar cobros futuros.' } },
+    subscription_data: { description: `${pack.name}: ${botes(pack.cans)} + ${pack.grips} overgrips al mes · recogida en club`, metadata: { plan: pack.slug, entrega: 'club' } },
+    metadata: { plan: pack.slug, pd_slug: slug, entrega: 'club' },
+    after_completion: { type: 'hosted_confirmation', hosted_confirmation: { custom_message: '¡Gracias por suscribirte a PADEL DROP! Te avisaremos cuando tu caja esté en el club.' } },
+  });
+  ok(`enlace ${pack.name} (recogida en club): creado`);
+  return link;
+}
+
 async function ensurePortal(stripe, siteUrl) {
   const { data } = await stripe.billingPortal.configurations.list({ active: true, limit: 100 });
   const mine = data.find((c) => c.metadata?.pd === 'portal');
@@ -147,11 +178,12 @@ async function ensureWebhook(stripe, siteUrl) {
   return { endpoint, secret: endpoint.secret };
 }
 
-function updateSiteConfig(links, portalUrl) {
+function updateSiteConfig(links, clubLinks, portalUrl) {
   const file = path.join(ROOT, 'public', 'js', 'config.js');
   let js = readFileSync(file, 'utf8');
-  const checkout = `checkoutUrl:{start:${JSON.stringify(links.start.url)},player:${JSON.stringify(links.player.url)},pro:${JSON.stringify(links.pro.url)}}`;
-  js = js.replace(/checkoutUrl:\{[^}]*\}/, checkout).replace(/portalUrl:"[^"]*"/, `portalUrl:${JSON.stringify(portalUrl)}`);
+  const urls = (l) => `{start:${JSON.stringify(l.start.url)},player:${JSON.stringify(l.player.url)},pro:${JSON.stringify(l.pro.url)}}`;
+  js = js.replace(/checkoutUrl:\{[^}]*\}/, `checkoutUrl:${urls(links)}`).replace(/clubUrl:\{[^}]*\}/, `clubUrl:${urls(clubLinks)}`)
+    .replace(/portalUrl:"[^"]*"/, `portalUrl:${JSON.stringify(portalUrl)}`);
   writeFileSync(file, js);
 }
 
@@ -198,6 +230,8 @@ async function main() {
   step('Enlaces de pago');
   const links = {};
   for (const p of PACKS) links[p.slug] = await ensurePaymentLink(stripe, p, prices[p.slug], shipPrice);
+  const clubLinks = {};
+  for (const p of PACKS) clubLinks[p.slug] = await ensurePickupLink(stripe, p, prices[p.slug]);
 
   step('Portal de cliente');
   const portal = await ensurePortal(stripe, siteUrl);
@@ -206,7 +240,7 @@ async function main() {
   const { secret } = await ensureWebhook(stripe, siteUrl);
 
   step('Web: actualizando public/js/config.js con los nuevos enlaces');
-  updateSiteConfig(links, portal.login_page.url);
+  updateSiteConfig(links, clubLinks, portal.login_page.url);
   ok('hecho');
 
   const sqlLines = PACKS.map((p) => `UPDATE packs SET stripe_price_id = '${prices[p.slug].id}', cans = ${p.cans}, grips = ${p.grips}, price_cents = ${p.cents} WHERE slug = '${p.slug}';`);
@@ -215,7 +249,8 @@ async function main() {
     `Cuenta: ${account?.id || '?'} · generado ${new Date().toISOString().slice(0, 10)} con server/scripts/stripe-setup.js`, '',
     '| Pack | Price ID | Enlace de pago |', '|---|---|---|',
     ...PACKS.map((p) => `| ${p.who} / ${p.name} (${eur(p.cents)} €) | ${prices[p.slug].id} | ${links[p.slug].url} |`),
-    `| Envío mensual (${eur(SHIPPING.cents)} €) | ${shipPrice.id} | (segunda línea de cada enlace) |`, '',
+    `| Envío mensual (${eur(SHIPPING.cents)} €) | ${shipPrice.id} | (segunda línea de cada enlace) |`,
+    ...PACKS.map((p) => `| ${p.name} · recogida en club (sin envío) | ${prices[p.slug].id} | ${clubLinks[p.slug].url} |`), '',
     `- Código de socio: \`${PROMO_CODE}\` (cupón ${COUPON_ID}, 10 % primer mes, solo clientes nuevos)`,
     `- Portal de cliente: ${portal.login_page.url}`,
     `- Webhook: ${siteUrl}/api/stripe/webhook (${EVENTS.join(', ')})`, '',

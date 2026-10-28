@@ -4,6 +4,13 @@ import { sql } from '../db/db.js';
 import { config } from '../config.js';
 import { monthOf } from './metrics.js';
 import { notifyAdmins } from './push.js';
+import { PICKUP_CLUBS } from './clubs.js';
+
+/** Recogida en club: columnas añadidas después del esquema inicial (se crean solas al arrancar). */
+export async function initPickup() {
+  await sql`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS pickup_club text NOT NULL DEFAULT ''`;
+  await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS pickup_club text NOT NULL DEFAULT ''`;
+}
 
 const eur = (c) => (c / 100).toFixed(2).replace('.', ',') + ' €';
 
@@ -140,7 +147,7 @@ async function createOrderFromInvoice(stripe, inv) {
 
   const userId = await upsertCustomer(stripe, idOf(inv.customer), inv.customer_shipping);
   const [u] = await sql`SELECT * FROM users WHERE id = ${userId}`;
-  const [local] = subId ? await sql`SELECT id FROM subscriptions WHERE stripe_subscription_id = ${subId}` : [];
+  const [local] = subId ? await sql`SELECT id, pickup_club FROM subscriptions WHERE stripe_subscription_id = ${subId}` : [];
   const ship = inv.customer_shipping?.address ? inv.customer_shipping : {};
   const addr = ship.address || {};
   const paidAt = toDate(inv.status_transitions?.paid_at) || new Date();
@@ -161,6 +168,8 @@ async function createOrderFromInvoice(stripe, inv) {
     ship_city: addr.city || u.city,
     ship_province: addr.state || u.province,
     ship_country: addr.country || u.country,
+    // Si la factura llega antes que el checkout, el club aún no se sabe: lo completa syncCheckout.
+    pickup_club: local?.pickup_club || '',
     paid_at: paidAt,
     stripe_invoice_id: inv.id,
   };
@@ -170,7 +179,7 @@ async function createOrderFromInvoice(stripe, inv) {
     const renewal = inv.billing_reason === 'subscription_cycle';
     await notifyAdmins({
       title: renewal ? '🔁 Pedido nuevo (renovación)' : '🎾 Pedido nuevo',
-      body: `${order.ship_name || u.email} · ${packName} · ${eur(order.amount_cents + order.shipping_cents)}${order.ship_city ? ` · ${order.ship_city}` : ''}`,
+      body: `${order.ship_name || u.email} · ${packName} · ${eur(order.amount_cents + order.shipping_cents)}${order.pickup_club ? ` · recoge en ${order.pickup_club}` : order.ship_city ? ` · ${order.ship_city}` : ''}`,
       url: '/admin/#/pedidos', tag: `pd-pedido-${created.id}`,
     });
   }
@@ -186,7 +195,16 @@ async function syncCheckout(stripe, session) {
       ship_street = ${u.street}, ship_floor_door = ${u.floor_door}, ship_postal_code = ${u.postal_code},
       ship_city = ${u.city}, ship_province = ${u.province}, ship_country = ${u.country}, updated_at = now()
     WHERE user_id = ${userId} AND status = 'pending' AND ship_street = ''`;
-  if (session.subscription) await syncSubscription(stripe, await stripe.subscriptions.retrieve(idOf(session.subscription)));
+  if (!session.subscription) return;
+  const subId = idOf(session.subscription);
+  await syncSubscription(stripe, await stripe.subscriptions.retrieve(subId));
+  // Enlaces de recogida: el club elegido en el desplegable de Stripe se guarda en la suscripción y en su primer pedido.
+  const club = PICKUP_CLUBS[(session.custom_fields || []).find((f) => f.key === 'club')?.dropdown?.value];
+  if (club) {
+    await sql`UPDATE subscriptions SET pickup_club = ${club}, updated_at = now() WHERE stripe_subscription_id = ${subId}`;
+    await sql`UPDATE orders SET pickup_club = ${club}, updated_at = now()
+      WHERE subscription_id = (SELECT id FROM subscriptions WHERE stripe_subscription_id = ${subId}) AND status = 'pending'`;
+  }
 }
 
 export const HANDLED_EVENTS = [

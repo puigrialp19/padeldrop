@@ -21,10 +21,14 @@ function orderCard(o) {
       <div class="flex flex-wrap items-center gap-2"><span data-badge>${statusBadge(ORDER_STATUS, o.status, true)}</span>${packBadge(o.pack_slug, o.pack_name)}</div>
     </div>
     <div class="mt-3 grid gap-3 sm:grid-cols-2">
-      <div class="rounded-xl bg-soft p-3 text-sm">
+      ${o.pickup_club ? `<div class="rounded-xl border-2 border-lime bg-soft p-3 text-sm">
+        <p class="label mb-0.5">Recogida en club · sin envío</p>
+        <p class="font-semibold">${esc(o.pickup_club)}</p>
+        <p class="mt-1 text-xs text-muted">Llévala al club y márcala como «Entregado» cuando la recoja.</p>
+      </div>` : `<div class="rounded-xl bg-soft p-3 text-sm">
         <p class="label mb-0.5">Dirección de envío</p>
         ${addr.map((l) => `<div>${esc(l)}</div>`).join('') || '<span class="text-critical">Sin dirección</span>'}
-      </div>
+      </div>`}
       <div class="rounded-xl bg-soft p-3 text-sm">
         <p class="label mb-0.5">Preparar</p>
         <p class="font-semibold">${botes(o.cans)} + ${o.grips} grips</p>
@@ -57,7 +61,7 @@ export async function renderOrders(view, { params, isStale }) {
       <div class="flex flex-wrap gap-1.5" role="group" aria-label="Estado del envío" id="tabs"></div>
       <div class="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row">
         <label class="sr-only" for="q">Buscar pedidos</label>
-        <input class="input min-w-0 sm:flex-1" id="q" type="search" placeholder="Nombre, email, ciudad, CP o seguimiento" value="${esc(state.q)}" autocomplete="off">
+        <input class="input min-w-0 sm:flex-1" id="q" type="search" placeholder="Nombre, email, ciudad, CP, club o seguimiento" value="${esc(state.q)}" autocomplete="off">
         <label class="sr-only" for="pack">Pack</label>
         <select class="input sm:w-48" id="pack">${PACK_OPTIONS.map(([v, l]) => `<option value="${v}" ${v === state.pack ? 'selected' : ''}>${l}</option>`).join('')}</select>
       </div>

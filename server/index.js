@@ -9,6 +9,7 @@ import { metricsRouter } from './routes/metrics.js';
 import { customersRouter } from './routes/customers.js';
 import { ordersRouter } from './routes/orders.js';
 import { stripeRouter } from './routes/stripe-webhook.js';
+import { initPickup } from './services/stripe-sync.js';
 import { pushRouter } from './routes/push.js';
 import { initPush } from './services/push.js';
 import { visitRouter, liveRouter } from './routes/live.js';
@@ -27,6 +28,8 @@ try {
 try { await initPush(); } catch (err) { console.error('  Avisos push no disponibles:', err.message); }
 // Visitantes en directo (anónimo): crea su tabla de recuentos la primera vez.
 try { await initLive(); } catch (err) { console.error('  Contador de visitas no disponible:', err.message); }
+// Recogida en club: añade sus columnas si aún no existen (los pedidos las necesitan).
+await initPickup();
 purgeExpiredSessions();
 setInterval(purgeExpiredSessions, 60 * 60 * 1000).unref();
 

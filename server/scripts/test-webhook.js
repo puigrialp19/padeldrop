@@ -6,7 +6,8 @@ process.env.STRIPE_WEBHOOK_SECRET ||= 'whsec_simulado';
 
 const { config } = await import('../config.js');
 const { sql, closeDb } = await import('../db/db.js');
-const { handleStripeEvent } = await import('../services/stripe-sync.js');
+const { handleStripeEvent, initPickup } = await import('../services/stripe-sync.js');
+await initPickup();
 const { initPush, __setSender } = await import('../services/push.js');
 // Avisos al móvil: se capturan en vez de enviarse de verdad
 const pushes = [];
@@ -36,6 +37,7 @@ const customers = {
   [`cus_B${T}`]: { id: `cus_B${T}`, email: `bruno.${T}@example.com`, name: 'Bruno Prueba', phone: '+34600111222',
     shipping: { name: 'Bruno Prueba', phone: '+34600111222', address: { line1: 'Carrer Major 5', line2: '2º 1ª', postal_code: '25210', city: 'Guissona', state: 'Lleida', country: 'ES' } } },
   [`cus_C${T}`]: { id: `cus_C${T}`, email: `carla.${T}@example.com`, name: 'Carla Prueba', shipping: null },
+  [`cus_F${T}`]: { id: `cus_F${T}`, email: `ferran.${T}@example.com`, name: 'Ferran Club', phone: null, shipping: null, address: null },
 };
 const subs = {};
 const fakeStripe = {
@@ -129,6 +131,28 @@ try {
   console.log('\nD) Factura sin ningún pack');
   await handleStripeEvent(fakeStripe, ev('invoice.paid', { id: `in_D${T}`, customer: `cus_C${T}`, lines: { data: [{ amount: 500, price: { id: 'price_otra_cosa' } }] } }));
   check('se ignora (no crea pedido)', (await sql`SELECT count(*) AS n FROM orders WHERE stripe_invoice_id = ${`in_D${T}`}`)[0].n === 0);
+
+  // ===== Escenario F: recogida en club (sin envío). La factura llega antes que el checkout con el club. =====
+  console.log('\nF) Recogida gratis en club');
+  subs[`sub_F${T}`] = { id: `sub_F${T}`, customer: `cus_F${T}`, status: 'active', start_date: now, metadata: { plan: 'start', entrega: 'club' },
+    items: { data: [{ price: { id: packs.start.stripe_price_id, unit_amount: 890 }, current_period_end: now + 30 * DAY }] } };
+  const invoiceF = (id) => ({ id, customer: `cus_F${T}`, customer_shipping: null, status_transitions: { paid_at: now },
+    parent: { subscription_details: { subscription: `sub_F${T}`, metadata: { plan: 'start', entrega: 'club' } } },
+    lines: { data: [{ amount: 890, pricing: { price_details: { price: packs.start.stripe_price_id } } }] } });
+  await handleStripeEvent(fakeStripe, ev('invoice.paid', invoiceF(`in_F1${T}`)));
+  await handleStripeEvent(fakeStripe, ev('checkout.session.completed', {
+    id: `cs_F${T}`, mode: 'subscription', customer: `cus_F${T}`, subscription: `sub_F${T}`,
+    customer_details: { email: `ferran.${T}@example.com`, name: 'Ferran Club', phone: '+34622333444', address: { postal_code: '25241', country: 'ES' } },
+    custom_fields: [{ key: 'club', type: 'dropdown', dropdown: { value: 'golmes' } }],
+  }));
+  const [of1] = await sql`SELECT * FROM orders WHERE stripe_invoice_id = ${`in_F1${T}`}`;
+  check('primer pedido marcado para recoger en Interpàdel Golmés', of1?.pickup_club === 'Interpàdel Golmés', of1?.pickup_club);
+  check('sin gastos de envío', of1?.amount_cents === 890 && of1?.shipping_cents === 0, `${of1?.amount_cents} + ${of1?.shipping_cents}`);
+  await handleStripeEvent(fakeStripe, ev('invoice.paid', { ...invoiceF(`in_F2${T}`), billing_reason: 'subscription_cycle' }));
+  const [of2] = await sql`SELECT * FROM orders WHERE stripe_invoice_id = ${`in_F2${T}`}`;
+  check('la renovación del mes siguiente también va al club', of2?.pickup_club === 'Interpàdel Golmés', of2?.pickup_club);
+  const avisoClub = pushes.find((p) => p.body.includes('Ferran') && p.title.includes('renovación'));
+  check('el aviso al móvil dice dónde se recoge', !!avisoClub && avisoClub.body.includes('recoge en Interpàdel Golmés'), avisoClub?.body);
 
   // ===== Escenario E: firma del webhook por HTTP =====
   console.log('\nE) Firma del webhook');

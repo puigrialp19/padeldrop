@@ -56,6 +56,8 @@ CREATE TABLE IF NOT EXISTS subscriptions (
   created_at              timestamptz NOT NULL DEFAULT now(),
   updated_at              timestamptz NOT NULL DEFAULT now()
 );
+-- Recogida gratis en club (vacío = envío a domicilio). El servidor también la añade solo al arrancar.
+ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS pickup_club text NOT NULL DEFAULT '';
 CREATE INDEX IF NOT EXISTS subscriptions_user_idx   ON subscriptions (user_id);
 CREATE INDEX IF NOT EXISTS subscriptions_status_idx ON subscriptions (status);
 
@@ -88,6 +90,7 @@ CREATE TABLE IF NOT EXISTS orders (
   created_at         timestamptz NOT NULL DEFAULT now(),
   updated_at         timestamptz NOT NULL DEFAULT now()
 );
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS pickup_club text NOT NULL DEFAULT '';  -- club de recogida (vacío = a domicilio)
 CREATE INDEX IF NOT EXISTS orders_period_idx ON orders (period);
 CREATE INDEX IF NOT EXISTS orders_status_idx ON orders (status);
 CREATE INDEX IF NOT EXISTS orders_user_idx   ON orders (user_id);
