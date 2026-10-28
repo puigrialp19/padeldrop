@@ -11,7 +11,7 @@ Cuenta: acct_1USXZLRq7KJQz9G9 · generado 2026-10-26 con server/scripts/stripe-s
 
 - Código de socio: `INTERPADEL-GUISSONA-TARREGA-GOLMES-3` (cupón INTERPADEL10, 10 % primer mes, solo clientes nuevos)
 - Portal de cliente: https://billing.stripe.com/p/login/7sY28t0Ja8Ca88jgRgeZ200
-- Webhook: https://padel-drop.onrender.com/api/stripe/webhook (checkout.session.completed, customer.subscription.created, customer.subscription.updated, customer.subscription.deleted, invoice.paid)
+- Webhook: https://www.padeldrop.net/api/stripe/webhook (checkout.session.completed, customer.subscription.created, customer.subscription.updated, customer.subscription.deleted, invoice.paid)
 
 ## SQL para Supabase
 
