@@ -4,7 +4,7 @@
 var CONFIG={
   checkoutUrl:{start:"https://buy.stripe.com/dRm9AVdvWg4C88jfNceZ203",player:"https://buy.stripe.com/8x200l63u3hQ9cndF4eZ204",pro:"https://buy.stripe.com/fZu5kF9fG6u260bfNceZ205"},
   /* Recogida gratis en club (enlaces sin envío; los crea "npm run stripe:setup"). Vacíos = la opción no se muestra. */
-  clubUrl:{start:"",player:"",pro:""},pickupClubs:["Interpàdel Guissona","Interpàdel Tàrrega","Interpàdel Golmés"],
+  clubUrl:{start:"https://buy.stripe.com/28EaEZajK2dMfALasSeZ206",player:"https://buy.stripe.com/5kQ14pcrS4lU3S37gGeZ207",pro:"https://buy.stripe.com/9B6fZj1Ne4lU9cn8kKeZ208"},pickupClubs:["Interpàdel Guissona","Interpàdel Tàrrega","Interpàdel Golmés"],
   interpadel:{enabled:true,subDiscount:"10 % el primer mes",productDiscount:"",codes:["INTERPADEL-GUISSONA-TARREGA-GOLMES-3"],conditions:"Descuento del 10 % en el primer mes para nuevos suscriptores socios de Interpàdel. Introduce el código al pagar."},
   /* Reseñas: photo = ruta en assets/img/resenas/ (foto real del cliente, con su permiso). name, city, rating (1-5) y date
      solo si son reales. demo:true = ejemplo: nunca se publica, solo se ve en la vista previa (#preview-resenas). */

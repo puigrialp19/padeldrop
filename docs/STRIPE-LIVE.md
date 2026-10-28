@@ -1,6 +1,6 @@
 # Stripe de PADEL DROP (MODO REAL)
 
-Cuenta: acct_1USXZLRq7KJQz9G9 · generado 2026-10-26 con server/scripts/stripe-setup.js
+Cuenta: acct_1USXZLRq7KJQz9G9 · generado 2026-10-28 con server/scripts/stripe-setup.js
 
 | Pack | Price ID | Enlace de pago |
 |---|---|---|
@@ -8,6 +8,9 @@ Cuenta: acct_1USXZLRq7KJQz9G9 · generado 2026-10-26 con server/scripts/stripe-s
 | Pack Intermedio / PADEL DROP PLAYER (12,90 €) | price_1UUnkyRq7KJQz9G927JLEfJ0 | https://buy.stripe.com/8x200l63u3hQ9cndF4eZ204 |
 | Pack Premium / PADEL DROP PRO (15,90 €) | price_1UUnl0Rq7KJQz9G96YWEimIb | https://buy.stripe.com/fZu5kF9fG6u260bfNceZ205 |
 | Envío mensual (0,90 €) | price_1UUnl1Rq7KJQz9G93YN79a0P | (segunda línea de cada enlace) |
+| PADEL DROP START · recogida en club (sin envío) | price_1UUnkxRq7KJQz9G9gkFvkUSX | https://buy.stripe.com/28EaEZajK2dMfALasSeZ206 |
+| PADEL DROP PLAYER · recogida en club (sin envío) | price_1UUnkyRq7KJQz9G927JLEfJ0 | https://buy.stripe.com/5kQ14pcrS4lU3S37gGeZ207 |
+| PADEL DROP PRO · recogida en club (sin envío) | price_1UUnl0Rq7KJQz9G96YWEimIb | https://buy.stripe.com/9B6fZj1Ne4lU9cn8kKeZ208 |
 
 - Código de socio: `INTERPADEL-GUISSONA-TARREGA-GOLMES-3` (cupón INTERPADEL10, 10 % primer mes, solo clientes nuevos)
 - Portal de cliente: https://billing.stripe.com/p/login/7sY28t0Ja8Ca88jgRgeZ200
