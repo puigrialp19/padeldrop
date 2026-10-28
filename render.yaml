@@ -11,6 +11,8 @@ services:
     healthCheckPath: /healthz    # Render comprueba que la web y la base de datos responden
     autoDeploy: true             # cada cambio subido a GitHub se publica solo
     envVars:
+      - key: PUBLIC_URL
+        value: https://www.padeldrop.net
       - key: NODE_ENV
         value: production
       - key: TRUST_PROXY

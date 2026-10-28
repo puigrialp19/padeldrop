@@ -39,6 +39,15 @@ app.get('/healthz', async (req, res) => {
   try { await sql`SELECT 1`; res.json({ ok: true }); } catch { res.status(503).json({ ok: false }); }
 });
 
+// Dominio propio: la dirección antigua de Render redirige (301) a PUBLIC_URL conservando la ruta y el ?ref de los QR ya
+// impresos. Solo GET/HEAD: el webhook de Stripe (POST) sigue llegando aunque apunte a la dirección antigua.
+const publicHost = new URL(config.publicUrl).hostname;
+app.use((req, res, next) => {
+  if ((req.method !== 'GET' && req.method !== 'HEAD') || req.hostname === publicHost || !req.hostname.endsWith('.onrender.com')) return next();
+  if (req.path === '/admin/sw.js') return next(); // la app del panel ya instalada sigue actualizándose
+  res.redirect(301, config.publicUrl + req.originalUrl);
+});
+
 // 1) Webhook de Stripe: necesita el cuerpo sin procesar, por eso va antes de express.json().
 app.use('/api/stripe', stripeRouter);
 
