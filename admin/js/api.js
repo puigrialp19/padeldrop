@@ -31,6 +31,7 @@ export const api = {
   orders: (params) => request('GET', `/api/admin/orders${qs(params)}`),
   updateOrder: (id, patch) => request('PATCH', `/api/admin/orders/${encodeURIComponent(id)}`, patch),
   exportUrl: (params) => `/api/admin/orders/export.csv${qs(params)}`,
+  packlinkUrl: (params) => `/api/admin/orders/packlink.csv${qs(params)}`,
   pushInfo: () => request('GET', '/api/admin/push'),
   pushSubscribe: (subscription) => request('POST', '/api/admin/push/subscribe', { subscription }),
   pushUnsubscribe: (endpoint) => request('POST', '/api/admin/push/unsubscribe', { endpoint }),

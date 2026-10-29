@@ -56,8 +56,10 @@ export async function renderOrders(view, { params, isStale }) {
 
   view.innerHTML = `
     ${pageHeader('Pedidos y envíos', 'Prepara, envía y registra el seguimiento de cada caja mensual.',
-      `${monthInput('month', state.month)}<a class="btn-primary" id="export" href="#" download>
-        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v3h16v-3"/></svg>Exportar CSV (Excel)</a>`)}
+      `${monthInput('month', state.month)}<a class="btn-ghost" id="export" href="#" download>
+        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v3h16v-3"/></svg>Exportar CSV (Excel)</a>
+      <a class="btn-primary" id="packlink" href="#" download title="Pedidos pendientes a domicilio y a oficina/CityPaq, para Packlink PRO → Nuevo envío → Importar CSV">
+        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M3 7l9-4 9 4-9 4-9-4zm0 0v10l9 4 9-4V7M12 11v10"/></svg>Exportar para Packlink</a>`)}
     <section class="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4" id="summary" aria-label="Resumen del mes"></section>
     <div class="card mb-4 flex flex-col gap-3 p-3 xl:flex-row xl:items-center">
       <div class="flex flex-wrap gap-1.5" role="group" aria-label="Estado del envío" id="tabs"></div>
@@ -77,6 +79,7 @@ export async function renderOrders(view, { params, isStale }) {
   async function load() {
     setQuery({ month: state.month === currentMonth() ? '' : state.month, status: state.status === 'pending' ? '' : state.status || 'all', q: state.q, pack: state.pack });
     view.querySelector('#export').href = api.exportUrl({ month: state.month, status: state.status, pack: state.pack, q: state.q });
+    view.querySelector('#packlink').href = api.packlinkUrl({ month: state.month, pack: state.pack, q: state.q });
     let data;
     try { data = await api.orders(state); } catch (err) { list.innerHTML = errorBox(err.message); return; }
     if (isStale()) return;

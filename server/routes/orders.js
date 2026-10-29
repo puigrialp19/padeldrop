@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { sql, audit } from '../db/db.js';
 import { MONTH_RE, TZ, currentMonth } from '../services/metrics.js';
 import { toCsv } from '../services/csv.js';
+import { packlinkCsv } from '../services/packlink.js';
 
 export const ordersRouter = Router();
 
@@ -103,6 +104,23 @@ ordersRouter.get('/export.csv', async (req, res, next) => {
     res.set('Content-Type', 'text/csv; charset=utf-8');
     res.set('Content-Disposition', `attachment; filename="envios-padel-drop-${f.month}${f.status ? '-' + f.status : ''}.csv"`);
     res.send(csv);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Pedidos pendientes de enviar por transportista (a domicilio u oficina de Correos/CityPaq), en el formato de Packlink PRO.
+// No incluye la recogida en club ni los reembolsados. Respeta el mes, el pack y la búsqueda de la pantalla.
+ordersRouter.get('/packlink.csv', async (req, res, next) => {
+  try {
+    const f = filters({ ...req.query, status: 'pending' });
+    const rows = await sql`${select()} WHERE ${f.where} AND o.delivery IN ('home', 'office')
+      AND NOT (o.refunded_cents > 0 AND o.refunded_cents >= o.amount_cents + o.shipping_cents)
+      ORDER BY o.delivery, o.ship_postal_code, o.ship_name`;
+    await audit(req, 'export_packlink', 'order', '', { month: f.month, rows: rows.length });
+    res.set('Content-Type', 'text/csv; charset=utf-8');
+    res.set('Content-Disposition', `attachment; filename="packlink-padel-drop-${f.month}.csv"`);
+    res.send(packlinkCsv(rows));
   } catch (err) {
     next(err);
   }
