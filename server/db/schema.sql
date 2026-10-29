@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS subscriptions (
 );
 -- Recogida gratis en club (vacío = envío a domicilio). El servidor también la añade solo al arrancar.
 ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS pickup_club text NOT NULL DEFAULT '';
+ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS pickup_office text NOT NULL DEFAULT '';
 CREATE INDEX IF NOT EXISTS subscriptions_user_idx   ON subscriptions (user_id);
 CREATE INDEX IF NOT EXISTS subscriptions_status_idx ON subscriptions (status);
 
@@ -93,6 +94,8 @@ CREATE TABLE IF NOT EXISTS orders (
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS pickup_club text NOT NULL DEFAULT '';  -- club de recogida (vacío = a domicilio)
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS refunded_cents integer NOT NULL DEFAULT 0;  -- reembolsado en Stripe (no cuenta como ingreso)
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS refunded_at timestamptz;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery text NOT NULL DEFAULT 'home';   -- home | office (oficina de Correos o CityPaq) | club
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS pickup_office text NOT NULL DEFAULT ''; -- oficina o CityPaq que pide el cliente (vacío = la más cercana)
 CREATE INDEX IF NOT EXISTS orders_period_idx ON orders (period);
 CREATE INDEX IF NOT EXISTS orders_status_idx ON orders (status);
 CREATE INDEX IF NOT EXISTS orders_user_idx   ON orders (user_id);

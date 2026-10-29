@@ -1,16 +1,24 @@
 var botes=function(n){return n===1?'1 bote':n+' botes'};
 var eur=function(n){return new Intl.NumberFormat("es-ES",{style:"currency",currency:"EUR"}).format(n)};
 var pl=document.getElementById("pl");
-/* Recogida gratis en club: solo si están los 3 enlaces sin envío de Stripe */
-var CLUB=!!(CONFIG.clubUrl&&CONFIG.clubUrl.start&&CONFIG.clubUrl.player&&CONFIG.clubUrl.pro);
+/* Formas de entrega: solo se ofrecen las que tienen sus 3 enlaces de pago de Stripe */
+var full=function(u){return !!(u&&u.start&&u.player&&u.pro)};
 var CLUBS=(CONFIG.pickupClubs||[]).join(", ").replace(/, ([^,]*)$/," o $1");
+var DLV=[
+  {id:"home",url:CONFIG.checkoutUrl,ship:CONFIG.shipping,title:"Envío a domicilio",desc:"Te llega a casa cada mes.",what:"envío a domicilio",li:"envío a domicilio"},
+  {id:"office",url:CONFIG.officeUrl,ship:CONFIG.officeShipping,title:"Recogida en oficina de Correos o CityPaq",desc:"Lo recoges en la oficina o el locker CityPaq que indiques al pagar (si no, el más cercano a tu dirección).",what:"envío a oficina de Correos o CityPaq",li:"recogida en Correos o CityPaq"},
+  {id:"club",url:CONFIG.clubUrl,ship:0,title:"Recogida en tu club",desc:"Solo para jugadores de "+CLUBS+". Eliges el club al pagar.",what:"recogida en tu club",li:"recogida gratis en tu club*"}
+].filter(function(d){return full(d.url)});
+var CLUB=DLV.some(function(d){return d.id==="club"});
+function dlvOf(id){return DLV.filter(function(d){return d.id===id})[0]||DLV[0]}
+var DLV_LI=DLV.map(function(d){return d.li}).join(", ").replace(/, ([^,]*)$/," o $1");DLV_LI=DLV_LI.charAt(0).toUpperCase()+DLV_LI.slice(1);
 PLANS.forEach(function(p){
   var d=document.createElement("article");d.className="plan rv"+(p.featured?" f":"");
   d.innerHTML=(p.featured?'<span class="badge">RECOMENDADO - MÁS VENDIDO</span>':'')+
   '<h3>'+p.name+'</h3>'+(p.who?'<p class="who">'+p.who+'</p>':'')+
   '<div class="price">'+eur(p.price)+' <small>/ mes</small></div>'+
   '<p class="eq">'+p.eq+'</p>'+
-  '<ul><li>'+botes(p.cans)+' de pelotas de pádel al mes</li><li>'+p.grips+' overgrips incluidos al mes</li><li>'+(CLUB?'Envío a domicilio o recogida gratis en tu club*':'Envío mensual a domicilio')+'</li><li>Renovación automática sin permanencia</li></ul>'+
+  '<ul><li>'+botes(p.cans)+' de pelotas de pádel al mes</li><li>'+p.grips+' overgrips incluidos al mes</li><li>'+DLV_LI+'</li><li>Renovación automática sin permanencia</li></ul>'+
   '<button class="btn b1" data-id="'+p.id+'">Suscribirme a '+p.name.split(" ")[2]+'</button>';
   pl.appendChild(d);
 });
@@ -19,20 +27,19 @@ var dlg=document.getElementById("dlg"),cb=document.getElementById("cb"),cn=docum
 var QS=new URLSearchParams(location.search);
 /* Si se llega desde un QR de club con ?codigo=XXX, el código se aplica solo en la página de pago de Stripe */
 var PROMO=(QS.get("codigo")||"").toUpperCase().replace(/[^A-Z0-9-]/g,"").slice(0,40);
-/* Entrega: "home" (envío a domicilio) o "club" (recogida gratis). Desde un QR de Interpàdel se propone la recogida. */
+/* Entrega elegida: "home", "office" o "club". Desde un QR de Interpàdel se propone la recogida en el club. */
 var deliv=CLUB&&/^qr-interpadel/.test(QS.get("ref")||"")?"club":"home";
-function payUrl(id){return deliv==="club"?CONFIG.clubUrl[id]:CONFIG.checkoutUrl[id]}
+function payUrl(id){return dlvOf(deliv).url[id]}
 function checkoutLink(id){var u=payUrl(id);return PROMO?u+(u.indexOf("?")>-1?"&":"?")+"prefilled_promo_code="+encodeURIComponent(PROMO):u}
 function planOf(id){return PLANS.filter(function(x){return x.id===id})[0]}
 function drawCart(){
   cn.hidden=!cart;
   if(!cart){cb.innerHTML='<p>Tu cesta está vacía. Elige un pack para empezar.</p><a class="btn b1" style="width:100%;margin-top:12px" href="#planes" data-close>Ver packs</a>';return}
-  var p=planOf(cart),club=deliv==="club",ship=club?0:CONFIG.shipping;
-  cb.innerHTML=(CLUB?'<fieldset class="dlv"><legend>¿Cómo quieres recibirlo?</legend>'+
-    '<label><input type="radio" name="dlv" value="home"'+(club?'':' checked')+'><span><strong>Envío a domicilio</strong> · +'+eur(CONFIG.shipping)+' al mes<br>Te llega a casa cada mes.</span></label>'+
-    '<label><input type="radio" name="dlv" value="club"'+(club?' checked':'')+'><span><strong>Recogida en tu club · gratis</strong><br>Solo para jugadores de '+CLUBS+'. Eliges el club al pagar.</span></label></fieldset>':'')+
-  '<div class="sum"><strong>'+p.name+'</strong><br>'+botes(p.cans)+' de pelotas + '+p.grips+' overgrips cada mes<br><strong>'+eur(p.price)+' / mes</strong>'+(club?', recogida en tu club sin gastos de envío':' + '+eur(CONFIG.shipping)+' de envío al mes (se añade en el checkout)')+'. IVA incluido.</div>'+
-  '<p>Total a pagar hoy: <strong>'+eur(p.price+ship)+'</strong>'+(club?' (sin gastos de envío)':' ('+eur(p.price)+' del pack + '+eur(CONFIG.shipping)+' de envío)')+'. La suscripción se renueva cada mes por el mismo importe hasta que la canceles.</p>'+
+  var p=planOf(cart),d=dlvOf(deliv),ship=d.ship;
+  cb.innerHTML=(DLV.length>1?'<fieldset class="dlv"><legend>¿Cómo quieres recibirlo?</legend>'+DLV.map(function(o){
+    return '<label><input type="radio" name="dlv" value="'+o.id+'"'+(o.id===d.id?' checked':'')+'><span><strong>'+o.title+'</strong> · '+(o.ship?'+'+eur(o.ship)+' al mes':'gratis')+'<br>'+o.desc+'</span></label>'}).join('')+'</fieldset>':'')+
+  '<div class="sum"><strong>'+p.name+'</strong><br>'+botes(p.cans)+' de pelotas + '+p.grips+' overgrips cada mes<br><strong>'+eur(p.price)+' / mes</strong>'+(ship?' + '+eur(ship)+' de '+d.what+' al mes (se añade en el checkout)':', '+d.what+' sin gastos de envío')+'. IVA incluido.</div>'+
+  '<p>Total a pagar hoy: <strong>'+eur(p.price+ship)+'</strong>'+(ship?' ('+eur(p.price)+' del pack + '+eur(ship)+' de envío)':' (sin gastos de envío)')+'. La suscripción se renueva cada mes por el mismo importe hasta que la canceles.</p>'+
   '<div class="row"><label><input type="checkbox" id="k1"><span>He leído y acepto las <a href="#/condiciones" data-close>condiciones de contratación</a>, el <a href="#/aviso-legal" data-close>aviso legal</a> y la <a href="#/privacidad" data-close>política de privacidad</a>.</span></label>'+
   '<label><input type="checkbox" id="k2"><span>Entiendo que es una suscripción con renovación automática mensual y que tengo derecho de desistimiento según la ley.</span></label></div>'+
   (PROMO?'<p class="sum" style="margin-top:12px">Código <strong>'+PROMO+'</strong>: se aplicará automáticamente al pagar.</p>':'')+

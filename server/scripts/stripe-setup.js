@@ -1,7 +1,7 @@
 // Crea en TU cuenta de Stripe todo lo que necesita PADEL DROP y conecta la web con ella:
-//   - 3 packs (START/PLAYER/PRO) + envío mensual, con sus precios (IVA incluido)
+//   - 3 packs (START/PLAYER/PRO) + envío a domicilio y a oficina, con sus precios (IVA incluido)
 //   - cupón y código de socio de Interpàdel (10 % el primer mes, solo clientes nuevos)
-//   - 3 enlaces de pago (pack + envío, pide nombre, teléfono y dirección en España)
+//   - 3 enlaces a domicilio (pack + envío 1,95 €) y 3 a oficina de Correos o CityPaq (pack + envío 1,50 €)
 //   - 3 enlaces de recogida gratis en club (solo el pack; el cliente elige Guissona, Tàrrega o Golmés)
 //   - portal de cliente (facturas, tarjeta, datos y cancelación)
 //   - webhook hacia tu web
@@ -25,7 +25,8 @@ const PACKS = [
   { slug: 'player', name: 'PADEL DROP PLAYER', cans: 2, grips: 3, cents: 1290, who: 'Pack Intermedio' },
   { slug: 'pro', name: 'PADEL DROP PRO', cans: 3, grips: 3, cents: 1590, who: 'Pack Premium' },
 ];
-const SHIPPING = { slug: 'envio', name: 'Envío mensual a domicilio', cents: 90 };
+const SHIPPING = { slug: 'envio', name: 'Envío mensual a domicilio', cents: 195 };
+const OFFICE = { slug: 'envio-oficina', name: 'Envío mensual a oficina de Correos o CityPaq', cents: 150 };
 const botes = (n) => (n === 1 ? '1 bote' : `${n} botes`);
 const COUPON_ID = 'INTERPADEL10';
 const PROMO_CODE = 'INTERPADEL-GUISSONA-TARREGA-GOLMES-3';
@@ -88,61 +89,71 @@ async function ensureCoupon(stripe) {
   }
 }
 
-/** Enlace de pago activo con metadata.pd_slug y los mismos precios; si no, se crea uno nuevo (y se desactiva el viejo). */
-async function ensurePaymentLink(stripe, pack, price, shippingPrice) {
-  const links = await stripe.paymentLinks.list({ active: true, limit: 100 });
-  for (const l of links.data.filter((x) => x.metadata?.pd_slug === pack.slug)) {
-    const items = await stripe.paymentLinks.listLineItems(l.id, { limit: 10 });
-    const ids = items.data.map((i) => i.price.id).sort().join();
-    if (ids === [price.id, shippingPrice.id].sort().join()) {
-      ok(`enlace ${pack.name}: ya existía`);
-      return l;
-    }
-    await stripe.paymentLinks.update(l.id, { active: false }); // precios antiguos: se desactiva
-  }
-  const link = await stripe.paymentLinks.create({
-    line_items: [{ price: price.id, quantity: 1 }, { price: shippingPrice.id, quantity: 1 }],
-    allow_promotion_codes: true,
-    billing_address_collection: 'required',
-    phone_number_collection: { enabled: true },
-    shipping_address_collection: { allowed_countries: ['ES'] },
-    custom_text: { submit: { message: `Suscripción mensual con renovación automática. El total incluye el pack y ${eur(SHIPPING.cents)} € de envío mensual. Puedes cancelarla antes de la siguiente renovación para evitar cobros futuros.` } },
-    subscription_data: { description: `${pack.name}: ${botes(pack.cans)} + ${pack.grips} overgrips al mes`, metadata: { plan: pack.slug } },
-    metadata: { plan: pack.slug, pd_slug: pack.slug },
-    after_completion: { type: 'hosted_confirmation', hosted_confirmation: { custom_message: '¡Gracias por suscribirte a PADEL DROP! Recibirás la confirmación por correo electrónico.' } },
-  });
-  ok(`enlace ${pack.name}: creado`);
-  return link;
-}
+/** Firma de los campos personalizados de un enlace (clave y opciones), para saber si hay que rehacerlo. */
+const fieldsKey = (fields = []) => fields.map((f) => `${f.key}:${f.type}:${(f.dropdown?.options || []).map((o) => o.value).join('|')}`).join();
 
-/** Enlace de recogida en club: solo el pack (sin envío ni dirección) y un desplegable obligatorio con el club. */
-async function ensurePickupLink(stripe, pack, price) {
-  const slug = `${pack.slug}-club`;
-  const clubs = Object.entries(PICKUP_CLUBS);
+/** Enlace de pago activo con metadata.pd_slug, los mismos precios y los mismos campos; si no, se crea uno nuevo (y se desactiva el viejo). */
+async function ensureLink(stripe, slug, label, prices, params) {
+  const want = prices.map((p) => p.id).sort().join();
   const links = await stripe.paymentLinks.list({ active: true, limit: 100 });
   for (const l of links.data.filter((x) => x.metadata?.pd_slug === slug)) {
     const items = await stripe.paymentLinks.listLineItems(l.id, { limit: 10 });
-    const sameClubs = (l.custom_fields?.[0]?.dropdown?.options || []).map((o) => o.value).join() === clubs.map(([v]) => v).join();
-    if (items.data.length === 1 && items.data[0].price.id === price.id && sameClubs) {
-      ok(`enlace ${pack.name} (recogida en club): ya existía`);
+    if (items.data.map((i) => i.price.id).sort().join() === want && fieldsKey(l.custom_fields) === fieldsKey(params.custom_fields)) {
+      ok(`enlace ${label}: ya existía`);
       return l;
     }
-    await stripe.paymentLinks.update(l.id, { active: false });
+    await stripe.paymentLinks.update(l.id, { active: false }); // precios o campos antiguos: se desactiva
   }
   const link = await stripe.paymentLinks.create({
-    line_items: [{ price: price.id, quantity: 1 }],
+    line_items: prices.map((p) => ({ price: p.id, quantity: 1 })),
     allow_promotion_codes: true,
-    billing_address_collection: 'auto',
     phone_number_collection: { enabled: true },
-    custom_fields: [{ key: 'club', label: { type: 'custom', custom: 'Club donde recogerás tu caja' }, type: 'dropdown', dropdown: { options: clubs.map(([value, label]) => ({ value, label })) } }],
-    custom_text: { submit: { message: 'Suscripción mensual con renovación automática. Recoges tu caja gratis cada mes en el club que elijas (sin gastos de envío). Puedes cancelarla antes de la siguiente renovación para evitar cobros futuros.' } },
-    subscription_data: { description: `${pack.name}: ${botes(pack.cans)} + ${pack.grips} overgrips al mes · recogida en club`, metadata: { plan: pack.slug, entrega: 'club' } },
-    metadata: { plan: pack.slug, pd_slug: slug, entrega: 'club' },
-    after_completion: { type: 'hosted_confirmation', hosted_confirmation: { custom_message: '¡Gracias por suscribirte a PADEL DROP! Te avisaremos cuando tu caja esté en el club.' } },
+    ...params,
+    metadata: { ...params.metadata, pd_slug: slug },
   });
-  ok(`enlace ${pack.name} (recogida en club): creado`);
+  ok(`enlace ${label}: creado`);
   return link;
 }
+
+const RENEWAL = 'Suscripción mensual con renovación automática. Puedes cancelarla antes de la siguiente renovación para evitar cobros futuros.';
+const subscription = (pack, entrega, suffix) => ({
+  description: `${pack.name}: ${botes(pack.cans)} + ${pack.grips} overgrips al mes · ${suffix}`, metadata: { plan: pack.slug, entrega },
+});
+const thanks = (message) => ({ type: 'hosted_confirmation', hosted_confirmation: { custom_message: message } });
+
+/** Envío a domicilio: pack + envío, con dirección en España. */
+const ensureHomeLink = (stripe, pack, price, shipPrice) => ensureLink(stripe, pack.slug, `${pack.name} (a domicilio)`, [price, shipPrice], {
+  billing_address_collection: 'required',
+  shipping_address_collection: { allowed_countries: ['ES'] },
+  custom_text: { submit: { message: `El total incluye el pack y ${eur(SHIPPING.cents)} € de envío a domicilio cada mes. ${RENEWAL}` } },
+  subscription_data: subscription(pack, 'domicilio', 'envío a domicilio'),
+  metadata: { plan: pack.slug, entrega: 'domicilio' },
+  after_completion: thanks('¡Gracias por suscribirte a PADEL DROP! Recibirás la confirmación por correo electrónico.'),
+});
+
+/** Envío a oficina de Correos o CityPaq: pack + envío reducido; la dirección sirve para elegir la oficina más cercana. */
+const ensureOfficeLink = (stripe, pack, price, officePrice) => ensureLink(stripe, `${pack.slug}-oficina`, `${pack.name} (oficina/CityPaq)`, [price, officePrice], {
+  billing_address_collection: 'required',
+  shipping_address_collection: { allowed_countries: ['ES'] },
+  custom_fields: [{ key: 'oficina', type: 'text', optional: true, label: { type: 'custom', custom: 'Oficina de Correos o CityPaq preferido' } }],
+  custom_text: {
+    shipping_address: { message: 'Recogerás tu caja en la oficina de Correos o el CityPaq (locker) más cercano a esta dirección, salvo que indiques otro abajo.' },
+    submit: { message: `El total incluye el pack y ${eur(OFFICE.cents)} € de envío a oficina de Correos o CityPaq cada mes. ${RENEWAL}` },
+  },
+  subscription_data: subscription(pack, 'oficina', 'recogida en oficina de Correos o CityPaq'),
+  metadata: { plan: pack.slug, entrega: 'oficina' },
+  after_completion: thanks('¡Gracias por suscribirte a PADEL DROP! Te avisaremos cuando tu caja esté lista para recoger.'),
+});
+
+/** Recogida en club: solo el pack (sin envío ni dirección) y un desplegable obligatorio con el club. */
+const ensurePickupLink = (stripe, pack, price) => ensureLink(stripe, `${pack.slug}-club`, `${pack.name} (recogida en club)`, [price], {
+  billing_address_collection: 'auto',
+  custom_fields: [{ key: 'club', label: { type: 'custom', custom: 'Club donde recogerás tu caja' }, type: 'dropdown', dropdown: { options: Object.entries(PICKUP_CLUBS).map(([value, label]) => ({ value, label })) } }],
+  custom_text: { submit: { message: `Recoges tu caja gratis cada mes en el club que elijas (sin gastos de envío). ${RENEWAL}` } },
+  subscription_data: subscription(pack, 'club', 'recogida en club'),
+  metadata: { plan: pack.slug, entrega: 'club' },
+  after_completion: thanks('¡Gracias por suscribirte a PADEL DROP! Te avisaremos cuando tu caja esté en el club.'),
+});
 
 async function ensurePortal(stripe, siteUrl) {
   const { data } = await stripe.billingPortal.configurations.list({ active: true, limit: 100 });
@@ -178,11 +189,13 @@ async function ensureWebhook(stripe, siteUrl) {
   return { endpoint, secret: endpoint.secret };
 }
 
-function updateSiteConfig(links, clubLinks, portalUrl) {
+function updateSiteConfig(links, officeLinks, clubLinks, portalUrl) {
   const file = path.join(ROOT, 'public', 'js', 'config.js');
   let js = readFileSync(file, 'utf8');
   const urls = (l) => `{start:${JSON.stringify(l.start.url)},player:${JSON.stringify(l.player.url)},pro:${JSON.stringify(l.pro.url)}}`;
-  js = js.replace(/checkoutUrl:\{[^}]*\}/, `checkoutUrl:${urls(links)}`).replace(/clubUrl:\{[^}]*\}/, `clubUrl:${urls(clubLinks)}`)
+  js = js.replace(/checkoutUrl:\{[^}]*\}/, `checkoutUrl:${urls(links)}`).replace(/officeUrl:\{[^}]*\}/, `officeUrl:${urls(officeLinks)}`)
+    .replace(/clubUrl:\{[^}]*\}/, `clubUrl:${urls(clubLinks)}`)
+    .replace(/shipping:[\d.]+,/, `shipping:${SHIPPING.cents / 100},`).replace(/officeShipping:[\d.]+/, `officeShipping:${OFFICE.cents / 100}`)
     .replace(/portalUrl:"[^"]*"/, `portalUrl:${JSON.stringify(portalUrl)}`);
   writeFileSync(file, js);
 }
@@ -214,7 +227,7 @@ async function main() {
   for (const p of PACKS) {
     const product = await ensureProduct(stripe, p.slug, {
       name: p.name,
-      description: `Suscripción mensual: ${botes(p.cans)} de pelotas de pádel + ${p.grips} overgrips. Envío aparte (${eur(SHIPPING.cents)} €/mes).`,
+      description: `Suscripción mensual: ${botes(p.cans)} de pelotas de pádel + ${p.grips} overgrips. Envío a domicilio ${eur(SHIPPING.cents)} €/mes, a oficina de Correos o CityPaq ${eur(OFFICE.cents)} €/mes o recogida gratis en club.`,
       metadata: { plan: p.slug, botes: String(p.cans), grips: String(p.grips) },
     });
     prices[p.slug] = await ensurePrice(stripe, product, p.slug, p.cents, `${p.slug.toUpperCase()} mensual ${eur(p.cents)}`);
@@ -223,13 +236,19 @@ async function main() {
     name: SHIPPING.name, description: 'Gastos de envío del pack mensual a domicilio (España peninsular).', metadata: { tipo: 'envio' },
   });
   const shipPrice = await ensurePrice(stripe, shipProduct, SHIPPING.slug, SHIPPING.cents, `Envío mensual ${eur(SHIPPING.cents)}`);
+  const officeProduct = await ensureProduct(stripe, OFFICE.slug, {
+    name: OFFICE.name, description: 'Gastos de envío del pack mensual a una oficina de Correos o CityPaq (España peninsular).', metadata: { tipo: 'envio' },
+  });
+  const officePrice = await ensurePrice(stripe, officeProduct, OFFICE.slug, OFFICE.cents, `Envío a oficina ${eur(OFFICE.cents)}`);
 
   step('Código de socio Interpàdel');
   await ensureCoupon(stripe);
 
   step('Enlaces de pago');
   const links = {};
-  for (const p of PACKS) links[p.slug] = await ensurePaymentLink(stripe, p, prices[p.slug], shipPrice);
+  for (const p of PACKS) links[p.slug] = await ensureHomeLink(stripe, p, prices[p.slug], shipPrice);
+  const officeLinks = {};
+  for (const p of PACKS) officeLinks[p.slug] = await ensureOfficeLink(stripe, p, prices[p.slug], officePrice);
   const clubLinks = {};
   for (const p of PACKS) clubLinks[p.slug] = await ensurePickupLink(stripe, p, prices[p.slug]);
 
@@ -240,7 +259,7 @@ async function main() {
   const { secret } = await ensureWebhook(stripe, siteUrl);
 
   step('Web: actualizando public/js/config.js con los nuevos enlaces');
-  updateSiteConfig(links, clubLinks, portal.login_page.url);
+  updateSiteConfig(links, officeLinks, clubLinks, portal.login_page.url);
   ok('hecho');
 
   const sqlLines = PACKS.map((p) => `UPDATE packs SET stripe_price_id = '${prices[p.slug].id}', cans = ${p.cans}, grips = ${p.grips}, price_cents = ${p.cents} WHERE slug = '${p.slug}';`);
@@ -249,7 +268,9 @@ async function main() {
     `Cuenta: ${account?.id || '?'} · generado ${new Date().toISOString().slice(0, 10)} con server/scripts/stripe-setup.js`, '',
     '| Pack | Price ID | Enlace de pago |', '|---|---|---|',
     ...PACKS.map((p) => `| ${p.who} / ${p.name} (${eur(p.cents)} €) | ${prices[p.slug].id} | ${links[p.slug].url} |`),
-    `| Envío mensual (${eur(SHIPPING.cents)} €) | ${shipPrice.id} | (segunda línea de cada enlace) |`,
+    `| Envío a domicilio (${eur(SHIPPING.cents)} €) | ${shipPrice.id} | (segunda línea de cada enlace a domicilio) |`,
+    `| Envío a oficina/CityPaq (${eur(OFFICE.cents)} €) | ${officePrice.id} | (segunda línea de cada enlace a oficina) |`,
+    ...PACKS.map((p) => `| ${p.name} · oficina de Correos o CityPaq | ${prices[p.slug].id} | ${officeLinks[p.slug].url} |`),
     ...PACKS.map((p) => `| ${p.name} · recogida en club (sin envío) | ${prices[p.slug].id} | ${clubLinks[p.slug].url} |`), '',
     `- Código de socio: \`${PROMO_CODE}\` (cupón ${COUPON_ID}, 10 % primer mes, solo clientes nuevos)`,
     `- Portal de cliente: ${portal.login_page.url}`,

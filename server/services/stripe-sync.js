@@ -12,7 +12,15 @@ export async function initOrderExtras() {
   await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS pickup_club text NOT NULL DEFAULT ''`;
   await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS refunded_cents integer NOT NULL DEFAULT 0`;
   await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS refunded_at timestamptz`;
+  // Entrega: home (a domicilio) | office (oficina de Correos o CityPaq) | club. pickup_office = oficina que pide el cliente.
+  await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery text NOT NULL DEFAULT 'home'`;
+  await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS pickup_office text NOT NULL DEFAULT ''`;
+  await sql`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS pickup_office text NOT NULL DEFAULT ''`;
+  await sql`UPDATE orders SET delivery = 'club' WHERE pickup_club <> '' AND delivery = 'home'`; // pedidos de antes de la columna
 }
+
+// metadata.entrega de los enlaces de pago (stripe-setup.js) -> valor guardado en orders.delivery
+const DELIVERY = { domicilio: 'home', oficina: 'office', club: 'club' };
 
 const eur = (c) => (c / 100).toFixed(2).replace('.', ',') + ' €';
 
@@ -149,7 +157,8 @@ async function createOrderFromInvoice(stripe, inv) {
 
   const userId = await upsertCustomer(stripe, idOf(inv.customer), inv.customer_shipping);
   const [u] = await sql`SELECT * FROM users WHERE id = ${userId}`;
-  const [local] = subId ? await sql`SELECT id, pickup_club FROM subscriptions WHERE stripe_subscription_id = ${subId}` : [];
+  const [local] = subId ? await sql`SELECT id, pickup_club, pickup_office FROM subscriptions WHERE stripe_subscription_id = ${subId}` : [];
+  const entrega = (inv.parent?.subscription_details?.metadata || inv.subscription_details?.metadata || {}).entrega;
   const ship = inv.customer_shipping?.address ? inv.customer_shipping : {};
   const addr = ship.address || {};
   const paidAt = toDate(inv.status_transitions?.paid_at) || new Date();
@@ -172,6 +181,8 @@ async function createOrderFromInvoice(stripe, inv) {
     ship_country: addr.country || u.country,
     // Si la factura llega antes que el checkout, el club aún no se sabe: lo completa syncCheckout.
     pickup_club: local?.pickup_club || '',
+    pickup_office: local?.pickup_office || '',
+    delivery: DELIVERY[entrega] || (local?.pickup_club ? 'club' : 'home'),
     paid_at: paidAt,
     stripe_invoice_id: inv.id,
   };
@@ -181,7 +192,7 @@ async function createOrderFromInvoice(stripe, inv) {
     const renewal = inv.billing_reason === 'subscription_cycle';
     await notifyAdmins({
       title: renewal ? '🔁 Pedido nuevo (renovación)' : '🎾 Pedido nuevo',
-      body: `${order.ship_name || u.email} · ${packName} · ${eur(order.amount_cents + order.shipping_cents)}${order.pickup_club ? ` · recoge en ${order.pickup_club}` : order.ship_city ? ` · ${order.ship_city}` : ''}`,
+      body: `${order.ship_name || u.email} · ${packName} · ${eur(order.amount_cents + order.shipping_cents)}${order.delivery === 'club' ? ` · recoge en ${order.pickup_club || 'su club'}` : `${order.delivery === 'office' ? ' · oficina/CityPaq' : ''}${order.ship_city ? ` · ${order.ship_city}` : ''}`}`,
       url: '/admin/#/pedidos', tag: `pd-pedido-${created.id}`,
     });
   }
@@ -205,6 +216,13 @@ async function syncCheckout(stripe, session) {
   if (club) {
     await sql`UPDATE subscriptions SET pickup_club = ${club}, updated_at = now() WHERE stripe_subscription_id = ${subId}`;
     await sql`UPDATE orders SET pickup_club = ${club}, updated_at = now()
+      WHERE subscription_id = (SELECT id FROM subscriptions WHERE stripe_subscription_id = ${subId}) AND status = 'pending'`;
+  }
+  // Enlaces a oficina de Correos o CityPaq: la oficina que escribe el cliente (opcional; si no, la más cercana a su dirección).
+  const office = String((session.custom_fields || []).find((f) => f.key === 'oficina')?.text?.value || '').trim().slice(0, 255);
+  if (office) {
+    await sql`UPDATE subscriptions SET pickup_office = ${office}, updated_at = now() WHERE stripe_subscription_id = ${subId}`;
+    await sql`UPDATE orders SET pickup_office = ${office}, updated_at = now()
       WHERE subscription_id = (SELECT id FROM subscriptions WHERE stripe_subscription_id = ${subId}) AND status = 'pending'`;
   }
 }

@@ -154,6 +154,32 @@ try {
   const avisoClub = pushes.find((p) => p.body.includes('Ferran') && p.title.includes('renovación'));
   check('el aviso al móvil dice dónde se recoge', !!avisoClub && avisoClub.body.includes('recoge en Interpàdel Golmés'), avisoClub?.body);
 
+  // ===== Escenario H: envío a oficina de Correos o CityPaq (1,50 €), con oficina escrita en el checkout =====
+  console.log('\nH) Envío a oficina de Correos o CityPaq');
+  customers[`cus_H${T}`] = { id: `cus_H${T}`, email: `helena.${T}@example.com`, name: 'Helena Oficina', shipping: null };
+  subs[`sub_H${T}`] = { id: `sub_H${T}`, customer: `cus_H${T}`, status: 'active', start_date: now, metadata: { plan: 'pro', entrega: 'oficina' },
+    items: { data: [{ price: { id: packs.pro.stripe_price_id, unit_amount: 1590 }, current_period_end: now + 30 * DAY }, { price: { id: 'price_envio_oficina', unit_amount: 150 }, current_period_end: now + 30 * DAY }] } };
+  await handleStripeEvent(fakeStripe, ev('invoice.paid', {
+    id: `in_H${T}`, customer: `cus_H${T}`, status_transitions: { paid_at: now },
+    customer_shipping: { name: 'Helena Oficina', address: { line1: 'Carrer Agoders 3', postal_code: '25300', city: 'Tàrrega', state: 'Lleida', country: 'ES' } },
+    parent: { subscription_details: { subscription: `sub_H${T}`, metadata: { plan: 'pro', entrega: 'oficina' } } },
+    lines: { data: [
+      { amount: 1590, pricing: { price_details: { price: packs.pro.stripe_price_id } } },
+      { amount: 150, pricing: { price_details: { price: 'price_envio_oficina' } } },
+    ] },
+  }));
+  await handleStripeEvent(fakeStripe, ev('checkout.session.completed', {
+    id: `cs_H${T}`, mode: 'subscription', customer: `cus_H${T}`, subscription: `sub_H${T}`,
+    customer_details: { email: `helena.${T}@example.com`, name: 'Helena Oficina', phone: '+34633444555' },
+    custom_fields: [{ key: 'oficina', type: 'text', text: { value: 'CityPaq Bonpreu Tàrrega' } }],
+  }));
+  const [oh] = await sql`SELECT * FROM orders WHERE stripe_invoice_id = ${`in_H${T}`}`;
+  check('pedido a oficina con 1,50 € de envío', oh?.delivery === 'office' && oh?.shipping_cents === 150, `${oh?.delivery} · ${oh?.shipping_cents}`);
+  check('guarda la oficina o CityPaq que pide el cliente', oh?.pickup_office === 'CityPaq Bonpreu Tàrrega', oh?.pickup_office);
+  check('y la dirección para saber la zona', oh?.ship_city === 'Tàrrega', oh?.ship_city);
+  const [of1d] = await sql`SELECT delivery FROM orders WHERE stripe_invoice_id = ${`in_F1${T}`}`;
+  check('los pedidos de recogida en club quedan como "club"', of1d?.delivery === 'club', of1d?.delivery);
+
   // ===== Escenario G: reembolso en Stripe (API nueva: el cargo no trae la factura) =====
   console.log('\nG) Reembolso');
   const { getDashboard } = await import('../services/metrics.js');
