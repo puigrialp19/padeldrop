@@ -16,6 +16,8 @@ Cuenta: acct_1USXZLRq7KJQz9G9 · generado 2026-10-29 con server/scripts/stripe-s
 | PADEL DROP PLAYER · recogida en club (sin envío) | price_1UUnkyRq7KJQz9G927JLEfJ0 | https://buy.stripe.com/5kQ14pcrS4lU3S37gGeZ207 |
 | PADEL DROP PRO · recogida en club (sin envío) | price_1UUnl0Rq7KJQz9G96YWEimIb | https://buy.stripe.com/9B6fZj1Ne4lU9cn8kKeZ208 |
 
+Cada 2 y 3 meses (mismo precio por caja): todos los enlaces están en public/js/links.js.
+
 - Código de socio: `INTERPADEL-GUISSONA-TARREGA-GOLMES-3` (cupón INTERPADEL10, 10 % primer mes, solo clientes nuevos)
 - Portal de cliente: https://billing.stripe.com/p/login/7sY28t0Ja8Ca88jgRgeZ200
 - Webhook: https://www.padeldrop.net/api/stripe/webhook (checkout.session.completed, customer.subscription.created, customer.subscription.updated, customer.subscription.deleted, invoice.paid, charge.refunded)
