@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS subscriptions (
 -- Recogida gratis en club (vacío = envío a domicilio). El servidor también la añade solo al arrancar.
 ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS pickup_club text NOT NULL DEFAULT '';
 ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS pickup_office text NOT NULL DEFAULT '';
+ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS interval_months integer NOT NULL DEFAULT 1;  -- meses entre cajas (1, 2 o 3)
 CREATE INDEX IF NOT EXISTS subscriptions_user_idx   ON subscriptions (user_id);
 CREATE INDEX IF NOT EXISTS subscriptions_status_idx ON subscriptions (status);
 

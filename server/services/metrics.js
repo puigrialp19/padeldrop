@@ -18,7 +18,7 @@ const monthStart = (month) => sql`(${`${month}-01`}::timestamp AT TIME ZONE ${TZ
 
 // Suscripciones activas en un instante (ni canceladas ni pausadas todavía), por pack.
 const activeAt = (t) => sql`
-  SELECT pack_id, count(*) AS subs, coalesce(sum(price_cents), 0) AS mrr
+  SELECT pack_id, count(*) AS subs, coalesce(sum(round(price_cents::numeric / greatest(interval_months, 1))), 0)::int AS mrr
   FROM subscriptions
   WHERE started_at <= ${t} AND (canceled_at IS NULL OR canceled_at > ${t}) AND (paused_at IS NULL OR paused_at > ${t})
   GROUP BY pack_id`;

@@ -180,6 +180,32 @@ try {
   const [of1d] = await sql`SELECT delivery FROM orders WHERE stripe_invoice_id = ${`in_F1${T}`}`;
   check('los pedidos de recogida en club quedan como "club"', of1d?.delivery === 'club', of1d?.delivery);
 
+  // ===== Escenario I: cada 2 meses (Price IDs que no están en packs; el envío llega como primera línea) =====
+  console.log('\nI) Suscripción cada 2 meses');
+  const { getDashboard: dash } = await import('../services/metrics.js');
+  const mrrBefore = (await dash(monthOf())).kpis.mrrCents;
+  customers[`cus_I${T}`] = { id: `cus_I${T}`, email: `ivan.${T}@example.com`, name: 'Ivan Bimestral', shipping: null };
+  subs[`sub_I${T}`] = { id: `sub_I${T}`, customer: `cus_I${T}`, status: 'active', start_date: now, metadata: { plan: 'player', entrega: 'domicilio', frecuencia: '2' },
+    items: { data: [
+      { price: { id: 'price_envio_2m', unit_amount: 195, recurring: { interval: 'month', interval_count: 2 } }, current_period_end: now + 60 * DAY },
+      { price: { id: 'price_player_2m', unit_amount: 1290, recurring: { interval: 'month', interval_count: 2 } }, current_period_end: now + 60 * DAY },
+    ] } };
+  await handleStripeEvent(fakeStripe, ev('invoice.paid', {
+    id: `in_I${T}`, customer: `cus_I${T}`, status_transitions: { paid_at: now },
+    customer_shipping: { name: 'Ivan Bimestral', address: { line1: 'Carrer Nou 1', postal_code: '25210', city: 'Guissona', country: 'ES' } },
+    parent: { subscription_details: { subscription: `sub_I${T}`, metadata: { plan: 'player', entrega: 'domicilio', frecuencia: '2' } } },
+    lines: { data: [
+      { amount: 195, pricing: { price_details: { price: 'price_envio_2m' } } },
+      { amount: 1290, pricing: { price_details: { price: 'price_player_2m' } } },
+    ] },
+  }));
+  const [oi] = await sql`SELECT o.amount_cents, o.shipping_cents, p.slug FROM orders o JOIN packs p ON p.id = o.pack_id WHERE o.stripe_invoice_id = ${`in_I${T}`}`;
+  check('pedido PLAYER 12,90 € + 1,95 € aunque el envío venga primero', oi?.slug === 'player' && oi?.amount_cents === 1290 && oi?.shipping_cents === 195, JSON.stringify(oi));
+  const [si] = await sql`SELECT interval_months, price_cents FROM subscriptions WHERE stripe_subscription_id = ${`sub_I${T}`}`;
+  check('suscripción guardada como cada 2 meses con la cuota del pack', si?.interval_months === 2 && si?.price_cents === 1290, JSON.stringify(si));
+  const mrrAfter = (await dash(monthOf())).kpis.mrrCents;
+  check('el MRR sube la mitad de la cuota (6,45 €)', mrrAfter - mrrBefore === 645, `${mrrBefore} -> ${mrrAfter}`);
+
   // ===== Escenario G: reembolso en Stripe (API nueva: el cargo no trae la factura) =====
   console.log('\nG) Reembolso');
   const { getDashboard } = await import('../services/metrics.js');

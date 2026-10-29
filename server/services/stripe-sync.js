@@ -16,6 +16,8 @@ export async function initOrderExtras() {
   await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery text NOT NULL DEFAULT 'home'`;
   await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS pickup_office text NOT NULL DEFAULT ''`;
   await sql`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS pickup_office text NOT NULL DEFAULT ''`;
+  // Meses entre cajas (1, 2 o 3): el MRR divide la cuota entre ellos.
+  await sql`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS interval_months integer NOT NULL DEFAULT 1`;
   await sql`UPDATE orders SET delivery = 'club' WHERE pickup_club <> '' AND delivery = 'home'`; // pedidos de antes de la columna
 }
 
@@ -28,6 +30,10 @@ const toDate = (unix) => (unix ? new Date(unix * 1000) : null);
 const idOf = (v) => (typeof v === 'string' ? v : v?.id) || null;
 // El precio de una línea está en sitios distintos según la versión de la API de Stripe.
 const priceIdOf = (l) => l?.price?.id || l?.pricing?.price_details?.price || l?.plan?.id || null;
+// Si el Price ID no está en la tabla packs (frecuencias de 2 o 3 meses, envíos nuevos), la línea del pack es la más cara:
+// cualquier pack cuesta más que cualquier envío.
+const amountOf = (l) => l?.amount ?? l?.price?.unit_amount ?? l?.plan?.amount ?? 0;
+const priciest = (list) => list.reduce((best, l) => (!best || amountOf(l) > amountOf(best) ? l : best), null);
 
 async function findPack(priceId, planSlug) {
   if (priceId) {
@@ -93,7 +99,7 @@ async function syncSubscription(stripe, sub) {
   }
   if (!pack) {
     pack = await findPack(null, sub.metadata?.plan);
-    item = (sub.items?.data || []).find((i) => priceIdOf(i) !== config.stripe.shippingPriceId) || sub.items?.data?.[0];
+    item = priciest(sub.items?.data || []);
   }
   if (!pack) {
     console.warn(`[stripe] Suscripción ${sub.id} sin pack reconocido: revisa stripe_price_id en la tabla packs.`);
@@ -108,6 +114,7 @@ async function syncSubscription(stripe, sub) {
     pack_id: pack.id,
     status,
     price_cents: item?.price?.unit_amount ?? pack.price_cents,
+    interval_months: item?.price?.recurring?.interval_count || item?.plan?.interval_count || 1,
     started_at: toDate(sub.start_date || sub.created),
     current_period_end: status === 'canceled' ? null : toDate(item?.current_period_end || sub.current_period_end),
     paused_at: status === 'paused' ? new Date() : null,
@@ -116,7 +123,7 @@ async function syncSubscription(stripe, sub) {
   };
   await sql`INSERT INTO subscriptions ${sql(row)}
     ON CONFLICT (stripe_subscription_id) DO UPDATE SET
-      pack_id = EXCLUDED.pack_id, status = EXCLUDED.status, price_cents = EXCLUDED.price_cents,
+      pack_id = EXCLUDED.pack_id, status = EXCLUDED.status, price_cents = EXCLUDED.price_cents, interval_months = EXCLUDED.interval_months,
       current_period_end = EXCLUDED.current_period_end,
       paused_at = CASE WHEN EXCLUDED.status = 'paused' THEN COALESCE(subscriptions.paused_at, EXCLUDED.paused_at) ELSE NULL END,
       canceled_at = EXCLUDED.canceled_at, updated_at = now()`;
@@ -145,7 +152,7 @@ async function createOrderFromInvoice(stripe, inv) {
   if (!pack) {
     const planSlug = inv.parent?.subscription_details?.metadata?.plan || inv.subscription_details?.metadata?.plan;
     pack = await findPack(null, planSlug);
-    packLine = lines.find((l) => priceIdOf(l) !== config.stripe.shippingPriceId);
+    packLine = priciest(lines);
   }
   if (!pack || !packLine) return; // no es una factura de un pack
   // Envío = la línea con el Price ID de envío configurado; si no coincide (p. ej. al cambiar de cuenta de Stripe), la otra línea.

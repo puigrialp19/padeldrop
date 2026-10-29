@@ -56,22 +56,23 @@ async function ensureProduct(stripe, slug, data) {
   return p;
 }
 
-/** Precio mensual en EUR con lookup_key fija: si ya existe con el mismo importe, se reutiliza. */
-async function ensurePrice(stripe, product, slug, cents, nickname) {
-  const lookup = `pd_${slug}_monthly`;
+/** Precio recurrente (cada `months` meses) en EUR con lookup_key fija: si ya existe con el mismo importe, se reutiliza. */
+async function ensurePrice(stripe, product, slug, cents, nickname, months = 1) {
+  const lookup = months === 1 ? `pd_${slug}_monthly` : `pd_${slug}_every${months}m`;
+  const per = months === 1 ? '€/mes' : `€ cada ${months} meses`;
   const { data } = await stripe.prices.list({ lookup_keys: [lookup], active: true, limit: 1 });
-  if (data[0] && data[0].unit_amount === cents && data[0].product === product.id) {
-    ok(`precio ${eur(cents)} €/mes: ya existía (${data[0].id})`);
+  if (data[0] && data[0].unit_amount === cents && data[0].product === product.id && (data[0].recurring?.interval_count || 1) === months) {
+    ok(`precio ${eur(cents)} ${per}: ya existía (${data[0].id})`);
     return data[0];
   }
   const price = await stripe.prices.create({
-    product: product.id, currency: 'eur', unit_amount: cents, recurring: { interval: 'month' },
-    tax_behavior: 'inclusive', nickname, lookup_key: lookup, transfer_lookup_key: true, metadata: { pd_slug: slug },
+    product: product.id, currency: 'eur', unit_amount: cents, recurring: { interval: 'month', interval_count: months },
+    tax_behavior: 'inclusive', nickname, lookup_key: lookup, transfer_lookup_key: true, metadata: { pd_slug: slug, meses: String(months) },
   });
-  await stripe.products.update(product.id, { default_price: price.id });
+  if (months === 1) await stripe.products.update(product.id, { default_price: price.id });
   // El precio anterior se archiva: las suscripciones que ya lo usan siguen igual, pero no se ofrece a nuevos clientes
   if (data[0] && data[0].id !== price.id) await stripe.prices.update(data[0].id, { active: false });
-  ok(`precio ${eur(cents)} €/mes: creado (${price.id})${data[0] ? ` · archivado el anterior de ${eur(data[0].unit_amount)} €` : ''}`);
+  ok(`precio ${eur(cents)} ${per}: creado (${price.id})${data[0] ? ` · archivado el anterior de ${eur(data[0].unit_amount)} €` : ''}`);
   return price;
 }
 
@@ -115,43 +116,47 @@ async function ensureLink(stripe, slug, label, prices, params) {
   return link;
 }
 
-const RENEWAL = 'Suscripción mensual con renovación automática. Puedes cancelarla antes de la siguiente renovación para evitar cobros futuros.';
-const subscription = (pack, entrega, suffix) => ({
-  description: `${pack.name}: ${botes(pack.cans)} + ${pack.grips} overgrips al mes · ${suffix}`, metadata: { plan: pack.slug, entrega },
+// Frecuencias que puede elegir el cliente (meses entre cajas). Mismo precio por caja en todas.
+const FREQS = [1, 2, 3];
+const each = (m) => (m === 1 ? 'cada mes' : `cada ${m} meses`);
+const sfx = (m) => (m === 1 ? '' : `-${m}m`);
+const RENEWAL = (m) => `Suscripción con renovación automática ${each(m)}. Puedes cancelarla antes de la siguiente renovación para evitar cobros futuros.`;
+const subscription = (pack, entrega, suffix, m) => ({
+  description: `${pack.name}: ${botes(pack.cans)} + ${pack.grips} overgrips ${each(m)} · ${suffix}`, metadata: { plan: pack.slug, entrega, frecuencia: String(m) },
 });
 const thanks = (message) => ({ type: 'hosted_confirmation', hosted_confirmation: { custom_message: message } });
 
 /** Envío a domicilio: pack + envío, con dirección en España. */
-const ensureHomeLink = (stripe, pack, price, shipPrice) => ensureLink(stripe, pack.slug, `${pack.name} (a domicilio)`, [price, shipPrice], {
+const ensureHomeLink = (stripe, pack, price, shipPrice, m) => ensureLink(stripe, `${pack.slug}${sfx(m)}`, `${pack.name} (a domicilio, ${each(m)})`, [price, shipPrice], {
   billing_address_collection: 'required',
   shipping_address_collection: { allowed_countries: ['ES'] },
-  custom_text: { submit: { message: `El total incluye el pack y ${eur(SHIPPING.cents)} € de envío a domicilio cada mes. ${RENEWAL}` } },
-  subscription_data: subscription(pack, 'domicilio', 'envío a domicilio'),
-  metadata: { plan: pack.slug, entrega: 'domicilio' },
+  custom_text: { submit: { message: `El total incluye el pack y ${eur(SHIPPING.cents)} € de envío a domicilio ${each(m)}. ${RENEWAL(m)}` } },
+  subscription_data: subscription(pack, 'domicilio', 'envío a domicilio', m),
+  metadata: { plan: pack.slug, entrega: 'domicilio', frecuencia: String(m) },
   after_completion: thanks('¡Gracias por suscribirte a PADEL DROP! Recibirás la confirmación por correo electrónico.'),
 });
 
 /** Envío a oficina de Correos o CityPaq: pack + envío reducido; la dirección sirve para elegir la oficina más cercana. */
-const ensureOfficeLink = (stripe, pack, price, officePrice) => ensureLink(stripe, `${pack.slug}-oficina`, `${pack.name} (oficina/CityPaq)`, [price, officePrice], {
+const ensureOfficeLink = (stripe, pack, price, officePrice, m) => ensureLink(stripe, `${pack.slug}-oficina${sfx(m)}`, `${pack.name} (oficina/CityPaq, ${each(m)})`, [price, officePrice], {
   billing_address_collection: 'required',
   shipping_address_collection: { allowed_countries: ['ES'] },
   custom_fields: [{ key: 'oficina', type: 'text', optional: true, label: { type: 'custom', custom: 'Oficina de Correos o CityPaq preferido' } }],
   custom_text: {
     shipping_address: { message: 'Recogerás tu caja en la oficina de Correos o el CityPaq (locker) más cercano a esta dirección, salvo que indiques otro abajo.' },
-    submit: { message: `El total incluye el pack y ${eur(OFFICE.cents)} € de envío a oficina de Correos o CityPaq cada mes. ${RENEWAL}` },
+    submit: { message: `El total incluye el pack y ${eur(OFFICE.cents)} € de envío a oficina de Correos o CityPaq ${each(m)}. ${RENEWAL(m)}` },
   },
-  subscription_data: subscription(pack, 'oficina', 'recogida en oficina de Correos o CityPaq'),
-  metadata: { plan: pack.slug, entrega: 'oficina' },
+  subscription_data: subscription(pack, 'oficina', 'recogida en oficina de Correos o CityPaq', m),
+  metadata: { plan: pack.slug, entrega: 'oficina', frecuencia: String(m) },
   after_completion: thanks('¡Gracias por suscribirte a PADEL DROP! Te avisaremos cuando tu caja esté lista para recoger.'),
 });
 
 /** Recogida en club: solo el pack (sin envío ni dirección) y un desplegable obligatorio con el club. */
-const ensurePickupLink = (stripe, pack, price) => ensureLink(stripe, `${pack.slug}-club`, `${pack.name} (recogida en club)`, [price], {
+const ensurePickupLink = (stripe, pack, price, m) => ensureLink(stripe, `${pack.slug}-club${sfx(m)}`, `${pack.name} (recogida en club, ${each(m)})`, [price], {
   billing_address_collection: 'auto',
   custom_fields: [{ key: 'club', label: { type: 'custom', custom: 'Club donde recogerás tu caja' }, type: 'dropdown', dropdown: { options: Object.entries(PICKUP_CLUBS).map(([value, label]) => ({ value, label })) } }],
-  custom_text: { submit: { message: `Recoges tu caja gratis cada mes en el club que elijas (sin gastos de envío). ${RENEWAL}` } },
-  subscription_data: subscription(pack, 'club', 'recogida en club'),
-  metadata: { plan: pack.slug, entrega: 'club' },
+  custom_text: { submit: { message: `Recoges tu caja gratis ${each(m)} en el club que elijas (sin gastos de envío). ${RENEWAL(m)}` } },
+  subscription_data: subscription(pack, 'club', 'recogida en club', m),
+  metadata: { plan: pack.slug, entrega: 'club', frecuencia: String(m) },
   after_completion: thanks('¡Gracias por suscribirte a PADEL DROP! Te avisaremos cuando tu caja esté en el club.'),
 });
 
@@ -189,13 +194,17 @@ async function ensureWebhook(stripe, siteUrl) {
   return { endpoint, secret: endpoint.secret };
 }
 
-function updateSiteConfig(links, officeLinks, clubLinks, portalUrl) {
+/** Escribe public/js/links.js (enlaces de pago por entrega y frecuencia) y los precios de envío en config.js. */
+function updateSiteConfig(links, portalUrl) {
+  const urls = {};
+  for (const [kind, byFreq] of Object.entries(links)) {
+    urls[kind] = Object.fromEntries(Object.entries(byFreq).map(([m, byPack]) => [m, Object.fromEntries(Object.entries(byPack).map(([p, l]) => [p, l.url]))]));
+  }
+  writeFileSync(path.join(ROOT, 'public', 'js', 'links.js'),
+    `/* Enlaces de pago de Stripe por entrega (home/office/club), frecuencia (meses) y pack. Lo genera server/scripts/stripe-setup.js: no editar a mano. */\nvar LINKS=${JSON.stringify(urls)};\n`);
   const file = path.join(ROOT, 'public', 'js', 'config.js');
   let js = readFileSync(file, 'utf8');
-  const urls = (l) => `{start:${JSON.stringify(l.start.url)},player:${JSON.stringify(l.player.url)},pro:${JSON.stringify(l.pro.url)}}`;
-  js = js.replace(/checkoutUrl:\{[^}]*\}/, `checkoutUrl:${urls(links)}`).replace(/officeUrl:\{[^}]*\}/, `officeUrl:${urls(officeLinks)}`)
-    .replace(/clubUrl:\{[^}]*\}/, `clubUrl:${urls(clubLinks)}`)
-    .replace(/shipping:[\d.]+,/, `shipping:${SHIPPING.cents / 100},`).replace(/officeShipping:[\d.]+/, `officeShipping:${OFFICE.cents / 100}`)
+  js = js.replace(/shipping:[\d.]+,/, `shipping:${SHIPPING.cents / 100},`).replace(/officeShipping:[\d.]+/, `officeShipping:${OFFICE.cents / 100}`)
     .replace(/portalUrl:"[^"]*"/, `portalUrl:${JSON.stringify(portalUrl)}`);
   writeFileSync(file, js);
 }
@@ -227,30 +236,39 @@ async function main() {
   for (const p of PACKS) {
     const product = await ensureProduct(stripe, p.slug, {
       name: p.name,
-      description: `Suscripción mensual: ${botes(p.cans)} de pelotas de pádel + ${p.grips} overgrips. Envío a domicilio ${eur(SHIPPING.cents)} €/mes, a oficina de Correos o CityPaq ${eur(OFFICE.cents)} €/mes o recogida gratis en club.`,
+      description: `Suscripción (cada 1, 2 o 3 meses): ${botes(p.cans)} de pelotas de pádel + ${p.grips} overgrips por caja. Envío a domicilio ${eur(SHIPPING.cents)} €, a oficina de Correos o CityPaq ${eur(OFFICE.cents)} € o recogida gratis en club.`,
       metadata: { plan: p.slug, botes: String(p.cans), grips: String(p.grips) },
     });
-    prices[p.slug] = await ensurePrice(stripe, product, p.slug, p.cents, `${p.slug.toUpperCase()} mensual ${eur(p.cents)}`);
+    prices[p.slug] = {};
+    for (const m of FREQS) prices[p.slug][m] = await ensurePrice(stripe, product, p.slug, p.cents, `${p.slug.toUpperCase()} ${each(m)} ${eur(p.cents)}`, m);
   }
   const shipProduct = await ensureProduct(stripe, SHIPPING.slug, {
     name: SHIPPING.name, description: 'Gastos de envío del pack mensual a domicilio (España peninsular).', metadata: { tipo: 'envio' },
   });
-  const shipPrice = await ensurePrice(stripe, shipProduct, SHIPPING.slug, SHIPPING.cents, `Envío mensual ${eur(SHIPPING.cents)}`);
+  const shipPrices = {};
+  for (const m of FREQS) shipPrices[m] = await ensurePrice(stripe, shipProduct, SHIPPING.slug, SHIPPING.cents, `Envío ${each(m)} ${eur(SHIPPING.cents)}`, m);
+  const shipPrice = shipPrices[1];
   const officeProduct = await ensureProduct(stripe, OFFICE.slug, {
     name: OFFICE.name, description: 'Gastos de envío del pack mensual a una oficina de Correos o CityPaq (España peninsular).', metadata: { tipo: 'envio' },
   });
-  const officePrice = await ensurePrice(stripe, officeProduct, OFFICE.slug, OFFICE.cents, `Envío a oficina ${eur(OFFICE.cents)}`);
+  const officePrices = {};
+  for (const m of FREQS) officePrices[m] = await ensurePrice(stripe, officeProduct, OFFICE.slug, OFFICE.cents, `Envío a oficina ${each(m)} ${eur(OFFICE.cents)}`, m);
+  const officePrice = officePrices[1];
 
   step('Código de socio Interpàdel');
   await ensureCoupon(stripe);
 
   step('Enlaces de pago');
-  const links = {};
-  for (const p of PACKS) links[p.slug] = await ensureHomeLink(stripe, p, prices[p.slug], shipPrice);
-  const officeLinks = {};
-  for (const p of PACKS) officeLinks[p.slug] = await ensureOfficeLink(stripe, p, prices[p.slug], officePrice);
-  const clubLinks = {};
-  for (const p of PACKS) clubLinks[p.slug] = await ensurePickupLink(stripe, p, prices[p.slug]);
+  const all = { home: {}, office: {}, club: {} };
+  for (const m of FREQS) {
+    all.home[m] = {}; all.office[m] = {}; all.club[m] = {};
+    for (const p of PACKS) {
+      all.home[m][p.slug] = await ensureHomeLink(stripe, p, prices[p.slug][m], shipPrices[m], m);
+      all.office[m][p.slug] = await ensureOfficeLink(stripe, p, prices[p.slug][m], officePrices[m], m);
+      all.club[m][p.slug] = await ensurePickupLink(stripe, p, prices[p.slug][m], m);
+    }
+  }
+  const links = all.home[1], officeLinks = all.office[1], clubLinks = all.club[1];
 
   step('Portal de cliente');
   const portal = await ensurePortal(stripe, siteUrl);
@@ -258,20 +276,21 @@ async function main() {
   step('Webhook');
   const { secret } = await ensureWebhook(stripe, siteUrl);
 
-  step('Web: actualizando public/js/config.js con los nuevos enlaces');
-  updateSiteConfig(links, officeLinks, clubLinks, portal.login_page.url);
+  step('Web: actualizando public/js/links.js y config.js con los nuevos enlaces');
+  updateSiteConfig(all, portal.login_page.url);
   ok('hecho');
 
-  const sqlLines = PACKS.map((p) => `UPDATE packs SET stripe_price_id = '${prices[p.slug].id}', cans = ${p.cans}, grips = ${p.grips}, price_cents = ${p.cents} WHERE slug = '${p.slug}';`);
+  const sqlLines = PACKS.map((p) => `UPDATE packs SET stripe_price_id = '${prices[p.slug][1].id}', cans = ${p.cans}, grips = ${p.grips}, price_cents = ${p.cents} WHERE slug = '${p.slug}';`);
   const doc = [
     `# Stripe de PADEL DROP (${live ? 'MODO REAL' : 'modo prueba'})`, '',
     `Cuenta: ${account?.id || '?'} · generado ${new Date().toISOString().slice(0, 10)} con server/scripts/stripe-setup.js`, '',
     '| Pack | Price ID | Enlace de pago |', '|---|---|---|',
-    ...PACKS.map((p) => `| ${p.who} / ${p.name} (${eur(p.cents)} €) | ${prices[p.slug].id} | ${links[p.slug].url} |`),
+    ...PACKS.map((p) => `| ${p.who} / ${p.name} (${eur(p.cents)} €) | ${prices[p.slug][1].id} | ${links[p.slug].url} |`),
     `| Envío a domicilio (${eur(SHIPPING.cents)} €) | ${shipPrice.id} | (segunda línea de cada enlace a domicilio) |`,
     `| Envío a oficina/CityPaq (${eur(OFFICE.cents)} €) | ${officePrice.id} | (segunda línea de cada enlace a oficina) |`,
-    ...PACKS.map((p) => `| ${p.name} · oficina de Correos o CityPaq | ${prices[p.slug].id} | ${officeLinks[p.slug].url} |`),
-    ...PACKS.map((p) => `| ${p.name} · recogida en club (sin envío) | ${prices[p.slug].id} | ${clubLinks[p.slug].url} |`), '',
+    ...PACKS.map((p) => `| ${p.name} · oficina de Correos o CityPaq | ${prices[p.slug][1].id} | ${officeLinks[p.slug].url} |`),
+    ...PACKS.map((p) => `| ${p.name} · recogida en club (sin envío) | ${prices[p.slug][1].id} | ${clubLinks[p.slug].url} |`), '',
+    'Cada 2 y 3 meses (mismo precio por caja): todos los enlaces están en public/js/links.js.', '',
     `- Código de socio: \`${PROMO_CODE}\` (cupón ${COUPON_ID}, 10 % primer mes, solo clientes nuevos)`,
     `- Portal de cliente: ${portal.login_page.url}`,
     `- Webhook: ${siteUrl}/api/stripe/webhook (${EVENTS.join(', ')})`, '',

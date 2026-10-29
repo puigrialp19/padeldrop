@@ -32,7 +32,7 @@ function orderCard(o) {
       </div>`}
       <div class="rounded-xl bg-soft p-3 text-sm">
         <p class="label mb-0.5">Preparar</p>
-        <p class="font-semibold">${botes(o.cans)} + ${o.grips} grips</p>
+        <p class="font-semibold">${botes(o.cans)} + ${o.grips} grips${o.interval_months > 1 ? ` <span class="ml-1 rounded-full bg-card px-2 py-0.5 text-xs font-semibold text-muted">cada ${o.interval_months} meses</span>` : ''}</p>
         <p class="mt-1 text-xs text-muted">PD-${o.id} · cobrado ${eur(o.amount_cents + o.shipping_cents)} el ${date(o.paid_at)}${o.shipped_at ? ` · enviado ${date(o.shipped_at)}` : ''}${o.delivered_at ? ` · entregado ${date(o.delivered_at)}` : ''}${o.refunded_at ? ` · reembolsado ${date(o.refunded_at)}` : ''}</p>
         <button type="button" class="mt-1 text-xs font-semibold text-muted underline hover:text-ink" data-refund="${o.refunded_cents ? 'false' : 'true'}">${o.refunded_cents ? 'Deshacer reembolso' : 'Marcar como reembolsado'}</button>
       </div>
