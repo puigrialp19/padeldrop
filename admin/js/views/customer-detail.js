@@ -72,7 +72,7 @@ export async function renderCustomerDetail(view, { args: [id], isStale }) {
             <tr class="border-b border-line last:border-0">
               <td class="td whitespace-nowrap">${esc(monthName(o.period, 'long', true))}</td>
               <td class="td whitespace-nowrap">${esc(o.pack_name)}</td>
-              <td class="td text-right num whitespace-nowrap">${eur(o.amount_cents + o.shipping_cents)}</td>
+              <td class="td text-right num whitespace-nowrap">${eur(o.amount_cents + o.shipping_cents)}${o.refunded_cents ? `<br><span class="text-xs font-semibold text-critical">reembolsado ${eur(o.refunded_cents)}</span>` : ''}</td>
               <td class="td">${statusBadge(ORDER_STATUS, o.status, true)}</td>
               <td class="td num">${o.tracking_number ? `${esc(o.tracking_number)}<div class="text-xs text-muted">${esc(o.carrier)}</div>` : '<span class="text-muted">—</span>'}</td>
             </tr>`).join('')}

@@ -23,6 +23,12 @@ const activeAt = (t) => sql`
   WHERE started_at <= ${t} AND (canceled_at IS NULL OR canceled_at > ${t}) AND (paused_at IS NULL OR paused_at > ${t})
   GROUP BY pack_id`;
 
+// Ingresos netos de pedidos: lo reembolsado se descuenta primero del pack y luego del envío.
+// Un pedido reembolsado entero no cuenta como pedido.
+const NET = sql`count(*) FILTER (WHERE refunded_cents < amount_cents + shipping_cents OR refunded_cents = 0) AS orders,
+  coalesce(sum(amount_cents - least(refunded_cents, amount_cents)), 0) AS pack_cents,
+  coalesce(sum(shipping_cents - least(greatest(refunded_cents - amount_cents, 0), shipping_cents)), 0) AS shipping_cents`;
+
 const sumUp = (rows) => ({
   byPack: Object.fromEntries(rows.map((r) => [r.pack_id, r])),
   subs: rows.reduce((a, r) => a + r.subs, 0),
@@ -45,13 +51,13 @@ export async function getDashboard(month, monthsBack = 12) {
     sql`SELECT id, slug, name, commercial_name, cans, grips, price_cents FROM packs ORDER BY sort_order`,
     activeAt(monthStart(month)),
     activeAt(end),
-    sql`SELECT period, pack_id, count(*) AS orders, sum(amount_cents) AS pack_cents, sum(shipping_cents) AS shipping_cents
+    sql`SELECT period, pack_id, ${NET}
         FROM orders WHERE period BETWEEN ${first} AND ${month} GROUP BY period, pack_id`,
     sql`SELECT to_char(started_at AT TIME ZONE ${TZ}, 'YYYY-MM') AS period, pack_id, count(*) AS n
         FROM subscriptions WHERE started_at >= ${from} AND started_at < ${to} GROUP BY 1, 2`,
     sql`SELECT to_char(canceled_at AT TIME ZONE ${TZ}, 'YYYY-MM') AS period, pack_id, count(*) AS n
         FROM subscriptions WHERE canceled_at >= ${from} AND canceled_at < ${to} GROUP BY 1, 2`,
-    sql`SELECT pack_id, count(*) AS orders, sum(amount_cents) AS pack_cents, sum(shipping_cents) AS shipping_cents FROM orders GROUP BY pack_id`,
+    sql`SELECT pack_id, ${NET} FROM orders GROUP BY pack_id`,
     sql`SELECT pack_id, status, count(*) AS n FROM subscriptions GROUP BY pack_id, status`,
     // Suscriptores activos al empezar cada mes de la serie (para el churn mensual)
     sql`SELECT to_char(m, 'YYYY-MM') AS period, (

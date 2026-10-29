@@ -6,10 +6,12 @@ import { monthOf } from './metrics.js';
 import { notifyAdmins } from './push.js';
 import { PICKUP_CLUBS } from './clubs.js';
 
-/** Recogida en club: columnas añadidas después del esquema inicial (se crean solas al arrancar). */
-export async function initPickup() {
+/** Columnas añadidas después del esquema inicial (recogida en club y reembolsos): se crean solas al arrancar. */
+export async function initOrderExtras() {
   await sql`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS pickup_club text NOT NULL DEFAULT ''`;
   await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS pickup_club text NOT NULL DEFAULT ''`;
+  await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS refunded_cents integer NOT NULL DEFAULT 0`;
+  await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS refunded_at timestamptz`;
 }
 
 const eur = (c) => (c / 100).toFixed(2).replace('.', ',') + ' €';
@@ -207,12 +209,36 @@ async function syncCheckout(stripe, session) {
   }
 }
 
+/**
+ * Reembolso (total o parcial) hecho en Stripe: se guarda en el pedido para que no cuente como ingreso.
+ * Con la API nueva el cargo ya no trae la factura; entonces se busca el pedido del mismo cliente con el mismo
+ * importe cobrado más cerca de la fecha del cargo (±3 días).
+ */
+async function syncRefund(stripe, charge) {
+  const refunded = charge.amount_refunded || 0;
+  let [order] = charge.invoice ? await sql`SELECT id FROM orders WHERE stripe_invoice_id = ${idOf(charge.invoice)}` : [];
+  if (!order && charge.customer) {
+    const at = toDate(charge.created);
+    [order] = await sql`SELECT o.id FROM orders o JOIN users u ON u.id = o.user_id
+      WHERE u.stripe_customer_id = ${idOf(charge.customer)} AND o.amount_cents + o.shipping_cents = ${charge.amount}
+        AND o.paid_at BETWEEN ${at}::timestamptz - interval '3 days' AND ${at}::timestamptz + interval '3 days'
+      ORDER BY abs(extract(epoch FROM o.paid_at - ${at}::timestamptz)) LIMIT 1`;
+  }
+  if (!order) {
+    console.warn(`[stripe] Reembolso del cargo ${charge.id} sin pedido asociado.`);
+    return;
+  }
+  await sql`UPDATE orders SET refunded_cents = ${refunded}, refunded_at = CASE WHEN ${refunded} > 0 THEN COALESCE(refunded_at, now()) END,
+    updated_at = now() WHERE id = ${order.id}`;
+}
+
 export const HANDLED_EVENTS = [
   'checkout.session.completed',
   'customer.subscription.created',
   'customer.subscription.updated',
   'customer.subscription.deleted',
   'invoice.paid',
+  'charge.refunded',
 ];
 
 export async function handleStripeEvent(stripe, event) {
@@ -226,6 +252,8 @@ export async function handleStripeEvent(stripe, event) {
       return syncSubscription(stripe, obj);
     case 'invoice.paid':
       return createOrderFromInvoice(stripe, obj);
+    case 'charge.refunded':
+      return syncRefund(stripe, obj);
     default:
       return undefined; // otros eventos: se ignoran
   }

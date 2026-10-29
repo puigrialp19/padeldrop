@@ -6,8 +6,8 @@ process.env.STRIPE_WEBHOOK_SECRET ||= 'whsec_simulado';
 
 const { config } = await import('../config.js');
 const { sql, closeDb } = await import('../db/db.js');
-const { handleStripeEvent, initPickup } = await import('../services/stripe-sync.js');
-await initPickup();
+const { handleStripeEvent, initOrderExtras } = await import('../services/stripe-sync.js');
+await initOrderExtras();
 const { initPush, __setSender } = await import('../services/push.js');
 // Avisos al móvil: se capturan en vez de enviarse de verdad
 const pushes = [];
@@ -153,6 +153,18 @@ try {
   check('la renovación del mes siguiente también va al club', of2?.pickup_club === 'Interpàdel Golmés', of2?.pickup_club);
   const avisoClub = pushes.find((p) => p.body.includes('Ferran') && p.title.includes('renovación'));
   check('el aviso al móvil dice dónde se recoge', !!avisoClub && avisoClub.body.includes('recoge en Interpàdel Golmés'), avisoClub?.body);
+
+  // ===== Escenario G: reembolso en Stripe (API nueva: el cargo no trae la factura) =====
+  console.log('\nG) Reembolso');
+  const { getDashboard } = await import('../services/metrics.js');
+  const before = (await getDashboard(monthOf())).kpis;
+  await handleStripeEvent(fakeStripe, ev('charge.refunded', { id: `ch_F${T}`, customer: `cus_F${T}`, amount: 890, amount_refunded: 890, created: now }));
+  await handleStripeEvent(fakeStripe, ev('charge.refunded', { id: `ch_F${T}`, customer: `cus_F${T}`, amount: 890, amount_refunded: 890, created: now }));
+  const refundedRows = await sql`SELECT stripe_invoice_id, refunded_cents FROM orders WHERE refunded_cents > 0 AND stripe_invoice_id LIKE ${`in_F%${T}`}`;
+  check('se marca un solo pedido como reembolsado (8,90 €)', refundedRows.length === 1 && refundedRows[0].refunded_cents === 890, JSON.stringify(refundedRows));
+  const after = (await getDashboard(monthOf())).kpis;
+  check('los ingresos del mes bajan 8,90 € aunque el evento llegue dos veces', before.monthSalesCents - after.monthSalesCents === 890, `${before.monthSalesCents} -> ${after.monthSalesCents}`);
+  check('el pedido reembolsado deja de contar como pedido', before.totalOrders - after.totalOrders === 1, `${before.totalOrders} -> ${after.totalOrders}`);
 
   // ===== Escenario E: firma del webhook por HTTP =====
   console.log('\nE) Firma del webhook');

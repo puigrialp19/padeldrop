@@ -56,7 +56,7 @@ customersRouter.get('/:id', async (req, res, next) => {
       sql`SELECT s.id, s.status, s.price_cents, s.started_at, s.current_period_end, s.paused_at, s.canceled_at, s.stripe_subscription_id,
             p.slug AS pack_slug, p.name AS pack_name, p.commercial_name, p.cans, p.grips
           FROM subscriptions s JOIN packs p ON p.id = s.pack_id WHERE s.user_id = ${id} ORDER BY s.started_at DESC`,
-      sql`SELECT o.id, o.period, o.amount_cents, o.shipping_cents, o.status, o.carrier, o.tracking_number, o.paid_at, o.shipped_at, o.delivered_at,
+      sql`SELECT o.id, o.period, o.amount_cents, o.shipping_cents, o.refunded_cents, o.status, o.carrier, o.tracking_number, o.paid_at, o.shipped_at, o.delivered_at,
             p.name AS pack_name, p.slug AS pack_slug
           FROM orders o JOIN packs p ON p.id = o.pack_id WHERE o.user_id = ${id} ORDER BY o.paid_at DESC`,
     ]);

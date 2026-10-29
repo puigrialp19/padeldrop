@@ -1,6 +1,6 @@
 import { api } from '../api.js';
 import { setQuery } from '../app.js';
-import { esc, int, botes, date, monthName, currentMonth, packBadge, statusBadge, ORDER_STATUS, orderAddress, pageHeader, monthInput, loading, errorBox, toast, debounce } from '../ui.js';
+import { esc, int, eur, botes, date, monthName, currentMonth, packBadge, statusBadge, ORDER_STATUS, orderAddress, pageHeader, monthInput, loading, errorBox, toast, debounce } from '../ui.js';
 
 const TABS = [['', 'Todos'], ['pending', 'Pendientes'], ['shipped', 'Enviados'], ['delivered', 'Entregados']];
 const PACK_OPTIONS = [['', 'Todos los packs'], ['start', 'Pack Básico'], ['player', 'Pack Intermedio'], ['pro', 'Pack Premium']];
@@ -18,7 +18,7 @@ function orderCard(o) {
         <a href="#/clientes/${o.user_id}" class="font-semibold hover:underline">${esc(o.ship_name)}</a>
         <p class="truncate text-sm text-muted">${esc(o.email)}${o.ship_phone ? ` · <a class="underline" href="tel:${esc(o.ship_phone.replace(/\s/g, ''))}">${esc(o.ship_phone)}</a>` : ''}</p>
       </div>
-      <div class="flex flex-wrap items-center gap-2"><span data-badge>${statusBadge(ORDER_STATUS, o.status, true)}</span>${packBadge(o.pack_slug, o.pack_name)}</div>
+      <div class="flex flex-wrap items-center gap-2">${o.refunded_cents ? `<span class="rounded-full bg-critical/10 px-2.5 py-1 text-xs font-semibold text-critical">Reembolsado ${eur(o.refunded_cents)}</span>` : ''}<span data-badge>${statusBadge(ORDER_STATUS, o.status, true)}</span>${packBadge(o.pack_slug, o.pack_name)}</div>
     </div>
     <div class="mt-3 grid gap-3 sm:grid-cols-2">
       ${o.pickup_club ? `<div class="rounded-xl border-2 border-lime bg-soft p-3 text-sm">
@@ -32,7 +32,8 @@ function orderCard(o) {
       <div class="rounded-xl bg-soft p-3 text-sm">
         <p class="label mb-0.5">Preparar</p>
         <p class="font-semibold">${botes(o.cans)} + ${o.grips} grips</p>
-        <p class="mt-1 text-xs text-muted">PD-${o.id} · cobrado ${date(o.paid_at)}${o.shipped_at ? ` · enviado ${date(o.shipped_at)}` : ''}${o.delivered_at ? ` · entregado ${date(o.delivered_at)}` : ''}</p>
+        <p class="mt-1 text-xs text-muted">PD-${o.id} · cobrado ${eur(o.amount_cents + o.shipping_cents)} el ${date(o.paid_at)}${o.shipped_at ? ` · enviado ${date(o.shipped_at)}` : ''}${o.delivered_at ? ` · entregado ${date(o.delivered_at)}` : ''}${o.refunded_at ? ` · reembolsado ${date(o.refunded_at)}` : ''}</p>
+        <button type="button" class="mt-1 text-xs font-semibold text-muted underline hover:text-ink" data-refund="${o.refunded_cents ? 'false' : 'true'}">${o.refunded_cents ? 'Deshacer reembolso' : 'Marcar como reembolsado'}</button>
       </div>
     </div>
     <form class="mt-3 grid gap-2 sm:grid-cols-[1.2fr_1fr_1.3fr_auto]" data-form>
@@ -113,6 +114,23 @@ export async function renderOrders(view, { params, isStale }) {
     if (e.target.dataset.field !== 'tracking_number' || !e.target.value.trim()) return;
     const sel = e.target.form.querySelector('[data-field="status"]');
     if (sel.value === 'pending') sel.value = 'shipped';
+  });
+
+  // Los reembolsos hechos en Stripe se marcan solos; este botón es para los hechos antes o fuera de Stripe.
+  list.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-refund]');
+    if (!b) return;
+    const refunded = b.dataset.refund === 'true';
+    if (refunded && !confirm('¿Marcar este pedido como reembolsado? Dejará de contar en los ingresos.')) return;
+    b.disabled = true;
+    try {
+      await api.updateOrder(Number(b.closest('[data-id]').dataset.id), { refunded });
+      toast(refunded ? 'Pedido marcado como reembolsado: ya no cuenta en los ingresos.' : 'Reembolso deshecho.');
+      load();
+    } catch (err) {
+      toast(err.message, true);
+      b.disabled = false;
+    }
   });
 
   list.addEventListener('submit', async (e) => {

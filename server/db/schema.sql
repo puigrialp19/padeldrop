@@ -91,6 +91,8 @@ CREATE TABLE IF NOT EXISTS orders (
   updated_at         timestamptz NOT NULL DEFAULT now()
 );
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS pickup_club text NOT NULL DEFAULT '';  -- club de recogida (vacío = a domicilio)
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS refunded_cents integer NOT NULL DEFAULT 0;  -- reembolsado en Stripe (no cuenta como ingreso)
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS refunded_at timestamptz;
 CREATE INDEX IF NOT EXISTS orders_period_idx ON orders (period);
 CREATE INDEX IF NOT EXISTS orders_status_idx ON orders (status);
 CREATE INDEX IF NOT EXISTS orders_user_idx   ON orders (user_id);

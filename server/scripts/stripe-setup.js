@@ -29,7 +29,7 @@ const SHIPPING = { slug: 'envio', name: 'Envío mensual a domicilio', cents: 90 
 const botes = (n) => (n === 1 ? '1 bote' : `${n} botes`);
 const COUPON_ID = 'INTERPADEL10';
 const PROMO_CODE = 'INTERPADEL-GUISSONA-TARREGA-GOLMES-3';
-const EVENTS = ['checkout.session.completed', 'customer.subscription.created', 'customer.subscription.updated', 'customer.subscription.deleted', 'invoice.paid'];
+const EVENTS = ['checkout.session.completed', 'customer.subscription.created', 'customer.subscription.updated', 'customer.subscription.deleted', 'invoice.paid', 'charge.refunded'];
 
 const eur = (c) => (c / 100).toFixed(2).replace('.', ',');
 const step = (t) => console.log(`\n  · ${t}`);

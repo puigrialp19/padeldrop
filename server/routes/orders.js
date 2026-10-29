@@ -24,7 +24,7 @@ function filters(query) {
 
 const select = () => sql`
   SELECT o.id, o.user_id, o.period, o.amount_cents, o.shipping_cents, o.status, o.carrier, o.tracking_number,
-         o.ship_name, o.ship_phone, o.ship_street, o.ship_number, o.ship_floor_door, o.ship_postal_code, o.ship_city, o.ship_province, o.ship_country, o.pickup_club,
+         o.ship_name, o.ship_phone, o.ship_street, o.ship_number, o.ship_floor_door, o.ship_postal_code, o.ship_city, o.ship_province, o.ship_country, o.pickup_club, o.refunded_cents, o.refunded_at,
          o.paid_at, o.shipped_at, o.delivered_at, u.email, p.slug AS pack_slug, p.name AS pack_name, p.cans, p.grips
   FROM orders o JOIN users u ON u.id = o.user_id JOIN packs p ON p.id = o.pack_id`;
 
@@ -49,6 +49,15 @@ ordersRouter.patch('/:id', async (req, res, next) => {
     const id = Number.parseInt(req.params.id, 10);
     const [order] = Number.isSafeInteger(id) ? await sql`SELECT * FROM orders WHERE id = ${id}` : [];
     if (!order) return res.status(404).json({ error: 'Pedido no encontrado.' });
+
+    // Marcar a mano como reembolsado (entero) o deshacerlo: deja de contar (o vuelve a contar) como ingreso.
+    if (typeof req.body?.refunded === 'boolean') {
+      const cents = req.body.refunded ? order.amount_cents + order.shipping_cents : 0;
+      await sql`UPDATE orders SET refunded_cents = ${cents}, refunded_at = ${req.body.refunded ? new Date() : null}, updated_at = now() WHERE id = ${id}`;
+      await audit(req, req.body.refunded ? 'refund_order' : 'unrefund_order', 'order', id, { cents });
+      const [updated] = await sql`${select()} WHERE o.id = ${id}`;
+      return res.json({ order: updated });
+    }
 
     const status = req.body?.status ?? order.status;
     if (!STATUSES.includes(status)) return res.status(400).json({ error: 'Estado no válido.' });
