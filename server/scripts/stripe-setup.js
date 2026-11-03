@@ -81,7 +81,7 @@ async function ensureCoupon(stripe, packProductIds) {
   let coupon = await stripe.coupons.retrieve(COUPON_ID).catch(() => null);
   if (!coupon) {
     coupon = await stripe.coupons.create({
-      id: COUPON_ID, percent_off: 10, duration: 'once', name: 'Socios Interpàdel: 10 % en el pack del primer cobro',
+      id: COUPON_ID, percent_off: 10, duration: 'once', name: 'Interpàdel: 10 % pack primer cobro',
       applies_to: { products: packProductIds },
     });
     ok(`cupón ${COUPON_ID}: creado (solo descuenta el pack)`);
@@ -269,7 +269,7 @@ async function main() {
 
   step('Código de socio Interpàdel');
   // Si la clave no tiene permiso de cupones, sigue con los enlaces y avisa (el cupón se puede crear después)
-  await ensureCoupon(stripe, packProducts).catch((e) => ok(`AVISO: no se ha podido preparar el cupón (${e.message}). Dale a la clave permiso de escritura en «Coupons» y «Promotion codes» y vuelve a ejecutar el script.`));
+  await ensureCoupon(stripe, packProducts).catch((e) => ok(`AVISO: no se ha podido preparar el cupón (${e.message}). Si es un problema de permisos, dale a la clave permiso de escritura en «Coupons» y «Promotion codes»; después vuelve a ejecutar el script.`));
 
   step('Enlaces de pago');
   const all = { home: {}, office: {}, club: {} };
