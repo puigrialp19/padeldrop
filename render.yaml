@@ -20,7 +20,7 @@ services:
       - key: SESSION_HOURS
         value: "8"
       - key: STRIPE_SHIPPING_PRICE_ID
-        value: price_1UW0D4Rq7KJQz9G9cDK39Trz
+        value: price_1UXe0TRq7KJQz9G94xaouHkH
       # Secretas: se rellenan en Render al crear el servicio
       - key: DATABASE_URL
         sync: false

@@ -1,7 +1,7 @@
 // Crea en TU cuenta de Stripe todo lo que necesita PADEL DROP y conecta la web con ella:
 //   - 3 packs (START/PLAYER/PRO) + envío a domicilio y a oficina, con sus precios (IVA incluido)
-//   - cupón y código de socio de Interpàdel (10 % el primer mes, solo clientes nuevos)
-//   - 3 enlaces a domicilio (pack + envío 1,95 €) y 3 a oficina de Correos o CityPaq (pack + envío 1,50 €)
+//   - cupón y código de socio de Interpàdel (10 % sobre el pack en el primer cobro, solo clientes nuevos; no descuenta el envío)
+//   - 3 enlaces a domicilio (pack + envío 2,75 €) y 3 a oficina de Correos o CityPaq (pack + envío 2,05 €)
 //   - 3 enlaces de recogida gratis en club (solo el pack; el cliente elige Guissona, Tàrrega o Golmés)
 //   - portal de cliente (facturas, tarjeta, datos y cancelación)
 //   - webhook hacia tu web
@@ -21,14 +21,14 @@ import { PICKUP_CLUBS } from '../services/clubs.js';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 const PACKS = [
-  { slug: 'start', name: 'PADEL DROP START', cans: 1, grips: 2, cents: 890, who: 'Pack Básico' },
-  { slug: 'player', name: 'PADEL DROP PLAYER', cans: 2, grips: 3, cents: 1290, who: 'Pack Intermedio' },
-  { slug: 'pro', name: 'PADEL DROP PRO', cans: 3, grips: 3, cents: 1590, who: 'Pack Premium' },
+  { slug: 'start', name: 'PADEL DROP START', cans: 1, grips: 2, cents: 1090, who: 'Pack Básico' },
+  { slug: 'player', name: 'PADEL DROP PLAYER', cans: 2, grips: 3, cents: 1590, who: 'Pack Intermedio' },
+  { slug: 'pro', name: 'PADEL DROP PRO', cans: 3, grips: 3, cents: 1990, who: 'Pack Premium' },
 ];
-const SHIPPING = { slug: 'envio', name: 'Envío mensual a domicilio', cents: 195 };
-const OFFICE = { slug: 'envio-oficina', name: 'Envío mensual a oficina de Correos o CityPaq', cents: 150 };
+const SHIPPING = { slug: 'envio', name: 'Envío mensual a domicilio', cents: 275 };
+const OFFICE = { slug: 'envio-oficina', name: 'Envío mensual a oficina de Correos o CityPaq', cents: 205 };
 const botes = (n) => (n === 1 ? '1 bote' : `${n} botes`);
-const COUPON_ID = 'INTERPADEL10';
+const COUPON_ID = 'INTERPADEL10-PACK';
 const PROMO_CODE = 'INTERPADEL-GUISSONA-TARREGA-GOLMES-3';
 const EVENTS = ['checkout.session.completed', 'customer.subscription.created', 'customer.subscription.updated', 'customer.subscription.deleted', 'invoice.paid', 'charge.refunded'];
 
@@ -76,14 +76,24 @@ async function ensurePrice(stripe, product, slug, cents, nickname, months = 1) {
   return price;
 }
 
-async function ensureCoupon(stripe) {
+/** Cupón de socio limitado a los productos de los packs: descuenta el pack, nunca el envío. */
+async function ensureCoupon(stripe, packProductIds) {
   let coupon = await stripe.coupons.retrieve(COUPON_ID).catch(() => null);
   if (!coupon) {
-    coupon = await stripe.coupons.create({ id: COUPON_ID, percent_off: 10, duration: 'once', name: 'Socios Interpàdel: 10 % primer mes' });
-    ok(`cupón ${COUPON_ID}: creado`);
+    coupon = await stripe.coupons.create({
+      id: COUPON_ID, percent_off: 10, duration: 'once', name: 'Socios Interpàdel: 10 % en el pack del primer cobro',
+      applies_to: { products: packProductIds },
+    });
+    ok(`cupón ${COUPON_ID}: creado (solo descuenta el pack)`);
   } else ok(`cupón ${COUPON_ID}: ya existía`);
-  const { data } = await stripe.promotionCodes.list({ code: PROMO_CODE, limit: 1 });
-  if (data[0]) ok(`código ${PROMO_CODE}: ya existía`);
+  // Un cupón no se puede limitar a productos después de crearlo: los códigos que apunten a otro cupón se desactivan
+  const { data } = await stripe.promotionCodes.list({ code: PROMO_CODE, active: true, limit: 10 });
+  const couponOf = (pc) => pc.coupon?.id || pc.promotion?.coupon?.id || pc.promotion?.coupon;
+  for (const pc of data.filter((x) => couponOf(x) !== COUPON_ID)) {
+    await stripe.promotionCodes.update(pc.id, { active: false });
+    ok(`código ${PROMO_CODE} del cupón ${couponOf(pc)}: desactivado`);
+  }
+  if (data.some((x) => couponOf(x) === COUPON_ID)) ok(`código ${PROMO_CODE}: ya existía`);
   else {
     await stripe.promotionCodes.create({ coupon: COUPON_ID, code: PROMO_CODE, restrictions: { first_time_transaction: true } });
     ok(`código ${PROMO_CODE}: creado (solo clientes nuevos)`);
@@ -233,12 +243,14 @@ async function main() {
 
   step('Productos y precios');
   const prices = {};
+  const packProducts = [];
   for (const p of PACKS) {
     const product = await ensureProduct(stripe, p.slug, {
       name: p.name,
       description: `Suscripción (cada 1, 2 o 3 meses): ${botes(p.cans)} de pelotas de pádel + ${p.grips} overgrips por caja. Envío a domicilio ${eur(SHIPPING.cents)} €, a oficina de Correos o CityPaq ${eur(OFFICE.cents)} € o recogida gratis en club.`,
       metadata: { plan: p.slug, botes: String(p.cans), grips: String(p.grips) },
     });
+    packProducts.push(product.id);
     prices[p.slug] = {};
     for (const m of FREQS) prices[p.slug][m] = await ensurePrice(stripe, product, p.slug, p.cents, `${p.slug.toUpperCase()} ${each(m)} ${eur(p.cents)}`, m);
   }
@@ -256,7 +268,8 @@ async function main() {
   const officePrice = officePrices[1];
 
   step('Código de socio Interpàdel');
-  await ensureCoupon(stripe);
+  // Si la clave no tiene permiso de cupones, sigue con los enlaces y avisa (el cupón se puede crear después)
+  await ensureCoupon(stripe, packProducts).catch((e) => ok(`AVISO: no se ha podido preparar el cupón (${e.message}). Dale a la clave permiso de escritura en «Coupons» y «Promotion codes» y vuelve a ejecutar el script.`));
 
   step('Enlaces de pago');
   const all = { home: {}, office: {}, club: {} };
@@ -291,7 +304,7 @@ async function main() {
     ...PACKS.map((p) => `| ${p.name} · oficina de Correos o CityPaq | ${prices[p.slug][1].id} | ${officeLinks[p.slug].url} |`),
     ...PACKS.map((p) => `| ${p.name} · recogida en club (sin envío) | ${prices[p.slug][1].id} | ${clubLinks[p.slug].url} |`), '',
     'Cada 2 y 3 meses (mismo precio por caja): todos los enlaces están en public/js/links.js.', '',
-    `- Código de socio: \`${PROMO_CODE}\` (cupón ${COUPON_ID}, 10 % primer mes, solo clientes nuevos)`,
+    `- Código de socio: \`${PROMO_CODE}\` (cupón ${COUPON_ID}, 10 % sobre el pack en el primer cobro, sin descontar el envío, solo clientes nuevos)`,
     `- Portal de cliente: ${portal.login_page.url}`,
     `- Webhook: ${siteUrl}/api/stripe/webhook (${EVENTS.join(', ')})`, '',
     '## SQL para Supabase', '', '```sql', ...sqlLines, '```', '',

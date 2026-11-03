@@ -155,7 +155,7 @@ ALTER TABLE app_settings  ENABLE ROW LEVEL SECURITY;
 -- ---------- Los 3 packs de PADEL DROP ----------
 -- El Price ID de Stripe lo rellena el SQL que muestra "node iniciar-padel-drop.js stripe".
 INSERT INTO packs (slug, name, commercial_name, cans, grips, price_cents, stripe_price_id, sort_order) VALUES
-  ('start',  'Pack Básico',     'PADEL DROP START',  1, 2,  890, NULL, 1),
-  ('player', 'Pack Intermedio', 'PADEL DROP PLAYER', 2, 3, 1290, NULL, 2),
-  ('pro',    'Pack Premium',    'PADEL DROP PRO',    3, 3, 1590, NULL, 3)
+  ('start',  'Pack Básico',     'PADEL DROP START',  1, 2, 1090, NULL, 1),
+  ('player', 'Pack Intermedio', 'PADEL DROP PLAYER', 2, 3, 1590, NULL, 2),
+  ('pro',    'Pack Premium',    'PADEL DROP PRO',    3, 3, 1990, NULL, 3)
 ON CONFLICT (slug) DO NOTHING;

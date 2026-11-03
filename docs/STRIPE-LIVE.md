@@ -1,31 +1,31 @@
 # Stripe de PADEL DROP (MODO REAL)
 
-Cuenta: acct_1USXZLRq7KJQz9G9 · generado 2026-10-29 con server/scripts/stripe-setup.js
+Cuenta: acct_1USXZLRq7KJQz9G9 · generado 2026-11-03 con server/scripts/stripe-setup.js
 
 | Pack | Price ID | Enlace de pago |
 |---|---|---|
-| Pack Básico / PADEL DROP START (8,90 €) | price_1UUnkxRq7KJQz9G9gkFvkUSX | https://buy.stripe.com/4gM14pajKf0ybkv8kKeZ209 |
-| Pack Intermedio / PADEL DROP PLAYER (12,90 €) | price_1UUnkyRq7KJQz9G927JLEfJ0 | https://buy.stripe.com/6oUcN7dvW6u260bbwWeZ20a |
-| Pack Premium / PADEL DROP PRO (15,90 €) | price_1UUnl0Rq7KJQz9G96YWEimIb | https://buy.stripe.com/8x228t9fG05EdsDbwWeZ20b |
-| Envío a domicilio (1,95 €) | price_1UW0D4Rq7KJQz9G9cDK39Trz | (segunda línea de cada enlace a domicilio) |
-| Envío a oficina/CityPaq (1,50 €) | price_1UW0D5Rq7KJQz9G9wGNOC7e4 | (segunda línea de cada enlace a oficina) |
-| PADEL DROP START · oficina de Correos o CityPaq | price_1UUnkxRq7KJQz9G9gkFvkUSX | https://buy.stripe.com/fZu28tcrS2dM1JVcB0eZ20c |
-| PADEL DROP PLAYER · oficina de Correos o CityPaq | price_1UUnkyRq7KJQz9G927JLEfJ0 | https://buy.stripe.com/28EdRb1Neg4CfAL9oOeZ20d |
-| PADEL DROP PRO · oficina de Correos o CityPaq | price_1UUnl0Rq7KJQz9G96YWEimIb | https://buy.stripe.com/00w8wR77y2dM4W78kKeZ20e |
-| PADEL DROP START · recogida en club (sin envío) | price_1UUnkxRq7KJQz9G9gkFvkUSX | https://buy.stripe.com/28EaEZajK2dMfALasSeZ206 |
-| PADEL DROP PLAYER · recogida en club (sin envío) | price_1UUnkyRq7KJQz9G927JLEfJ0 | https://buy.stripe.com/5kQ14pcrS4lU3S37gGeZ207 |
-| PADEL DROP PRO · recogida en club (sin envío) | price_1UUnl0Rq7KJQz9G96YWEimIb | https://buy.stripe.com/9B6fZj1Ne4lU9cn8kKeZ208 |
+| Pack Básico / PADEL DROP START (10,90 €) | price_1UXe0LRq7KJQz9G9okhaaqdq | https://buy.stripe.com/eVq14peA03hQ1JV6cCeZ20x |
+| Pack Intermedio / PADEL DROP PLAYER (15,90 €) | price_1UXe0NRq7KJQz9G9zdKpijhL | https://buy.stripe.com/fZu3cx63u7y6fAL30qeZ20A |
+| Pack Premium / PADEL DROP PRO (19,90 €) | price_1UXe0QRq7KJQz9G9Iqs6tuSV | https://buy.stripe.com/9B6dRb9fGf0ycozbwWeZ20D |
+| Envío a domicilio (2,75 €) | price_1UXe0TRq7KJQz9G94xaouHkH | (segunda línea de cada enlace a domicilio) |
+| Envío a oficina/CityPaq (2,05 €) | price_1UXe0VRq7KJQz9G9dDc3Epln | (segunda línea de cada enlace a oficina) |
+| PADEL DROP START · oficina de Correos o CityPaq | price_1UXe0LRq7KJQz9G9okhaaqdq | https://buy.stripe.com/9B6aEZ2Ri3hQbkv58yeZ20y |
+| PADEL DROP PLAYER · oficina de Correos o CityPaq | price_1UXe0NRq7KJQz9G9zdKpijhL | https://buy.stripe.com/dRmaEZbnO5pYfALbwWeZ20B |
+| PADEL DROP PRO · oficina de Correos o CityPaq | price_1UXe0QRq7KJQz9G9Iqs6tuSV | https://buy.stripe.com/4gM00lbnO4lU88jfNceZ20E |
+| PADEL DROP START · recogida en club (sin envío) | price_1UXe0LRq7KJQz9G9okhaaqdq | https://buy.stripe.com/4gMbJ31Ne2dM74feJ8eZ20z |
+| PADEL DROP PLAYER · recogida en club (sin envío) | price_1UXe0NRq7KJQz9G9zdKpijhL | https://buy.stripe.com/eVq7sN3Vm7y64W730qeZ20C |
+| PADEL DROP PRO · recogida en club (sin envío) | price_1UXe0QRq7KJQz9G9Iqs6tuSV | https://buy.stripe.com/8x200l4Zq5pY88j8kKeZ20F |
 
 Cada 2 y 3 meses (mismo precio por caja): todos los enlaces están en public/js/links.js.
 
-- Código de socio: `INTERPADEL-GUISSONA-TARREGA-GOLMES-3` (cupón INTERPADEL10, 10 % primer mes, solo clientes nuevos)
+- Código de socio: `INTERPADEL-GUISSONA-TARREGA-GOLMES-3` (cupón INTERPADEL10-PACK, 10 % sobre el pack en el primer cobro, sin descontar el envío, solo clientes nuevos)
 - Portal de cliente: https://billing.stripe.com/p/login/7sY28t0Ja8Ca88jgRgeZ200
 - Webhook: https://www.padeldrop.net/api/stripe/webhook (checkout.session.completed, customer.subscription.created, customer.subscription.updated, customer.subscription.deleted, invoice.paid, charge.refunded)
 
 ## SQL para Supabase
 
 ```sql
-UPDATE packs SET stripe_price_id = 'price_1UUnkxRq7KJQz9G9gkFvkUSX', cans = 1, grips = 2, price_cents = 890 WHERE slug = 'start';
-UPDATE packs SET stripe_price_id = 'price_1UUnkyRq7KJQz9G927JLEfJ0', cans = 2, grips = 3, price_cents = 1290 WHERE slug = 'player';
-UPDATE packs SET stripe_price_id = 'price_1UUnl0Rq7KJQz9G96YWEimIb', cans = 3, grips = 3, price_cents = 1590 WHERE slug = 'pro';
+UPDATE packs SET stripe_price_id = 'price_1UXe0LRq7KJQz9G9okhaaqdq', cans = 1, grips = 2, price_cents = 1090 WHERE slug = 'start';
+UPDATE packs SET stripe_price_id = 'price_1UXe0NRq7KJQz9G9zdKpijhL', cans = 2, grips = 3, price_cents = 1590 WHERE slug = 'player';
+UPDATE packs SET stripe_price_id = 'price_1UXe0QRq7KJQz9G9Iqs6tuSV', cans = 3, grips = 3, price_cents = 1990 WHERE slug = 'pro';
 ```
