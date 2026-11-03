@@ -6,22 +6,25 @@ const T = {
   es: {
     kicker: 'Suscripción mensual de pádel', title: 'Pelotas y grips nuevos cada mes, en tu casa',
     scan: 'Escanea y suscríbete', members: (n) => `Socios de ${n}`, code: (c) => `Código ${c}: se aplica solo al escanear`,
-    foot: 'Sin permanencia · Envío a domicilio 0,90 €/mes', per: '/mes', content: (c, g) => `${c === 1 ? '1 bote' : `${c} botes`} de pelotas + ${g} overgrips`,
+    foot: (sh, club) => ['Precios con IVA', 'Sin permanencia', sh && `Envío: domicilio ${sh.home} · Correos o CityPaq ${sh.office}`, club && 'Recogida gratis en el club'].filter(Boolean).join(' · '), per: '/mes', content: (c, g) => `${c === 1 ? '1 bote' : `${c} botes`} de pelotas + ${g} overgrips`,
     packs: { start: 'Pack Básico', player: 'Pack Intermedio', pro: 'Pack Premium' }, short: 'Pelotas y grips cada mes, en casa',
   },
   ca: {
     kicker: 'Subscripció mensual de pàdel', title: 'Pilotes i grips nous cada mes, a casa teva',
     scan: 'Escaneja i subscriu-te', members: (n) => `Socis de ${n}`, code: (c) => `Codi ${c}: s'aplica sol en escanejar`,
-    foot: 'Sense permanència · Enviament a domicili 0,90 €/mes', per: '/mes', content: (c, g) => `${c === 1 ? '1 pot' : `${c} pots`} de pilotes + ${g} overgrips`,
+    foot: (sh, club) => ['Preus amb IVA', 'Sense permanència', sh && `Enviament: domicili ${sh.home} · Correus o CityPaq ${sh.office}`, club && 'Recollida gratis al club'].filter(Boolean).join(' · '), per: '/mes', content: (c, g) => `${c === 1 ? '1 pot' : `${c} pots`} de pilotes + ${g} overgrips`,
     packs: { start: 'Pack Bàsic', player: 'Pack Intermedi', pro: 'Pack Prèmium' }, short: 'Pilotes i grips cada mes, a casa',
   },
 };
+
+// Clubs con recogida gratis (los mismos que en public/js/config.js y server/services/clubs.js)
+const PICKUP = /interp[aà]del (guissona|t[aà]rrega|golm[eé]s)/i;
 
 const slugify = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 34);
 
 // Al imprimir, las medidas van en vh (alto de la hoja): el cartel se adapta al papel y a los márgenes y siempre cabe
 // en una sola página, tanto en A4 como en A3.
-function poster(s, packs, qr, link) {
+function poster(s, packs, qr, link, ship) {
   const t = T[s.lang];
   // La web pública (sin /admin ni ?ref) para que se pueda teclear a mano.
   const web = link ? new URL(link).host : location.host;
@@ -43,7 +46,7 @@ function poster(s, packs, qr, link) {
         <p class="mt-[2%] font-display text-[clamp(18px,4vw,28pt)] font-extrabold uppercase print:text-[3.09vh]">${esc(t.scan)}</p>
       </div>
     </div>
-    <footer class="bg-black px-[6%] py-[2.5%] text-center text-[clamp(9px,1.8vw,12pt)] font-semibold text-white print:text-[1.43vh] print:[print-color-adjust:exact]"><span class="block font-display text-[1.45em] font-extrabold tracking-wide">${esc(web)}</span>${esc(t.foot)}</footer>
+    <footer class="bg-black px-[6%] py-[2.5%] text-center text-[clamp(9px,1.8vw,12pt)] font-semibold text-white print:text-[1.43vh] print:[print-color-adjust:exact]"><span class="block font-display text-[1.45em] font-extrabold tracking-wide">${esc(web)}</span>${esc(t.foot(ship, PICKUP.test(s.name)))}</footer>
   </article>`;
 }
 
@@ -91,6 +94,13 @@ export async function renderQr(view, { isStale }) {
 
   let packs = [];
   try { packs = (await api.metrics(currentMonth())).byPack; } catch { /* sin precios: el cartel sale sin la lista de packs */ }
+  // Gastos de envío actuales de la web (los actualiza el script de Stripe en public/js/config.js)
+  let ship = null;
+  try {
+    const js = await (await fetch('/js/config.js', { cache: 'no-store' })).text();
+    const home = js.match(/[{,\s]shipping:([\d.]+)/)?.[1], office = js.match(/officeShipping:([\d.]+)/)?.[1];
+    if (home && office) ship = { home: eur(Math.round(home * 100)), office: eur(Math.round(office * 100)) };
+  } catch { /* sin importes: el pie del cartel no los muestra */ }
   if (isStale()) return;
 
   const $ = (id) => view.querySelector(id);
@@ -112,7 +122,7 @@ export async function renderQr(view, { isStale }) {
     $('#q-link').textContent = link();
     $('#q-download').href = qrSrc();
     $('#q-download').setAttribute('download', `qr-${slugify(s.name) || 'club'}.svg`);
-    $('#q-preview').innerHTML = poster(s, packs, qrSrc(), link());
+    $('#q-preview').innerHTML = poster(s, packs, qrSrc(), link(), ship);
     loadStats();
   }, 200);
 
@@ -161,8 +171,8 @@ export async function renderQr(view, { isStale }) {
       window.print();
     });
   }
-  $('#p-poster').addEventListener('click', () => printWith(poster(s, packs, qrSrc(), link())));
-  $('#p-poster-a3').addEventListener('click', () => printWith(poster(s, packs, qrSrc(), link()), true));
+  $('#p-poster').addEventListener('click', () => printWith(poster(s, packs, qrSrc(), link(), ship)));
+  $('#p-poster-a3').addEventListener('click', () => printWith(poster(s, packs, qrSrc(), link(), ship), true));
   $('#p-cards').addEventListener('click', () => printWith(`<div class="grid h-[100vh] w-full grid-cols-2 grid-rows-4 gap-[4mm] bg-white p-[8mm]">${Array.from({ length: 8 }, () => card(s, qrSrc())).join('')}</div>`));
 
   paint();
