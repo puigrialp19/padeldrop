@@ -80,7 +80,13 @@ dlg.addEventListener("click",function(e){
   if(e.target===dlg||e.target.closest("#dc")||e.target.closest("[data-close]"))dlg.close();
   if(e.target.closest("#rm")){cart=null;drawCart()}
 });
-if(CONFIG.portalUrl){var ac=document.getElementById("acc");ac.href=CONFIG.portalUrl;ac.hidden=false}
+/* Mi cuenta: ventana propia que explica el acceso y lleva al portal de cliente de Stripe */
+var acd=document.getElementById("acd");
+function openAcc(){document.getElementById("lk").classList.remove("open");if(!acd.open)acd.showModal()}
+if(CONFIG.portalUrl){var ac=document.getElementById("acc");ac.hidden=false;document.getElementById("ago").href=CONFIG.portalUrl;
+ac.addEventListener("click",function(e){e.preventDefault();openAcc()});
+acd.addEventListener("click",function(e){if(e.target===acd||e.target.closest("#ac"))acd.close()});
+if(location.hash==="#mi-cuenta")openAcc()}
 drawCart();
 var bg=document.getElementById("bg"),lk=document.getElementById("lk");
 bg.onclick=function(){var o=lk.classList.toggle("open");bg.setAttribute("aria-expanded",o)};
