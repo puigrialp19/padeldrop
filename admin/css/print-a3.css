@@ -1,4 +1,5 @@
-/* Cartel en A3: solo cambia el papel. El cartel se mide en vh (alto de la hoja), así que crece solo. */
+/* Cartel en A3: el cartel mide un A4 (210 × 297 mm) y se amplía √2 para llenar la hoja A3 (297 × 420 mm). */
 @media print {
   @page { size: A3; margin: 0; }
+  #print-root { zoom: 1.41421; }
 }
