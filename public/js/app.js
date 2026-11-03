@@ -103,18 +103,15 @@ document.getElementById("ipform").addEventListener("submit",function(e){e.preven
 var RV=CONFIG.reviews||{items:[]},rsg=document.getElementById("rsg");
 function rsEsc(t){var d=document.createElement("div");d.textContent=t==null?"":String(t);return d.innerHTML.replace(/"/g,"&quot;")}
 function rsDate(d){var t=new Date(d);return isNaN(t)?rsEsc(d):t.toLocaleDateString("es-ES",{month:"long",year:"numeric"})}
-function rsCard(r,big){var st=r.rating>0?Math.min(5,Math.round(r.rating)):0;
-return '<figure class="rcard'+(big?' rf':'')+(r.photo?'':' rtx')+'">'+
-(r.photo?'<div class="rph"><img src="'+rsEsc(r.photo)+'" alt="'+rsEsc(r.alt||("Foto de "+(r.name||"un cliente")+" con su caja PADEL DROP"))+'" loading="lazy" decoding="async">'+(r.demo?'<span class="rdemo">Ejemplo</span>':'')+'</div>':'')+
-'<figcaption>'+(!r.photo&&r.demo?'<span class="rdemo rdt">Ejemplo</span>':'')+
+function rsCard(r,i){var st=r.rating>0?Math.min(5,Math.round(r.rating)):0,who=r.demo?"Reseña de ejemplo":(r.name||"Cliente"),sub=r.demo?"":[r.city,r.date?rsDate(r.date):""].filter(Boolean).map(rsEsc).join(" · ");
+return '<figure class="rcard'+(i===0?' rk':'')+'">'+(r.demo?'<span class="rdemo">Ejemplo</span>':'')+
+'<span class="rq" aria-hidden="true">“</span>'+
 (st?'<p class="rst" role="img" aria-label="'+st+' de 5 estrellas">'+'★★★★★'.slice(0,st)+'<i>'+'★★★★★'.slice(st)+'</i></p>':'')+
 '<blockquote>'+rsEsc(r.text)+'</blockquote>'+
-'<p class="rwho">'+(r.demo?'<span>Reseña de ejemplo'+(r.photo?' · imagen ilustrativa':'')+'</span>':'<span>'+(r.name?'<b>'+rsEsc(r.name)+'</b>':'')+(r.city?(r.name?' · ':'')+rsEsc(r.city):'')+'</span>')+(r.date&&!r.demo?'<span>'+rsDate(r.date)+'</span>':'')+'</p>'+
-'</figcaption></figure>'}
+'<figcaption class="rwho"><span class="rav" aria-hidden="true">'+rsEsc(who.trim().charAt(0).toUpperCase())+'</span><span><b>'+rsEsc(who)+'</b>'+sub+'</span></figcaption></figure>'}
 function rsShow(){var pv=location.hash==="#preview-resenas",its=RV.items.filter(function(r){return pv||!r.demo});
 document.getElementById("preview-resenas").hidden=!pv;document.getElementById("resenas").hidden=!((RV.enabled||pv)&&its.length);
-var f=its.filter(function(r){return r.photo})[0],rest=its.filter(function(r){return r!==f});
-rsg.innerHTML=(f?rsCard(f,true):'')+'<div class="rsm'+(rest.length<4?' rs2':'')+'">'+rest.map(function(r){return rsCard(r)}).join("")+'</div>'}
+rsg.className="rsg rs"+Math.min(3,its.length);rsg.innerHTML=its.map(rsCard).join("")}
 var T={condiciones:"Condiciones de contratación",privacidad:"Política de privacidad",cookies:"Política de cookies","aviso-legal":"Aviso legal"};
 function route(){ipShow();rsShow();var h=location.hash,r=h.indexOf("#/")===0?h.slice(2):"",on=!!T[r],m=document.getElementById("top");
 document.getElementById("legal").hidden=!on;m.hidden=on;
