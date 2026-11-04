@@ -1,0 +1,202 @@
+/* PADEL DROP · capa visual premium (portada, secciones, microinteracciones).
+   Se carga después de styles.css. Nada queda oculto por CSS: los estados iniciales de las animaciones
+   los pone js/motion.js, así que sin JavaScript (o con «reducir movimiento») todo se ve directamente. */
+:root{
+  --lime-2:#8dff4f;--teal:#2de2b4;--ink-2:#121412;
+  --sh-1:0 1px 2px rgba(10,12,8,.04),0 8px 24px -12px rgba(10,12,8,.12);
+  --sh-2:0 2px 6px rgba(10,12,8,.04),0 30px 60px -28px rgba(10,12,8,.28);
+  --sh-lime:0 10px 30px -6px rgba(198,255,0,.55),0 0 0 1px rgba(198,255,0,.4);
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--sh-1:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.6);--sh-2:0 2px 6px rgba(0,0,0,.3),0 30px 60px -28px rgba(0,0,0,.8)}}
+:root[data-theme="dark"]{--sh-1:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.6);--sh-2:0 2px 6px rgba(0,0,0,.3),0 30px 60px -28px rgba(0,0,0,.8)}
+body,#top{overflow-x:clip}
+.wrap{max-width:1240px}
+section{padding:120px 0}
+.eyebrow{display:inline-flex;align-items:center;gap:10px}
+.head .eyebrow::before,.stl .eyebrow::before,.ipt .eyebrow::before{content:"";width:28px;height:2px;background:var(--lime);border-radius:2px;box-shadow:0 0 12px rgba(198,255,0,.6)}
+h2{font-size:clamp(40px,6.4vw,84px);line-height:.92;letter-spacing:-.005em}
+.head{max-width:820px;margin-bottom:56px}
+/* Revelado de títulos: cada palabra sube desde detrás de una máscara (motion.js parte el texto) */
+.split .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.06em;margin-bottom:-.06em}
+.split .w>span{display:inline-block;will-change:transform}
+
+/* ---------- Botones: CTA con brillo, flecha y efecto magnético ---------- */
+.btn{position:relative;isolation:isolate;transition:box-shadow .35s var(--ease),background .25s,color .25s,border-color .25s}
+.btn:hover{transform:none}
+.b1{box-shadow:var(--sh-lime);overflow:hidden}
+.b1::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.65) 48%,transparent 66%);transform:translateX(-120%);transition:transform .8s var(--ease)}
+.b1:hover::after{transform:translateX(120%)}
+.b1:hover{box-shadow:0 18px 44px -8px rgba(198,255,0,.75),0 0 0 1px rgba(198,255,0,.6)}
+.btn.big{padding:19px 34px;font-size:17px}
+.arr{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .35s var(--ease)}
+.btn:hover .arr{transform:translateX(5px)}
+.mag>*{pointer-events:none}
+.b2{backdrop-filter:blur(6px);background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.35)}
+
+/* ---------- Portada ---------- */
+.hero{position:relative;overflow:hidden;background:#070807;color:#fff;padding:0;min-height:calc(100svh - 68px);display:flex;flex-direction:column;justify-content:center}
+.hero::before{display:none}
+.hbg{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.blob{position:absolute;border-radius:50%;opacity:.9;mix-blend-mode:screen}
+.bl1{width:58vmax;height:58vmax;right:-14vmax;top:-22vmax;background:radial-gradient(circle,rgba(198,255,0,.34),transparent 62%);animation:drift1 18s ease-in-out infinite alternate}
+.bl2{width:44vmax;height:44vmax;left:-16vmax;bottom:-24vmax;background:radial-gradient(circle,rgba(45,226,180,.22),transparent 62%);animation:drift2 22s ease-in-out infinite alternate}
+.bl3{width:30vmax;height:30vmax;left:38%;top:30%;background:radial-gradient(circle,rgba(141,255,79,.14),transparent 64%);animation:drift3 26s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate3d(-8vmax,6vmax,0) scale(1.08)}}
+@keyframes drift2{to{transform:translate3d(10vmax,-5vmax,0) scale(1.12)}}
+@keyframes drift3{to{transform:translate3d(-6vmax,-8vmax,0) scale(.9)}}
+.hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:72px 72px;-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,#000 30%,transparent 75%);mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,#000 30%,transparent 75%)}
+.hg{position:relative;display:block;padding:72px 20px 96px}
+.hey{color:#d8d8d3;font-size:13px;letter-spacing:.16em;margin-bottom:26px;padding:8px 16px 8px 12px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.04);backdrop-filter:blur(8px)}
+.hey b{color:var(--lime);font-weight:700;letter-spacing:.06em;white-space:nowrap}
+.hey .dot{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 0 rgba(198,255,0,.7);animation:ping 2.2s var(--ease) infinite}
+@keyframes ping{70%{box-shadow:0 0 0 10px rgba(198,255,0,0)}100%{box-shadow:0 0 0 0 rgba(198,255,0,0)}}
+.ht{font-size:clamp(50px,10.4vw,150px);line-height:.86;letter-spacing:-.012em;margin:0}
+.ht .ln{display:block;overflow:hidden;padding-bottom:.04em}
+.ht .ln>span{display:inline-block;will-change:transform}
+.ht em{font-style:normal;color:transparent;background:linear-gradient(100deg,var(--lime) 10%,var(--lime-2) 45%,var(--teal) 90%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;animation:sheen 7s ease-in-out infinite alternate}
+@keyframes sheen{to{background-position:100% 0}}
+.hball{display:inline-block;width:.42em;height:.42em;margin-left:.12em;border-radius:50%;vertical-align:.06em;background:radial-gradient(circle at 32% 30%,#f2ff9e,var(--lime) 45%,#7fae00 100%);box-shadow:0 0 40px rgba(198,255,0,.55),inset -6px -8px 14px rgba(0,0,0,.25);position:relative}
+.hball::before,.hball::after{content:"";position:absolute;inset:8% -2%;border:2px solid rgba(255,255,255,.85);border-color:rgba(255,255,255,.85) transparent;border-radius:50%}
+.hball::after{transform:rotate(90deg);inset:-2% 8%;border-color:transparent rgba(255,255,255,.85)}
+.hrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:48px;align-items:center;margin-top:38px}
+.hero p.sub{font-size:clamp(17px,1.5vw,20px);color:#c4c5bf;max-width:520px;margin:0 0 32px;line-height:1.55}
+.cta{gap:14px}
+.tags{list-style:none;padding:0;display:flex;gap:10px 22px;flex-wrap:wrap;margin-top:30px;font-size:14px;color:#a3a3a0}
+.tags li::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--lime);margin-right:9px;vertical-align:1px}
+.hv{position:relative;display:grid;place-items:center;min-height:300px}
+.ring{position:absolute;width:min(440px,92%);aspect-ratio:1;border-radius:50%;border:1px dashed rgba(198,255,0,.35);animation:spin 40s linear infinite}
+.ring::before{content:"";position:absolute;inset:14%;border-radius:50%;background:radial-gradient(circle,rgba(198,255,0,.14),transparent 70%)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hv .pack{position:relative;max-width:520px;animation:none}
+.chip{position:absolute;font-size:13px;font-weight:600;color:#e9e9e4;padding:9px 14px;border-radius:14px;background:rgba(20,22,18,.72);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(10px);box-shadow:0 20px 40px -20px rgba(0,0,0,.8);white-space:nowrap}
+.chip b{color:var(--lime);font-family:var(--hd);font-size:17px}
+.ch1{left:2%;top:10%}.ch2{right:0;bottom:8%}
+.shint{position:absolute;left:50%;bottom:26px;width:26px;height:42px;margin-left:-13px;border:2px solid rgba(255,255,255,.3);border-radius:14px}
+.shint span{position:absolute;left:50%;top:8px;width:4px;height:8px;margin-left:-2px;border-radius:2px;background:var(--lime);animation:wheel 1.8s var(--ease) infinite}
+@keyframes wheel{0%{opacity:0;transform:translateY(0)}30%{opacity:1}100%{opacity:0;transform:translateY(14px)}}
+
+/* ---------- Marquesina ---------- */
+.marquee{background:var(--lime);color:var(--ink);overflow:hidden;padding:18px 0;transform:rotate(-1.4deg);margin:-14px -2vw 0;position:relative;z-index:2;box-shadow:0 20px 50px -20px rgba(120,170,0,.6)}
+.mq{display:flex;width:max-content;align-items:center;gap:34px;font:800 clamp(22px,3vw,34px)/1 var(--hd);text-transform:uppercase;letter-spacing:.02em;animation:mq 30s linear infinite}
+.mq i{width:14px;height:14px;border-radius:50%;background:var(--ink);flex:none}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- Manifiesto (las palabras se iluminan al hacer scroll) ---------- */
+.mfs{padding:150px 0 110px}
+.mf{font:800 clamp(34px,5.4vw,76px)/1.02 var(--hd);text-transform:uppercase;letter-spacing:-.005em;max-width:1100px}
+.mf em{font-style:normal;color:#7aa800}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mf em{color:var(--lime)}}:root[data-theme="dark"] .mf em{color:var(--lime)}
+.mf .mw{display:inline}
+
+/* ---------- Tarjetas: sombras difusas, inclinación 3D y brillo que sigue al cursor ---------- */
+.card,.plan,.rcard{transition:box-shadow .45s var(--ease),border-color .3s;box-shadow:var(--sh-1)}
+.tilt{transform-style:preserve-3d;will-change:transform}
+.tilt::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(198,255,0,.16),transparent 45%);opacity:0;transition:opacity .4s}
+.tilt:hover::after{opacity:1}
+.card:hover,.plan:hover,.rcard:hover{box-shadow:var(--sh-2)}
+.rcard:hover{transform:none}
+.bens{gap:20px}
+.bens .card{position:relative;padding:32px 28px 30px;border-radius:26px;overflow:hidden}
+.bn{position:absolute;right:22px;top:18px;font:800 54px/1 var(--hd);color:transparent;-webkit-text-stroke:1.5px var(--line)}
+.bens .ic{width:54px;height:54px;border-radius:16px;margin-bottom:26px;box-shadow:0 10px 24px -10px rgba(140,190,0,.8)}
+.bens h3{font-size:28px}
+
+/* ---------- Cómo funciona: columna fija + pasos (en escritorio se fija en pantalla) ---------- */
+.stg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:60px;align-items:start}
+.stn{display:flex;align-items:baseline;gap:6px;margin-top:40px;font-family:var(--hd);font-weight:800;line-height:.8}
+.stc{font-size:clamp(110px,14vw,200px);color:transparent;background:linear-gradient(160deg,var(--fg) 30%,#7aa800);-webkit-background-clip:text;background-clip:text}
+.stt{font-size:40px;color:var(--mut)}
+.stbar{height:4px;border-radius:4px;background:var(--line);margin-top:28px;max-width:340px;overflow:hidden}
+.stbar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--lime),var(--teal));transform-origin:0 50%;transform:scaleX(.33)}
+.str{display:grid;gap:18px}
+.step{position:relative;background:var(--bg);border:1px solid var(--line);border-radius:28px;padding:40px 36px;box-shadow:var(--sh-2)}
+.sn{display:inline-grid;place-items:center;min-width:58px;height:58px;padding:0 12px;border-radius:18px;background:var(--lime);color:var(--ink);font:800 30px/1 var(--hd);box-shadow:0 12px 28px -10px rgba(140,190,0,.9)}
+.step h3{font-size:clamp(32px,3.4vw,46px);margin:26px 0 12px}
+.step p{color:var(--mut);font-size:17px;max-width:460px}
+@media (min-width:901px){
+  .steps.pinable .str{position:relative;min-height:440px}
+  .steps.pinable .step{position:absolute;inset:0 0 auto}
+}
+
+/* ---------- Planes ---------- */
+#planes .head{text-align:center}
+#planes .head .eyebrow{justify-content:center}
+.plan{border-radius:30px;padding:36px 32px;border-width:1px;overflow:hidden}
+.plan.f{border:0;background:radial-gradient(120% 80% at 100% 0%,rgba(198,255,0,.18),transparent 55%),#0a0b09;box-shadow:0 40px 80px -36px rgba(120,170,0,.55),var(--sh-2)}
+.plan.f::before{content:"";position:absolute;inset:0;padding:2px;border-radius:inherit;background:conic-gradient(from var(--ang,0deg),var(--lime),var(--teal),transparent 40%,transparent 60%,var(--lime));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:ang 5s linear infinite;pointer-events:none}
+@property --ang{syntax:"<angle>";inherits:false;initial-value:0deg}
+@keyframes ang{to{--ang:360deg}}
+.badge{position:static;align-self:flex-start;margin-bottom:16px;box-shadow:0 8px 20px -6px rgba(198,255,0,.7)}
+.plan h3{font-size:24px}
+.price{font-size:clamp(56px,6vw,72px);letter-spacing:-.01em}
+.plan .btn{margin-top:auto}
+
+/* ---------- Preguntas ---------- */
+details{transition:background .3s}
+summary{transition:color .25s,padding .35s var(--ease)}
+summary:hover{color:#7aa800;padding-left:8px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) summary:hover{color:var(--lime)}}:root[data-theme="dark"] summary:hover{color:var(--lime)}
+
+/* ---------- Llamada final ---------- */
+.fins{padding:40px 0 120px}
+.final{position:relative;overflow:hidden;padding:110px 24px;border-radius:40px;max-width:1200px;margin:0 auto;background:#070807;isolation:isolate}
+.final h2{font-size:clamp(44px,7vw,100px);max-width:1000px;margin:0 auto}
+.fglow{position:absolute;inset:-40%;z-index:-1;background:conic-gradient(from 0deg at 50% 50%,rgba(198,255,0,.0),rgba(198,255,0,.28),rgba(45,226,180,.18),rgba(198,255,0,0) 60%);animation:spin 16s linear infinite;filter:blur(30px)}
+.final p{font-size:18px}
+
+/* ---------- Barra fija de compra (móvil) ---------- */
+.scta{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:8;display:none;align-items:center;justify-content:space-between;gap:12px;padding:15px 22px;border-radius:999px;background:var(--lime);color:var(--ink);font-weight:700;text-decoration:none;box-shadow:0 18px 40px -10px rgba(100,150,0,.7),0 0 0 1px rgba(0,0,0,.06);transform:translateY(160%);transition:transform .5s var(--ease)}
+.scta b{font-weight:600;font-size:14px}
+.scta.on{transform:none}
+@media (max-width:760px){.scta{display:flex}}
+
+/* ---------- Cursor propio (solo ratón) ---------- */
+.cur{display:none}
+.has-cur .cur{display:block;position:fixed;inset:0;pointer-events:none;z-index:50}
+.cdot,.cring{position:fixed;left:0;top:0;border-radius:50%;pointer-events:none}
+.cdot{width:8px;height:8px;margin:-4px 0 0 -4px;background:var(--lime);mix-blend-mode:difference}
+.cring{width:42px;height:42px;margin:-21px 0 0 -21px;border:1.5px solid rgba(198,255,0,.75);display:grid;place-items:center;transition:width .35s var(--ease),height .35s var(--ease),margin .35s var(--ease),background .35s,border-color .35s}
+.clab{font:700 11px var(--bd);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);opacity:0;transition:opacity .2s}
+.has-cur .cur.hov .cring{width:70px;height:70px;margin:-35px 0 0 -35px;background:rgba(198,255,0,.14)}
+.has-cur .cur.lab .cring{width:92px;height:92px;margin:-46px 0 0 -46px;background:var(--lime);border-color:var(--lime)}
+.has-cur .cur.lab .clab{opacity:1}
+.has-cur .cur.down .cring{transform:scale(.85)}
+body:has(dialog[open]) .cur{display:none!important}
+
+/* ---------- Móvil y tableta ---------- */
+@media (max-width:900px){
+  section{padding:84px 0}
+  .stg{grid-template-columns:1fr;gap:28px}
+  .stn,.stbar{display:none}
+  .hrow{grid-template-columns:1fr;gap:20px}
+  .hv{order:-1;min-height:220px}
+}
+@media (max-width:760px){
+  .hero{min-height:auto}
+  .hg{padding:40px 20px 76px}
+  .hey{font-size:11px;letter-spacing:.1em}.hey .hsm{display:none}
+  .ht{font-size:clamp(44px,13.4vw,72px)}
+  .hv .pack{max-width:300px}
+  .ring{width:280px}
+  .chip{font-size:12px;padding:7px 11px}.ch1{left:0;top:4%}.ch2{right:0;bottom:2%}
+  .shint{display:none}
+  .marquee{padding:13px 0}
+  .mfs{padding:96px 0 70px}
+  .bn{font-size:44px}
+  .step{padding:30px 24px}
+  .final{padding:72px 22px;border-radius:30px}
+  .fins{padding:24px 0 96px}
+  footer{padding-bottom:110px}
+}
+@media (prefers-reduced-motion:reduce){.scta{transition:none}}
+
+/* Cursor nativo oculto solo donde se ve el propio; en formularios y ventanas vuelve el normal */
+.has-cur body,.has-cur a,.has-cur button,.has-cur summary,.has-cur label{cursor:none}
+.has-cur input,.has-cur textarea,.has-cur select,.has-cur dialog,.has-cur dialog *{cursor:auto}
+.has-cur dialog a,.has-cur dialog button,.has-cur dialog label{cursor:pointer}
+body:has(dialog[open]),body:has(dialog[open]) a,body:has(dialog[open]) button{cursor:auto}
+/* Con GSAP activo, la marquesina la mueve motion.js (acelera con la velocidad del scroll) */
+.gs .mq{animation:none}
+header{transition:box-shadow .4s var(--ease)}header.sc{box-shadow:0 14px 40px -24px rgba(0,0,0,.9)}
+.final{width:calc(100% - 40px)}

@@ -18,6 +18,7 @@
 <link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/fonts-local.css">
 <link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/premium.css">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -34,42 +35,58 @@
 <button class="burger" id="bg" aria-label="Abrir menú" aria-expanded="false">☰</button>
 <nav class="links" id="lk" aria-label="Principal">
 <a href="#planes">Planes</a><a href="#como">Cómo funciona</a><a href="#faq">Preguntas frecuentes</a>
-<a id="acc" href="#mi-cuenta" hidden>Mi cuenta</a><a class="btn b1 sm" href="#planes">Suscríbete</a>
+<a id="acc" href="#mi-cuenta" hidden>Mi cuenta</a><a class="btn b1 sm mag" href="#planes">Suscríbete</a>
 </nav>
 </div>
 </header>
 
 <main id="top">
-<div class="hero"><div class="wrap hg">
-<div>
-<p class="eyebrow" style="color:var(--lime)">Tu pádel. Siempre a punto.</p>
-<h1>Nunca más te quedes sin <em>grips</em> ni <em>pelotas</em></h1>
-<p class="sub">Elige el pack que encaja con tu ritmo de juego y recibe cada mes en casa botes de pelotas y grips nuevos. Tú juegas, nosotros reponemos.</p>
-<div class="cta"><a class="btn b1" href="#planes">Elige tu suscripción</a><a class="btn b2" href="#como">Descubre cómo funciona</a></div>
-<div class="tags"><span>Envío mensual a domicilio</span><span>Precio y condiciones claros</span><span>Renovación mensual automática</span></div>
+<section class="hero" id="inicio">
+<div class="hbg" aria-hidden="true"><span class="blob bl1"></span><span class="blob bl2"></span><span class="blob bl3"></span><span class="hgrid"></span></div>
+<div class="wrap hg">
+<p class="eyebrow hey"><span class="dot"></span><span class="hsm">Suscripción de pádel · </span>Packs desde <b id="hfrom">10,90 €</b> al mes</p>
+<h1 class="ht" aria-label="Nunca más te quedes sin grips ni pelotas"><span class="ln" aria-hidden="true"><span>Nunca más te</span></span><span class="ln" aria-hidden="true"><span>quedes sin <em>grips</em></span></span><span class="ln" aria-hidden="true"><span>ni <em>pelotas</em><i class="hball"></i></span></span></h1>
+<div class="hrow">
+<div class="hcopy">
+<p class="sub">Elige el pack que encaja con tu ritmo de juego y recibe en casa botes de pelotas y grips nuevos. Tú juegas, nosotros reponemos.</p>
+<div class="cta"><a class="btn b1 mag big" href="#planes"><span>Elige tu suscripción</span><svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="btn b2 mag" href="#como">Cómo funciona</a></div>
+<ul class="tags"><li>Envío a domicilio o recogida</li><li>Sin permanencia</li><li>IVA incluido</li></ul>
 </div>
-<div class="lg pack" role="img" aria-label="PADEL DROP: pelota con gafas llevando una caja"></div>
-</div></div>
+<div class="hv"><span class="ring" aria-hidden="true"></span><div class="lg pack" role="img" aria-label="PADEL DROP: pelota con gafas llevando una caja"></div>
+<span class="chip ch1" aria-hidden="true"><b>2</b> botes + <b>3</b> grips</span><span class="chip ch2" aria-hidden="true">Cada 1, 2 o 3 meses</span></div>
+</div>
+</div>
+<a class="shint" href="#beneficios" aria-label="Bajar a las ventajas"><span></span></a>
+</section>
+
+<div class="marquee" aria-hidden="true"><div class="mq"><span>Pelotas nuevas</span><i></i><span>Grips frescos</span><i></i><span>Cada mes en casa</span><i></i><span>Sin permanencia</span><i></i><span>Tu pádel, siempre a punto</span><i></i><span>Pelotas nuevas</span><i></i><span>Grips frescos</span><i></i><span>Cada mes en casa</span><i></i><span>Sin permanencia</span><i></i><span>Tu pádel, siempre a punto</span><i></i></div></div>
+
+<section class="mfs"><div class="wrap"><p class="mf">Tú juegas. <em>Nosotros reponemos.</em> Cada caja trae las pelotas y los grips que necesitas para llegar a la pista a punto, sin acordarte de comprarlos.</p></div></section>
 
 <section id="beneficios"><div class="wrap">
-<div class="head rv"><p class="eyebrow">Por qué PADEL DROP</p><h2>Lo esencial, siempre en tu mochila</h2></div>
-<div class="grid g4">
-<div class="card rv"><div class="ic"><svg><use href="#i1"/></svg></div><h3>Siempre a punto</h3><p>Grips nuevos y pelotas frescas cada mes, sin acordarte de pedirlos.</p></div>
-<div class="card rv"><div class="ic"><svg><use href="#i2"/></svg></div><h3>Un pack, cero compras</h3><p>Todo en una sola caja a domicilio. Menos tiempo en tiendas y webs.</p></div>
-<div class="card rv"><div class="ic"><svg><use href="#i3"/></svg></div><h3>Recurrente y sencillo</h3><p>Cuota mensual fija y un solo envío al mes. Tú eliges el plan.</p></div>
-<div class="card rv"><div class="ic"><svg><use href="#i4"/></svg></div><h3>Condiciones claras</h3><p>Precio, renovación y cancelación visibles antes de pagar.</p></div>
+<div class="head"><p class="eyebrow">Por qué PADEL DROP</p><h2 class="split">Lo esencial, siempre en tu mochila</h2></div>
+<div class="grid g4 bens">
+<div class="card tilt"><span class="bn">01</span><div class="ic"><svg><use href="#i1"/></svg></div><h3>Siempre a punto</h3><p>Grips nuevos y pelotas frescas en cada caja, sin acordarte de pedirlos.</p></div>
+<div class="card tilt"><span class="bn">02</span><div class="ic"><svg><use href="#i2"/></svg></div><h3>Un pack, cero compras</h3><p>Todo en una sola caja. Menos tiempo en tiendas y webs.</p></div>
+<div class="card tilt"><span class="bn">03</span><div class="ic"><svg><use href="#i3"/></svg></div><h3>Recurrente y sencillo</h3><p>Precio fijo por caja, cada 1, 2 o 3 meses. Tú eliges el plan.</p></div>
+<div class="card tilt"><span class="bn">04</span><div class="ic"><svg><use href="#i4"/></svg></div><h3>Condiciones claras</h3><p>Precio, renovación y cancelación visibles antes de pagar.</p></div>
 </div></div></section>
 
-<section id="como" class="alt"><div class="wrap">
-<div class="head rv"><p class="eyebrow">Cómo funciona</p><h2>Tres pasos y a la pista</h2></div>
-<div class="grid g3">
-<div class="card rv"><div class="num"><span>1</span></div><h3 style="margin-top:16px">Elige tu plan</h3><p>START, PLAYER o PRO: más o menos botes y grips según cuánto juegues.</p></div>
-<div class="card rv"><div class="num"><span>2</span></div><h3 style="margin-top:16px">Recibe tu pack</h3><p>Introduces tus datos, completas el pago y cada mes te llega la caja a casa.</p></div>
-<div class="card rv"><div class="num"><span>3</span></div><h3 style="margin-top:16px">Disfruta de la pista</h3><p>Material siempre disponible. Sin permanencia: pausa o cancela cuando quieras, según las condiciones del servicio.</p></div>
-</div></div></section>
+<section id="como" class="alt steps"><div class="wrap stg">
+<div class="stl">
+<p class="eyebrow">Cómo funciona</p><h2 class="split">Tres pasos y a la pista</h2>
+<div class="stn" aria-hidden="true"><span class="stc">01</span><span class="stt">/03</span></div>
+<div class="stbar" aria-hidden="true"><i></i></div>
+</div>
+<div class="str">
+<article class="step"><span class="sn">01</span><h3>Elige tu plan</h3><p>START, PLAYER o PRO: más o menos botes y grips según cuánto juegues, y cada cuánto quieres tu caja.</p></article>
+<article class="step"><span class="sn">02</span><h3>Recibe tu pack</h3><p>Introduces tus datos, completas el pago y te llega la caja a casa, a tu oficina de Correos o a tu club.</p></article>
+<article class="step"><span class="sn">03</span><h3>Disfruta de la pista</h3><p>Material siempre disponible. Sin permanencia: pausa o cancela cuando quieras, según las condiciones del servicio.</p></article>
+</div>
+</div></section>
 
 <section id="planes"><div class="wrap">
-<div class="head rv" style="text-align:center;margin-inline:auto"><p class="eyebrow">Planes</p><h2>ELIGE TU SUSCRIPCIÓN</h2><p>Recibe tus pelotas y grips cada mes directamente en casa. Sin permanencia, cancela cuando quieras.</p></div>
+<div class="head" style="text-align:center;margin-inline:auto"><p class="eyebrow">Planes</p><h2 class="split">Elige tu suscripción</h2><p>Recibe tus pelotas y grips cada mes directamente en casa. Sin permanencia, cancela cuando quieras.</p></div>
 <div class="grid plans" id="pl"></div>
 <p class="note" id="pn"></p>
 </div></section>
@@ -77,19 +94,19 @@
 <section id="resenas" class="alt rs" hidden>
 <div class="pv" id="preview-resenas" hidden>Vista previa. Las reseñas de ejemplo no son públicas: solo se muestran las reales cuando se active CONFIG.reviews.enabled</div>
 <div class="wrap">
-<div class="head rv"><p class="eyebrow">Opiniones</p><h2>Lo que dicen al abrir la puerta</h2><p>Opiniones de quienes ya reciben su caja PADEL DROP.</p></div>
+<div class="head"><p class="eyebrow">Opiniones</p><h2 class="split">Lo que dicen al abrir la puerta</h2><p>Opiniones de quienes ya reciben su caja PADEL DROP.</p></div>
 <div class="rsg" id="rsg"></div>
 <p class="note">Opiniones de nuestros primeros clientes, publicadas con su permiso.</p>
-<div class="rsc rv"><a class="btn b1" href="#planes">Ver planes de suscripción</a></div>
+<div class="rsc"><a class="btn b1 mag" href="#planes">Ver planes de suscripción</a></div>
 </div></section>
 
 <section id="interpadel" class="alt ip" hidden>
 <div class="pv" id="preview-interpadel" hidden>Vista previa. Esta sección no es pública hasta que se active en CONFIG.interpadel.enabled</div>
 <div class="wrap ipg">
-<div class="ipl rv"><span>Club colaborador</span><img src="assets/img/interpadel-logo.jpg" alt="Interpàdel: Guissona, Tàrrega, Golmés" width="640" height="575"></div>
-<div class="rv">
+<div class="ipl"><span>Club colaborador</span><img src="assets/img/interpadel-logo.jpg" alt="Interpàdel: Guissona, Tàrrega, Golmés" width="640" height="575"></div>
+<div class="ipt">
 <p class="eyebrow">Colaboración</p>
-<h2>Socios de Interpàdel, ventajas exclusivas</h2>
+<h2 class="split">Socios de Interpàdel, ventajas exclusivas</h2>
 <p style="color:var(--mut);margin-top:14px;max-width:580px">PADEL DROP colabora con Interpàdel para que los jugadores del club tengan pelotas, grips y material de pádel siempre a mano, con beneficios pensados para quienes juegan en sus pistas.</p>
 <div class="perks">
 <div class="card perk"><b>Descuento en suscripciones</b><em id="ip1"></em></div>
@@ -101,7 +118,7 @@
 </div></div></section>
 
 <section id="faq" class="alt"><div class="wrap">
-<div class="head rv"><p class="eyebrow">Preguntas frecuentes</p><h2>Resolvemos tus dudas</h2></div>
+<div class="head"><p class="eyebrow">Preguntas frecuentes</p><h2 class="split">Resolvemos tus dudas</h2></div>
 <div class="faq">
 <details><summary>¿Qué contiene cada pack?</summary><p>Cada pack combina botes de pelotas (3 pelotas por bote) y grips. Las cantidades de START, PLAYER y PRO están en la sección de planes.</p></details>
 <details><summary>¿Cuándo se realizan los envíos?</summary><p>Se envía un pack con la frecuencia que elijas (cada mes, cada 2 meses o cada 3 meses): el primero tras el pago y los siguientes tras cada cobro. La entrega suele tardar de 2 a 5 días laborables desde el envío y te facilitamos el número de seguimiento.</p></details>
@@ -113,10 +130,10 @@
 <details><summary>¿Cómo contacto con atención al cliente?</summary><p>Por correo electrónico en <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a>. Te respondemos lo antes posible.</p></details>
 </div></div></section>
 
-<section style="padding-top:84px"><div class="final rv">
+<section class="fins"><div class="final"><span class="fglow" aria-hidden="true"></span>
 <h2>Tu próxima caja de pádel <em>ya está en camino</em></h2>
 <p>Elige tu plan y deja de preocuparte por grips y pelotas.</p>
-<a class="btn b1" href="#planes">Elige tu suscripción</a>
+<a class="btn b1 mag big" href="#planes"><span>Elige tu suscripción</span><svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
 </div></section>
 </main>
 <main id="legal" class="wrap legal" hidden>
@@ -260,9 +277,15 @@
 <p class="acn acl"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>Acceso seguro gestionado por Stripe, nuestro proveedor de pagos.</p>
 </dialog>
 
+<a class="scta" id="scta" href="#planes"><span>Elige tu pack</span><b>desde <span id="sfrom">10,90 €</span></b></a>
+<div class="cur" aria-hidden="true"><span class="cdot"></span><span class="cring"><span class="clab"></span></span></div>
+
 <script src="js/config.js"></script>
 <script src="js/links.js"></script>
 <script src="js/app.js"></script>
 <script src="js/visit.js"></script>
+<script src="js/vendor/gsap.min.js"></script>
+<script src="js/vendor/ScrollTrigger.min.js"></script>
+<script src="js/motion.js"></script>
 </body>
 </html>
