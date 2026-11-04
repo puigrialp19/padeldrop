@@ -91,11 +91,6 @@ drawCart();
 var bg=document.getElementById("bg"),lk=document.getElementById("lk");
 bg.onclick=function(){var o=lk.classList.toggle("open");bg.setAttribute("aria-expanded",o)};
 lk.addEventListener("click",function(e){if(e.target.tagName==="A"){lk.classList.remove("open");bg.setAttribute("aria-expanded","false")}});
-var els=document.querySelectorAll(".rv");
-if("IntersectionObserver" in window){
-  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add("on");io.unobserve(x.target)}})},{threshold:.12});
-  els.forEach(function(el){io.observe(el)});
-}else{els.forEach(function(el){el.classList.add("on")})}
 var IP=CONFIG.interpadel;
 document.getElementById("ip1").textContent=IP.subDiscount;
 document.getElementById("ipt").textContent=IP.conditions||"Condiciones de la promoción por definir.";
@@ -117,6 +112,7 @@ return '<figure class="rcard'+(i===0?' rk':'')+'">'+(r.demo?'<span class="rdemo"
 '<figcaption class="rwho"><span class="rav" aria-hidden="true">'+rsEsc(who.trim().charAt(0).toUpperCase())+'</span><span><b>'+rsEsc(who)+'</b>'+sub+'</span></figcaption></figure>'}
 function rsShow(){var pv=location.hash==="#preview-resenas",its=RV.items.filter(function(r){return pv||!r.demo});
 document.getElementById("preview-resenas").hidden=!pv;document.getElementById("resenas").hidden=!((RV.enabled||pv)&&its.length);
+if(rsShow.pv===pv&&rsg.childElementCount)return;rsShow.pv=pv;
 rsg.className="rsg rs"+Math.min(3,its.length);rsg.innerHTML=its.map(rsCard).join("")}
 var T={condiciones:"Condiciones de contratación",privacidad:"Política de privacidad",cookies:"Política de cookies","aviso-legal":"Aviso legal"};
 function route(){ipShow();rsShow();var h=location.hash,r=h.indexOf("#/")===0?h.slice(2):"",on=!!T[r],m=document.getElementById("top");
@@ -125,3 +121,24 @@ document.querySelectorAll("[data-r]").forEach(function(a){a.hidden=a.dataset.r!=
 document.title=on?T[r]+" · PADEL DROP":"PADEL DROP · Suscripción mensual de grips y pelotas de pádel";
 if(on){scrollTo(0,0)}else if(h.length>1){var t=document.getElementById(h.slice(1));if(t)t.scrollIntoView()}}
 addEventListener("hashchange",route);route();
+
+/* Animaciones al hacer scroll: cada bloque aparece deslizándose hacia arriba cuando entra en pantalla.
+   Las tarjetas de una misma fila salen escalonadas (--d). Al terminar se quita la clase para que los
+   efectos :hover de cada tarjeta respondan sin retraso. Sin IntersectionObserver o con «reducir
+   movimiento» activado, todo se muestra directamente. */
+(function(){
+  var reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduce||!("IntersectionObserver" in window)){document.querySelectorAll(".rv").forEach(function(el){el.classList.remove("rv")});return}
+  var SEL=".head,.card,.plan,.rcard,.faq details,.ipl,.final,#fq,.rsc,.note";
+  var els=[].slice.call(document.querySelectorAll(".rv,#top "+SEL.split(",").join(",#top ")+",footer .wrap>*"));
+  els.forEach(function(el){
+    el.classList.add("rv");if(el.matches(".ipl,.final"))el.classList.add("rv-z");
+    var sib=[].filter.call(el.parentNode.children,function(c){return c.classList.contains("rv")}),i=sib.indexOf(el);
+    if(i>0)el.style.setProperty("--d",Math.min(i,5)*90+"ms");
+  });
+  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(!x.isIntersecting)return;var el=x.target;io.unobserve(el);
+    el.classList.add("on");setTimeout(function(){el.classList.remove("rv","rv-z","on");el.style.removeProperty("--d")},900+(parseInt(el.style.getPropertyValue("--d"))||0))})},
+    {threshold:.1});
+  document.documentElement.classList.add("anim");
+  els.forEach(function(el){io.observe(el)});
+})();
