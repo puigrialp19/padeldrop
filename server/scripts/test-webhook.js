@@ -3,6 +3,19 @@
 // Uso: npm run test:webhook
 process.env.STRIPE_SECRET_KEY ||= 'sk_test_simulado';
 process.env.STRIPE_WEBHOOK_SECRET ||= 'whsec_simulado';
+// Packlink PRO simulado: guarda los envíos que recibe (nunca se llama al Packlink real)
+const { default: http } = await import('node:http');
+const drafts = [];
+const plServer = http.createServer((req, res) => {
+  let b = ''; req.on('data', (c) => { b += c; });
+  req.on('end', () => {
+    drafts.push({ auth: req.headers.authorization, method: req.method, url: req.url, body: JSON.parse(b || '{}') });
+    res.writeHead(200, { 'content-type': 'application/json' }); res.end(JSON.stringify({ reference: `ES2026PRUEBA${drafts.length}` }));
+  });
+});
+await new Promise((r) => plServer.listen(0, '127.0.0.1', r));
+process.env.PACKLINK_API_KEY ||= 'clave_packlink_simulada';
+process.env.PACKLINK_API_URL = `http://127.0.0.1:${plServer.address().port}/v1/`;
 
 const { config } = await import('../config.js');
 const { sql, closeDb } = await import('../db/db.js');
@@ -180,6 +193,20 @@ try {
   const [of1d] = await sql`SELECT delivery FROM orders WHERE stripe_invoice_id = ${`in_F1${T}`}`;
   check('los pedidos de recogida en club quedan como "club"', of1d?.delivery === 'club', of1d?.delivery);
 
+  // ===== Escenario J: pedidos a Packlink PRO como envío pendiente =====
+  console.log('\nJ) Envío automático a Packlink PRO');
+  const ref = (o) => drafts.filter((d) => String(d.body.shipment_custom_reference || '').startsWith(`PD-${o.id}`));
+  const da = ref(oa[0]), db = ref(ob), dh = ref(oh), dfc = [...ref(of1), ...ref(of2)];
+  check('A domicilio: un solo envío en Packlink aunque el evento se repita', da.length === 1, `${da.length} envíos`);
+  check('con la dirección del checkout (la factura llegó sin dirección)', da[0]?.body.to.street1 === 'Avinguda Catalunya 10' && da[0]?.body.to.zip_code === '25300' && da[0]?.body.to.name === 'Ana', JSON.stringify(da[0]?.body.to));
+  check('POST /v1/shipments con la clave en Authorization', da[0]?.method === 'POST' && da[0]?.url === '/v1/shipments' && da[0]?.auth === process.env.PACKLINK_API_KEY, `${da[0]?.method} ${da[0]?.url}`);
+  check('caja de 35 × 26 × 8 cm y peso del pack', da[0]?.body.packages?.[0]?.length === 35 && da[0]?.body.packages[0].weight === 0.75, JSON.stringify(da[0]?.body.packages));
+  const [oaRef] = await sql`SELECT packlink_ref, packlink_error FROM orders WHERE id = ${oa[0].id}`;
+  check('el pedido guarda la referencia de Packlink', /^ES2026PRUEBA\d+$/.test(oaRef.packlink_ref) && !oaRef.packlink_error, oaRef.packlink_ref);
+  check('renovación a domicilio: se envía al momento', db.length === 1, `${db.length} envíos`);
+  check('recogida en club: no se envía a Packlink', dfc.length === 0, `${dfc.length} envíos`);
+  check('oficina/CityPaq: un envío, con la oficina elegida en la referencia', dh.length === 1 && dh[0].body.shipment_custom_reference.includes('OFICINA CityPaq Bonpreu'), dh.map((d) => d.body.shipment_custom_reference).join(' | '));
+
   // ===== Escenario I: cada 2 meses (Price IDs que no están en packs; el envío llega como primera línea) =====
   console.log('\nI) Suscripción cada 2 meses');
   const { getDashboard: dash } = await import('../services/metrics.js');
@@ -241,5 +268,6 @@ try {
   if (tempPrice.length) await sql`UPDATE packs SET stripe_price_id = NULL WHERE stripe_price_id LIKE ${`%_${T}`}`;
   console.log(failures ? `\n${failures} comprobaciones FALLIDAS.` : '\nTodo correcto: el webhook funciona. Datos de prueba borrados.');
   process.exitCode = failures ? 1 : 0;
+  plServer.close();
   await closeDb();
 }

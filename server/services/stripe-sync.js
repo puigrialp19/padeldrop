@@ -5,6 +5,7 @@ import { config } from '../config.js';
 import { monthOf } from './metrics.js';
 import { notifyAdmins } from './push.js';
 import { PICKUP_CLUBS } from './clubs.js';
+import { sendToPacklink, sendSubscriptionToPacklink } from './packlink.js';
 
 /** Columnas añadidas después del esquema inicial (recogida en club y reembolsos): se crean solas al arrancar. */
 export async function initOrderExtras() {
@@ -19,6 +20,10 @@ export async function initOrderExtras() {
   // Meses entre cajas (1, 2 o 3): el MRR divide la cuota entre ellos.
   await sql`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS interval_months integer NOT NULL DEFAULT 1`;
   await sql`UPDATE orders SET delivery = 'club' WHERE pickup_club <> '' AND delivery = 'home'`; // pedidos de antes de la columna
+  // Packlink PRO: referencia del envío pendiente creado por la API (o el último error, para reintentarlo desde el panel)
+  await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS packlink_ref text NOT NULL DEFAULT ''`;
+  await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS packlink_error text NOT NULL DEFAULT ''`;
+  await sql`ALTER TABLE orders ADD COLUMN IF NOT EXISTS packlink_sent_at timestamptz`;
 }
 
 // metadata.entrega de los enlaces de pago (stripe-setup.js) -> valor guardado en orders.delivery
@@ -202,6 +207,8 @@ async function createOrderFromInvoice(stripe, inv) {
       body: `${order.ship_name || u.email} · ${packName} · ${eur(order.amount_cents + order.shipping_cents)}${order.delivery === 'club' ? ` · recoge en ${order.pickup_club || 'su club'}` : `${order.delivery === 'office' ? ' · oficina/CityPaq' : ''}${order.ship_city ? ` · ${order.ship_city}` : ''}`}`,
       url: '/admin/#/pedidos', tag: `pd-pedido-${created.id}`,
     });
+    // A Packlink como envío pendiente. En el primer pedido a oficina se espera al checkout, que trae la oficina elegida.
+    if (!(order.delivery === 'office' && !order.pickup_office && inv.billing_reason !== 'subscription_cycle')) await sendToPacklink(created.id);
   }
 }
 
@@ -232,6 +239,9 @@ async function syncCheckout(stripe, session) {
     await sql`UPDATE orders SET pickup_office = ${office}, updated_at = now()
       WHERE subscription_id = (SELECT id FROM subscriptions WHERE stripe_subscription_id = ${subId}) AND status = 'pending'`;
   }
+  // Con la dirección (y la oficina) ya completas, el primer pedido pasa a Packlink si aún no estaba
+  const [local] = await sql`SELECT id FROM subscriptions WHERE stripe_subscription_id = ${subId}`;
+  await sendSubscriptionToPacklink(local?.id);
 }
 
 /**

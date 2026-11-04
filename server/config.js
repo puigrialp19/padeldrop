@@ -29,6 +29,11 @@ export const config = {
     webhookSecret: env.STRIPE_WEBHOOK_SECRET || '',
     shippingPriceId: env.STRIPE_SHIPPING_PRICE_ID || '',
   },
+  // Packlink PRO: con la clave, cada pedido pagado a domicilio u oficina se crea solo como envío pendiente en Packlink.
+  packlink: {
+    apiKey: env.PACKLINK_API_KEY || '',
+    apiUrl: (env.PACKLINK_API_URL || 'https://api.packlink.com/v1/').replace(/\/?$/, '/'),
+  },
   paths: {
     public: path.join(ROOT, 'public'),
     admin: path.join(ROOT, 'admin'),

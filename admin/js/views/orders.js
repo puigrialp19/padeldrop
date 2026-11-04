@@ -6,6 +6,16 @@ const TABS = [['', 'Todos'], ['pending', 'Pendientes'], ['shipped', 'Enviados'],
 const PACK_OPTIONS = [['', 'Todos los packs'], ['start', 'Pack Básico'], ['player', 'Pack Intermedio'], ['pro', 'Pack Premium']];
 const CARRIERS = ['Correos Express', 'SEUR', 'MRW', 'GLS', 'Nacex', 'Correos'];
 
+// Estado del envío en Packlink PRO (solo si la clave está configurada y el pedido va por transportista)
+let packlinkOn = false;
+function packlinkLine(o) {
+  if (!packlinkOn || o.delivery === 'club') return '';
+  if (o.packlink_ref && o.packlink_ref !== 'enviando') return `<p class="mt-1.5 text-xs"><span class="rounded-full bg-lime px-2 py-0.5 font-semibold text-black">En Packlink</span> <span class="text-muted">ref. ${esc(o.packlink_ref)}${o.packlink_sent_at ? ` · ${date(o.packlink_sent_at)}` : ''}</span></p>`;
+  if (o.status !== 'pending') return '';
+  const err = o.packlink_error ? `<span class="block text-critical" title="${esc(o.packlink_error)}">No se pudo enviar a Packlink: ${esc(o.packlink_error.slice(0, 90))}</span>` : '';
+  return `<p class="mt-1.5 text-xs">${err}<button type="button" class="font-semibold underline hover:text-ink" data-packlink>${o.packlink_error ? 'Reintentar envío a Packlink' : 'Enviar a Packlink'}</button></p>`;
+}
+
 const statusSelect = (o) => `<label class="sr-only" for="st-${o.id}">Estado del envío</label>
   <select class="input" id="st-${o.id}" data-field="status">${Object.entries(ORDER_STATUS).map(([v, s]) => `<option value="${v}" ${v === o.status ? 'selected' : ''}>${s.label}</option>`).join('')}</select>`;
 
@@ -34,6 +44,7 @@ function orderCard(o) {
         <p class="label mb-0.5">Preparar</p>
         <p class="font-semibold">${botes(o.cans)} + ${o.grips} grips${o.interval_months > 1 ? ` <span class="ml-1 rounded-full bg-card px-2 py-0.5 text-xs font-semibold text-muted">cada ${o.interval_months} meses</span>` : ''}</p>
         <p class="mt-1 text-xs text-muted">PD-${o.id} · cobrado ${eur(o.amount_cents + o.shipping_cents)} el ${date(o.paid_at)}${o.shipped_at ? ` · enviado ${date(o.shipped_at)}` : ''}${o.delivered_at ? ` · entregado ${date(o.delivered_at)}` : ''}${o.refunded_at ? ` · reembolsado ${date(o.refunded_at)}` : ''}</p>
+        ${packlinkLine(o)}
         <button type="button" class="mt-1 text-xs font-semibold text-muted underline hover:text-ink" data-refund="${o.refunded_cents ? 'false' : 'true'}">${o.refunded_cents ? 'Deshacer reembolso' : 'Marcar como reembolsado'}</button>
       </div>
     </div>
@@ -60,6 +71,7 @@ export async function renderOrders(view, { params, isStale }) {
         <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v3h16v-3"/></svg>Exportar CSV (Excel)</a>
       <a class="btn-primary" id="packlink" href="#" download title="Pedidos pendientes a domicilio y a oficina/CityPaq, para Packlink PRO → Nuevo envío → Importar CSV">
         <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M3 7l9-4 9 4-9 4-9-4zm0 0v10l9 4 9-4V7M12 11v10"/></svg>Exportar para Packlink</a>`)}
+    <div class="mb-4 flex flex-wrap items-center gap-2 text-sm" id="plstat" hidden></div>
     <section class="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4" id="summary" aria-label="Resumen del mes"></section>
     <div class="card mb-4 flex flex-col gap-3 p-3 xl:flex-row xl:items-center">
       <div class="flex flex-wrap gap-1.5" role="group" aria-label="Estado del envío" id="tabs"></div>
@@ -84,6 +96,18 @@ export async function renderOrders(view, { params, isStale }) {
     try { data = await api.orders(state); } catch (err) { list.innerHTML = errorBox(err.message); return; }
     if (isStale()) return;
     orders = data.orders;
+    packlinkOn = !!data.packlink;
+    const ps = view.querySelector('#plstat');
+    ps.hidden = false;
+    ps.innerHTML = packlinkOn
+      ? '<span class="rounded-full bg-lime px-2.5 py-1 text-xs font-semibold text-black">Packlink PRO automático</span><span class="text-muted">Los pedidos a domicilio y oficina se crean solos como envío pendiente.</span><button type="button" class="font-semibold underline" id="plcheck">Probar conexión</button>'
+      : '<span class="text-muted">Packlink PRO automático desactivado: añade PACKLINK_API_KEY en Render.</span>';
+    const pc = view.querySelector('#plcheck');
+    if (pc) pc.onclick = async () => {
+      pc.disabled = true; pc.textContent = 'Comprobando…';
+      try { const r = await api.checkPacklink(); toast(r.ok ? `Conectado con Packlink PRO${r.account ? ` (${r.account})` : ''}.` : r.error, !r.ok); } catch (err) { toast(err.message, true); }
+      pc.disabled = false; pc.textContent = 'Probar conexión';
+    };
 
     const sm = data.summary, get = (k, f = 'n') => sm[k]?.[f] || 0;
     const allN = get('pending') + get('shipped') + get('delivered');
@@ -121,6 +145,20 @@ export async function renderOrders(view, { params, isStale }) {
   });
 
   // Los reembolsos hechos en Stripe se marcan solos; este botón es para los hechos antes o fuera de Stripe.
+  // Enviar o reintentar a Packlink PRO
+  list.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-packlink]');
+    if (!b) return;
+    b.disabled = true; b.textContent = 'Enviando a Packlink…';
+    try {
+      await api.sendPacklink(Number(b.closest('[data-id]').dataset.id));
+      toast('Pedido creado en Packlink PRO como envío pendiente.');
+    } catch (err) {
+      toast(err.message, true);
+    }
+    load();
+  });
+
   list.addEventListener('click', async (e) => {
     const b = e.target.closest('[data-refund]');
     if (!b) return;

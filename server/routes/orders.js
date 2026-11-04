@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { sql, audit } from '../db/db.js';
 import { MONTH_RE, TZ, currentMonth } from '../services/metrics.js';
 import { toCsv } from '../services/csv.js';
-import { packlinkCsv } from '../services/packlink.js';
+import { packlinkCsv, sendToPacklink } from '../services/packlink.js';
+import { config } from '../config.js';
 
 export const ordersRouter = Router();
 
@@ -30,7 +31,7 @@ function filters(query) {
 
 const select = () => sql`
   SELECT o.id, o.user_id, o.period, o.amount_cents, o.shipping_cents, o.status, o.carrier, o.tracking_number,
-         o.ship_name, o.ship_phone, o.ship_street, o.ship_number, o.ship_floor_door, o.ship_postal_code, o.ship_city, o.ship_province, o.ship_country, o.pickup_club, o.delivery, o.pickup_office, o.refunded_cents, o.refunded_at,
+         o.ship_name, o.ship_phone, o.ship_street, o.ship_number, o.ship_floor_door, o.ship_postal_code, o.ship_city, o.ship_province, o.ship_country, o.pickup_club, o.delivery, o.pickup_office, o.refunded_cents, o.refunded_at, o.packlink_ref, o.packlink_error, o.packlink_sent_at,
          o.paid_at, o.shipped_at, o.delivered_at, u.email, p.slug AS pack_slug, p.name AS pack_name, p.cans, p.grips,
          coalesce(s.interval_months, 1) AS interval_months
   FROM orders o JOIN users u ON u.id = o.user_id JOIN packs p ON p.id = o.pack_id LEFT JOIN subscriptions s ON s.id = o.subscription_id`;
@@ -45,7 +46,7 @@ ordersRouter.get('/', async (req, res, next) => {
       sql`SELECT o.status, count(*) AS n, sum(p.cans) AS cans, sum(p.grips) AS grips
           FROM orders o JOIN packs p ON p.id = o.pack_id WHERE o.period = ${f.month} GROUP BY o.status`,
     ]);
-    res.json({ month: f.month, orders, summary: Object.fromEntries(summary.map((s) => [s.status, s])) });
+    res.json({ month: f.month, orders, summary: Object.fromEntries(summary.map((s) => [s.status, s])), packlink: Boolean(config.packlink.apiKey) });
   } catch (err) {
     next(err);
   }
@@ -85,6 +86,38 @@ ordersRouter.patch('/:id', async (req, res, next) => {
 
     const [updated] = await sql`${select()} WHERE o.id = ${id}`;
     res.json({ order: updated });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Comprueba la clave de Packlink PRO sin crear nada (consulta los datos de la cuenta).
+ordersRouter.get('/packlink/check', async (req, res, next) => {
+  try {
+    if (!config.packlink.apiKey) return res.json({ ok: false, error: 'Falta la clave PACKLINK_API_KEY en Render.' });
+    const r = await fetch(`${config.packlink.apiUrl}clients`, { headers: { Authorization: config.packlink.apiKey, Accept: 'application/json' }, signal: AbortSignal.timeout(10000) });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) return res.json({ ok: false, error: `Packlink rechaza la clave (${r.status}). Revisa PACKLINK_API_KEY en Render.` });
+    res.json({ ok: true, account: data.email || data.company || '' });
+  } catch (err) {
+    res.json({ ok: false, error: `No se pudo conectar con Packlink: ${err.message}` });
+  }
+});
+
+// Enviar (o reintentar) un pedido a Packlink PRO como envío pendiente.
+ordersRouter.post('/:id/packlink', async (req, res, next) => {
+  try {
+    const id = Number.parseInt(req.params.id, 10);
+    if (!Number.isSafeInteger(id)) return res.status(404).json({ error: 'Pedido no encontrado.' });
+    if (!config.packlink.apiKey) return res.status(400).json({ error: 'Falta la clave PACKLINK_API_KEY en Render.' });
+    // Un intento que se cortó a medias (servidor reiniciado) deja «enviando»: se libera para reintentar
+    await sql`UPDATE orders SET packlink_ref = '' WHERE id = ${id} AND packlink_ref = 'enviando' AND packlink_sent_at IS NULL`;
+    const r = await sendToPacklink(id);
+    await audit(req, 'send_packlink', 'order', id, { status: r.status, reference: r.reference || '' });
+    const [order] = await sql`${select()} WHERE o.id = ${id}`;
+    if (r.status === 'error') return res.status(502).json({ error: r.error, order });
+    if (r.status === 'waiting') return res.status(400).json({ error: 'Al pedido le falta la dirección de envío.', order });
+    res.json({ order, result: r.status });
   } catch (err) {
     next(err);
   }
