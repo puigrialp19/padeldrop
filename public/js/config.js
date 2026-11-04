@@ -7,12 +7,6 @@ var CONFIG={
   /* Clubs donde se puede recoger gratis (tienen que coincidir con server/services/clubs.js). */
   pickupClubs:["Interpàdel Guissona","Interpàdel Tàrrega","Interpàdel Golmés"],
   interpadel:{enabled:true,subDiscount:"10 % en el pack del primer cobro",productDiscount:"",codes:["INTERPADEL-GUISSONA-TARREGA-GOLMES-3"],conditions:"Descuento del 10 % sobre el precio del pack en el primer cobro, para nuevos suscriptores socios de Interpàdel. No se aplica a los gastos de envío ni se acumula con otros descuentos. Introduce el código al pagar."},
-  /* Reseñas (solo texto): name, city, rating (1-5) y date solo si son reales. demo:true = ejemplo: nunca se publica, solo se ve en la vista previa (#preview-resenas). */
-  reviews:{enabled:true,items:[
-    {name:"Marc",city:"Guissona",rating:5,text:"Me llegó la caja súper rápido y la presentación es brutal. Las bolas son de primera y el paquete venía impecable."},
-    {name:"Álex M.",city:"Barcelona",rating:5,text:"Súper cómodo no tener que ir a buscar botes de bolas antes de los partidos del finde. La caja mola un huevo y los overgrips se notan de buena calidad."},
-    {name:"Dani",city:"Girona",rating:5,text:"El envío fue rapidísimo. Todo venía perfectamente colocado y la caja llegó en perfecto estado. Repetiré seguro el mes que viene."}
-  ]},
   portalUrl:"https://billing.stripe.com/p/login/7sY28t0Ja8Ca88jgRgeZ200",
   /* Envío a domicilio (€/mes). Lo actualiza "npm run stripe:setup" junto con los enlaces. */
   shipping:2.75,

@@ -138,7 +138,20 @@
   }
   batch('.bens .card', { opacity: 0, y: 70, rotate: 1.5 });
   batch('#pl .plan', { opacity: 0, y: 90, scale: .96 });
-  batch('#rsg .rcard', { opacity: 0, y: 70 });
+  batch('.pcard', { opacity: 0, y: 90, rotate: 2 });
+  batch('.cls > li', { opacity: 0, x: -50 });
+  // Mapa: entra con zoom, la ruta se dibuja y los puntos caen uno tras otro
+  var mp = $('#map');
+  if (mp) {
+    var road = $('.mroad2'), len = road.getTotalLength();
+    gsap.set(road, { strokeDasharray: len, strokeDashoffset: len });
+    gsap.set('.mpi', { opacity: 0, y: -40 });
+    gsap.timeline({ scrollTrigger: { trigger: mp, start: 'top 80%', once: true } })
+      .from(mp, { opacity: 0, scale: .92, y: 60, duration: 1.2, ease: 'expo.out' })
+      .to(road, { strokeDashoffset: 0, duration: 1.6, ease: 'power2.inOut' }, '-=.6')
+      .to('.mpi', { opacity: 1, y: 0, stagger: .18, duration: .9, ease: 'bounce.out' }, '-=1.1');
+    gsap.to('.pglow', { yPercent: 40, ease: 'none', scrollTrigger: { trigger: '.phil', start: 'top bottom', end: 'bottom top', scrub: true } });
+  }
   batch('.faq details', { opacity: 0, y: 30 });
   batch('.perks .card, .ipf, #fq, .note, .rsc', { opacity: 0, y: 30 });
   batch('footer .wrap > *', { opacity: 0, y: 24 });

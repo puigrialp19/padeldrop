@@ -100,22 +100,21 @@ document.getElementById("ipform").addEventListener("submit",function(e){e.preven
   if(!IP.codes.length){m.textContent="Las ofertas para socios se publicarán muy pronto."}
   else if(IP.codes.map(function(c){return c.toUpperCase()}).indexOf(v)>-1){m.textContent="Código válido. Introdúcelo en el campo de código promocional al pagar: "+v}
   else{m.textContent="Ese código no es válido. Revisa que esté bien escrito."}});
-/* Reseñas: las de ejemplo (demo) solo se ven en la vista previa #preview-resenas */
-var RV=CONFIG.reviews||{items:[]},rsg=document.getElementById("rsg");
-function rsEsc(t){var d=document.createElement("div");d.textContent=t==null?"":String(t);return d.innerHTML.replace(/"/g,"&quot;")}
-function rsDate(d){var t=new Date(d);return isNaN(t)?rsEsc(d):t.toLocaleDateString("es-ES",{month:"long",year:"numeric"})}
-function rsCard(r,i){var st=r.rating>0?Math.min(5,Math.round(r.rating)):0,who=r.demo?"Reseña de ejemplo":(r.name||"Cliente"),sub=r.demo?"":[r.city,r.date?rsDate(r.date):""].filter(Boolean).map(rsEsc).join(" · ");
-return '<figure class="rcard'+(i===0?' rk':'')+'">'+(r.demo?'<span class="rdemo">Ejemplo</span>':'')+
-'<span class="rq" aria-hidden="true">“</span>'+
-(st?'<p class="rst" role="img" aria-label="'+st+' de 5 estrellas">'+'★★★★★'.slice(0,st)+'<i>'+'★★★★★'.slice(st)+'</i></p>':'')+
-'<blockquote>'+rsEsc(r.text)+'</blockquote>'+
-'<figcaption class="rwho"><span class="rav" aria-hidden="true">'+rsEsc(who.trim().charAt(0).toUpperCase())+'</span><span><b>'+rsEsc(who)+'</b>'+sub+'</span></figcaption></figure>'}
-function rsShow(){var pv=location.hash==="#preview-resenas",its=RV.items.filter(function(r){return pv||!r.demo});
-document.getElementById("preview-resenas").hidden=!pv;document.getElementById("resenas").hidden=!((RV.enabled||pv)&&its.length);
-if(rsShow.pv===pv&&rsg.childElementCount)return;rsShow.pv=pv;
-rsg.className="rsg rs"+Math.min(3,its.length);rsg.innerHTML=its.map(rsCard).join("")}
+/* Puntos de recogida: elegir club en la lista o en el mapa; el mapa de Google solo se carga al pulsar el botón */
+var mframe=document.getElementById("mframe"),mname=document.getElementById("mname"),gmap=null;
+function pickClub(id){
+  document.querySelectorAll(".clb").forEach(function(b){var on=b.dataset.club===id;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on);if(on){mname.textContent=b.querySelector("b").textContent;if(gmap)gmap.src="https://www.google.com/maps?q="+b.dataset.q+"&output=embed"}});
+  document.querySelectorAll(".mpin").forEach(function(p){p.classList.toggle("on",p.dataset.club===id)});
+}
+document.querySelectorAll(".clb").forEach(function(b){b.addEventListener("click",function(){pickClub(b.dataset.club)})});
+document.querySelectorAll(".mpin").forEach(function(p){p.addEventListener("click",function(){pickClub(p.dataset.club)});p.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();pickClub(p.dataset.club)}})});
+document.getElementById("mload").addEventListener("click",function(){
+  var b=document.querySelector(".clb.on");
+  if(!gmap){gmap=document.createElement("iframe");gmap.title="Mapa de Google del club seleccionado";gmap.loading="lazy";gmap.referrerPolicy="no-referrer-when-downgrade";gmap.setAttribute("allowfullscreen","");mframe.appendChild(gmap);document.getElementById("map").classList.add("live");this.querySelector("span").textContent="Mapa de Google cargado"}
+  gmap.src="https://www.google.com/maps?q="+b.dataset.q+"&output=embed";
+});
 var T={condiciones:"Condiciones de contratación",privacidad:"Política de privacidad",cookies:"Política de cookies","aviso-legal":"Aviso legal"};
-function route(){ipShow();rsShow();var h=location.hash,r=h.indexOf("#/")===0?h.slice(2):"",on=!!T[r],m=document.getElementById("top");
+function route(){ipShow();var h=location.hash,r=h.indexOf("#/")===0?h.slice(2):"",on=!!T[r],m=document.getElementById("top");
 document.getElementById("legal").hidden=!on;m.hidden=on;
 document.querySelectorAll("[data-r]").forEach(function(a){a.hidden=a.dataset.r!==r});
 document.title=on?T[r]+" · PADEL DROP":"PADEL DROP · Suscripción mensual de grips y pelotas de pádel";

@@ -13,6 +13,8 @@ export const publicHeaders = helmet({
       imgSrc: ["'self'", 'data:'],
       scriptSrc: ["'self'"],
       connectSrc: ["'self'"],
+      // Mapa de Google de los puntos de recogida (solo se carga si el visitante pulsa «Ver en Google Maps»)
+      frameSrc: ['https://www.google.com', 'https://maps.google.com'],
       formAction: ["'self'", 'https://buy.stripe.com', 'https://billing.stripe.com'],
       upgradeInsecureRequests: config.isProd ? [] : null,
     },

@@ -196,3 +196,66 @@ body:has(dialog[open]),body:has(dialog[open]) a,body:has(dialog[open]) button{cu
 .gs .mq{animation:none}
 header{transition:box-shadow .4s var(--ease)}header.sc{box-shadow:0 14px 40px -24px rgba(0,0,0,.9)}
 .final{width:calc(100% - 40px)}
+
+/* ---------- Nuestra filosofía (sección oscura) ---------- */
+.phil{position:relative;overflow:hidden;background:#070807;color:#fff;isolation:isolate}
+.pglow{position:absolute;z-index:-1;width:70vmax;height:70vmax;left:50%;top:-30vmax;margin-left:-35vmax;border-radius:50%;background:radial-gradient(circle,rgba(198,255,0,.16),rgba(45,226,180,.06) 40%,transparent 65%);pointer-events:none}
+.phil .head p{color:#a3a3a0}.phil .head .eyebrow{color:#c9c9c4}
+.phg{gap:20px}
+.pcard{position:relative;overflow:hidden;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:34px 28px 32px;color:#fff;box-shadow:0 30px 60px -36px rgba(0,0,0,.9)}
+.pcard:hover{border-color:rgba(198,255,0,.45);box-shadow:0 40px 80px -40px rgba(120,170,0,.55)}
+.pn{position:absolute;right:22px;top:16px;font:800 60px/1 var(--hd);color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.14)}
+.pic{display:grid;place-items:center;width:58px;height:58px;border-radius:18px;background:var(--lime);color:var(--ink);box-shadow:0 14px 30px -10px rgba(198,255,0,.7);margin-bottom:28px}
+.pic svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pcard h3{font-size:30px}
+.pcard p{color:#b9bab4;font-size:15.5px;line-height:1.6;margin-top:10px}
+.pcard a{color:var(--lime)}
+
+/* ---------- Puntos de recogida ---------- */
+.clg{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:56px;align-items:center}
+.clubs .head{margin-bottom:34px}
+.cls{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+.cls li{position:relative}
+.clb{position:relative;width:100%;display:flex;align-items:center;gap:16px;text-align:left;font:inherit;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:22px;padding:18px 20px 18px 18px;cursor:pointer;box-shadow:var(--sh-1);transition:border-color .3s,box-shadow .4s var(--ease),background .3s}
+.clb:hover{box-shadow:var(--sh-2)}
+.clb.on{border-color:#7aa800;box-shadow:0 0 0 3px rgba(198,255,0,.35),var(--sh-2)}
+.clb:focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+.cpin{flex:none;display:grid;place-items:center;width:48px;height:48px;border-radius:15px;background:var(--card);color:var(--fg);transition:background .3s,color .3s}
+.clb.on .cpin{background:var(--lime);color:var(--ink);box-shadow:0 10px 24px -10px rgba(140,190,0,.9)}
+.cpin svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ctx{min-width:0;display:grid;gap:3px;padding-right:96px}
+.ctx b{font:800 22px/1.05 var(--hd);text-transform:uppercase;letter-spacing:.01em}
+.ctx span{font-size:14px;color:var(--mut);line-height:1.4}
+.cnum{position:absolute;right:20px;top:12px;font:800 30px/1 var(--hd);color:transparent;-webkit-text-stroke:1.2px var(--line)}
+.cgo{position:absolute;right:18px;bottom:16px;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:700;color:var(--fg);text-decoration:none;padding:6px 10px;border-radius:999px;background:var(--card);transition:background .25s,color .25s}
+.cgo:hover{background:var(--lime);color:var(--ink)}
+.cgo svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.map{position:relative;overflow:hidden;border-radius:32px;background:#070807;color:#fff;box-shadow:0 50px 100px -50px rgba(0,0,0,.75),0 0 0 1px rgba(255,255,255,.06)}
+.mbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.08);font-size:13px;color:#a3a3a0}
+.mbar span{display:inline-flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.12em;font-weight:600;white-space:nowrap}
+.mbar i{width:8px;height:8px;border-radius:50%;background:var(--lime);animation:ping 2.2s var(--ease) infinite}
+.mbar b{font:800 20px/1 var(--hd);text-transform:uppercase;color:#fff;letter-spacing:.02em}
+.mframe{position:relative;aspect-ratio:600/420}
+.msvg{display:block;width:100%;height:100%}
+.mframe iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:grayscale(.15) contrast(1.05)}
+.map.live .msvg{visibility:hidden}
+.mroad{fill:none;stroke:rgba(255,255,255,.08);stroke-width:10;stroke-linecap:round}
+.mroad2{fill:none;stroke:var(--lime);stroke-width:2;stroke-dasharray:6 8;stroke-linecap:round;opacity:.7}
+.mhint text{fill:#6f716b;font:600 13px var(--bd);letter-spacing:.06em}
+.mpin{cursor:pointer;outline:none}
+.mpin .mdot{fill:#1a1c18;stroke:#c9c9c4;stroke-width:2.5;transition:fill .3s,stroke .3s}
+.mpin .mcore{fill:#c9c9c4;transition:fill .3s}
+.mpin .mpulse{fill:rgba(198,255,0,.18);opacity:0;transform-box:fill-box;transform-origin:center}
+.mpin text{fill:#c9c9c4;font:800 18px var(--hd);text-transform:uppercase;letter-spacing:.04em;transition:fill .3s}
+.mpin:hover .mdot,.mpin:focus-visible .mdot{stroke:var(--lime)}
+.mpin.on .mdot{fill:var(--lime);stroke:var(--lime)}
+.mpin.on .mcore{fill:#070807}
+.mpin.on text{fill:var(--lime)}
+.mpin.on .mpulse{opacity:1;animation:mpulse 2s var(--ease) infinite}
+@keyframes mpulse{0%{transform:scale(.5);opacity:.9}100%{transform:scale(2.2);opacity:0}}
+.mfoot{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:18px 22px 22px;border-top:1px solid rgba(255,255,255,.08)}
+.mfoot .btn{padding:12px 20px;font-size:15px}
+.mfoot .btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mnote{flex:1 1 220px;font-size:12px;color:#8a8b86;line-height:1.5}.mnote a{color:#c9c9c4}
+@media (max-width:900px){.clg{grid-template-columns:1fr;gap:32px}}
+@media (max-width:560px){.ctx{padding-right:0;padding-bottom:30px}.cgo{right:14px;bottom:12px}.cnum{font-size:24px;top:10px;right:14px}.ctx b{font-size:20px}.mbar b{font-size:16px}.mpin text{font-size:22px}}

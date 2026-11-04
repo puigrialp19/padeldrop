@@ -34,7 +34,7 @@
 <button class="cart" id="ct" aria-label="Abrir cesta"><svg viewBox="0 0 24 24"><path d="M6 7h12l1 13H5z"/><path d="M9 10V6a3 3 0 016 0v4"/></svg><b id="cn" hidden>1</b></button>
 <button class="burger" id="bg" aria-label="Abrir menú" aria-expanded="false">☰</button>
 <nav class="links" id="lk" aria-label="Principal">
-<a href="#planes">Planes</a><a href="#como">Cómo funciona</a><a href="#faq">Preguntas frecuentes</a>
+<a href="#planes">Planes</a><a href="#como">Cómo funciona</a><a href="#clubes">Clubs</a><a href="#faq">Preguntas frecuentes</a>
 <a id="acc" href="#mi-cuenta" hidden>Mi cuenta</a><a class="btn b1 sm mag" href="#planes">Suscríbete</a>
 </nav>
 </div>
@@ -90,13 +90,54 @@
 <p class="note" id="pn"></p>
 </div></section>
 
-<section id="resenas" class="alt rs" hidden>
-<div class="pv" id="preview-resenas" hidden>Vista previa. Las reseñas de ejemplo no son públicas: solo se muestran las reales cuando se active CONFIG.reviews.enabled</div>
+<section id="filosofia" class="phil">
+<span class="pglow" aria-hidden="true"></span>
 <div class="wrap">
-<div class="head"><p class="eyebrow">Opiniones</p><h2 class="split">Lo que dicen al abrir la puerta</h2><p>Opiniones de quienes ya reciben su caja PADEL DROP.</p></div>
-<div class="rsg" id="rsg"></div>
-<p class="note">Opiniones de nuestros primeros clientes, publicadas con su permiso.</p>
-<div class="rsc"><a class="btn b1 mag" href="#planes">Ver planes de suscripción</a></div>
+<div class="head"><p class="eyebrow">Nuestra filosofía</p><h2 class="split">Lo que no negociamos</h2><p>Cuatro compromisos que cumplimos en cada caja, con cada cliente.</p></div>
+<div class="grid g4 phg">
+<article class="card tilt pcard"><span class="pn">01</span><span class="pic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/></svg></span><h3>Transparencia</h3><p>Precio final con IVA y gastos de envío desglosados antes de pagar. Sin letra pequeña ni sorpresas en el cobro.</p></article>
+<article class="card tilt pcard"><span class="pn">02</span><span class="pic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><h3>Honestidad</h3><p>Sin permanencia: pausas o cancelas cuando quieras desde «Mi cuenta», sin llamadas ni excusas.</p></article>
+<article class="card tilt pcard"><span class="pn">03</span><span class="pic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg></span><h3>Calidad en cada caja</h3><p>Pelotas y overgrips seleccionados, preparados con cuidado y bien protegidos en nuestra caja PADEL DROP.</p></article>
+<article class="card tilt pcard"><span class="pn">04</span><span class="pic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/></svg></span><h3>Trato cercano</h3><p>Detrás de PADEL DROP hay personas. Te respondemos nosotros mismos en <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a>.</p></article>
+</div></div></section>
+
+<section id="clubes" class="alt clubs"><div class="wrap clg">
+<div class="cll">
+<div class="head"><p class="eyebrow">Puntos de recogida</p><h2 class="split">Recoge tu caja en tu club</h2><p>Si juegas en Interpàdel, elige al contratar la recogida en club: tu caja te espera allí, sin gastos de envío.</p></div>
+<ul class="cls">
+<li><button type="button" class="clb tilt on" data-club="guissona" data-q="Interp%C3%A0del%20Guissona%2C%20Carrer%20Bonaigua%2C%2014%2C%2025210%20Guissona%20(Lleida)" aria-pressed="true">
+<span class="cpin"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0114 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><span class="ctx"><b>Interpàdel Guissona</b><span>Carrer Bonaigua, 14, 25210 Guissona (Lleida)</span></span><span class="cnum">01</span></button>
+<a class="cgo" href="https://www.google.com/maps/dir/?api=1&amp;destination=Interp%C3%A0del%20Guissona%2C%20Carrer%20Bonaigua%2C%2014%2C%2025210%20Guissona%20(Lleida)" target="_blank" rel="noopener">Cómo llegar <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a></li>
+<li><button type="button" class="clb tilt" data-club="tarrega" data-q="Interp%C3%A0del%20T%C3%A0rrega%2C%20Av.%20de%20la%20Canaleta%2C%2069B%2C%2025300%20T%C3%A0rrega%20(Lleida)" aria-pressed="false">
+<span class="cpin"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0114 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><span class="ctx"><b>Interpàdel Tàrrega</b><span>Av. de la Canaleta, 69B, 25300 Tàrrega (Lleida)</span></span><span class="cnum">02</span></button>
+<a class="cgo" href="https://www.google.com/maps/dir/?api=1&amp;destination=Interp%C3%A0del%20T%C3%A0rrega%2C%20Av.%20de%20la%20Canaleta%2C%2069B%2C%2025300%20T%C3%A0rrega%20(Lleida)" target="_blank" rel="noopener">Cómo llegar <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a></li>
+<li><button type="button" class="clb tilt" data-club="golmes" data-q="Interp%C3%A0del%20Golm%C3%A9s%2C%20Carrer%20Barcelona%2C%203%2C%2025241%20Golm%C3%A9s%20(Lleida)" aria-pressed="false">
+<span class="cpin"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0114 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><span class="ctx"><b>Interpàdel Golmés</b><span>Carrer Barcelona, 3, 25241 Golmés (Lleida)</span></span><span class="cnum">03</span></button>
+<a class="cgo" href="https://www.google.com/maps/dir/?api=1&amp;destination=Interp%C3%A0del%20Golm%C3%A9s%2C%20Carrer%20Barcelona%2C%203%2C%2025241%20Golm%C3%A9s%20(Lleida)" target="_blank" rel="noopener">Cómo llegar <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a></li>
+</ul>
+</div>
+<div class="map" id="map">
+<div class="mbar"><span><i></i>Recogida gratis</span><b id="mname">Interpàdel Guissona</b></div>
+<div class="mframe" id="mframe"><svg class="msvg" viewBox="0 0 600 420" role="img" aria-label="Mapa de los tres clubs de recogida: Guissona, Tàrrega y Golmés">
+<defs><pattern id="mg" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="rgba(255,255,255,.06)"/></pattern>
+<radialGradient id="mglow" cx="55%" cy="45%" r="60%"><stop offset="0" stop-color="rgba(198,255,0,.18)"/><stop offset="1" stop-color="rgba(198,255,0,0)"/></radialGradient></defs>
+<rect width="600" height="420" fill="url(#mg)"/><rect width="600" height="420" fill="url(#mglow)"/>
+<path class="mroad" d="M140 310 C 200 300, 260 300, 321 286 S 410 170, 450 107"/><path class="mroad2" d="M140 310 C 200 300, 260 300, 321 286 S 410 170, 450 107"/>
+<g class="mhint"><text x="24" y="398">← Lleida</text><text x="576" y="398" text-anchor="end">Barcelona →</text>
+<g transform="translate(560 44)"><circle r="16" fill="none" stroke="rgba(255,255,255,.18)"/><path d="M0-11 L4 2 L0 0 L-4 2Z" fill="#c6ff00"/><text y="-22" text-anchor="middle">N</text></g></g>
+<g class="mpin on" data-club="guissona" transform="translate(450 107)" tabindex="0" role="button" aria-label="Interpàdel Guissona"><g class="mpi">
+<circle class="mpulse" r="22"/><circle class="mdot" r="9"/><circle class="mcore" r="3.5"/>
+<text x="18" y="-18" text-anchor="start">Guissona</text></g></g>
+<g class="mpin" data-club="tarrega" transform="translate(321 286)" tabindex="0" role="button" aria-label="Interpàdel Tàrrega"><g class="mpi">
+<circle class="mpulse" r="22"/><circle class="mdot" r="9"/><circle class="mcore" r="3.5"/>
+<text x="18" y="6" text-anchor="start">Tàrrega</text></g></g>
+<g class="mpin" data-club="golmes" transform="translate(140 310)" tabindex="0" role="button" aria-label="Interpàdel Golmés"><g class="mpi">
+<circle class="mpulse" r="22"/><circle class="mdot" r="9"/><circle class="mcore" r="3.5"/>
+<text x="0" y="-26" text-anchor="middle">Golmés</text></g></g>
+</svg></div>
+<div class="mfoot"><button type="button" class="btn b1 mag" id="mload"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg><span>Ver en Google Maps</span></button>
+<p class="mnote">El mapa de Google solo se carga si pulsas el botón. Al hacerlo, Google puede instalar cookies (ver <a href="#/cookies">política de cookies</a>).</p></div>
+</div>
 </div></section>
 
 <section id="interpadel" class="alt ip" hidden>
@@ -202,11 +243,13 @@
 <ul><li><strong>Navegación por la web pública:</strong> la web de PADEL DROP no instala ninguna cookie ni guarda información en tu dispositivo mientras navegas por ella. Para saber cuántas personas nos visitan, la página envía periódicamente a nuestro servidor una señal anónima (un número aleatorio que desaparece al cerrar la página, la sección que estás viendo y el origen de la visita), sin cookies ni almacenamiento local y sin guardar tu dirección IP.</li>
 <li><strong>Sesión del panel de gestión</strong> (<code>__Host-pd_admin</code>, propia): solo se instala a las personas autorizadas que gestionan la tienda cuando inician sesión. Mantiene la sesión abierta de forma segura y caduca tras 8 horas sin actividad o al cerrar sesión. Los clientes no la reciben.</li>
 <li><strong>Pago y área de cliente</strong> (Stripe, de terceros): cuando pulsas «Contratar y pagar» o «Mi cuenta», pasas a las páginas seguras de Stripe (checkout.stripe.com, buy.stripe.com y billing.stripe.com). Allí, Stripe instala cookies técnicas necesarias para procesar el pago, mantener tu sesión y prevenir el fraude, por ejemplo <code>__stripe_mid</code> (prevención del fraude, 1 año) y <code>__stripe_sid</code> (sesión de pago, 30 minutos). Estas cookies las gestiona Stripe conforme a su <a href="https://stripe.com/es/legal/cookies-policy" target="_blank" rel="noopener">política de cookies</a>.</li></ul>
-<h2>3. Cookies opcionales</h2>
+<h2>3. Mapa de los puntos de recogida</h2>
+<p>En la sección «Puntos de recogida» mostramos un mapa propio que no conecta con nadie. Solo si pulsas «Ver en Google Maps» se carga el mapa de Google (Google Ireland Ltd.), que puede instalar sus propias cookies y recibir tu dirección IP. Si no lo pulsas, no se conecta con Google. Los enlaces «Cómo llegar» abren Google Maps en otra pestaña.</p>
+<h2>4. Cookies opcionales</h2>
 <p>Si en el futuro usamos cookies analíticas o de otro tipo no necesario, te pediremos tu consentimiento antes de instalarlas, con un aviso que te permita aceptar o rechazar con la misma facilidad, y actualizaremos esta política.</p>
-<h2>4. Cómo gestionar o eliminar cookies</h2>
+<h2>5. Cómo gestionar o eliminar cookies</h2>
 <p>Puedes ver, bloquear o borrar las cookies desde los ajustes de privacidad de tu navegador (Chrome, Firefox, Safari, Edge u otros). Si bloqueas las cookies técnicas de Stripe, es posible que no puedas completar el pago ni acceder a «Mi cuenta».</p>
-<h2>5. Responsable y contacto</h2>
+<h2>6. Responsable y contacto</h2>
 <p>Èric Puig Rialp (PADEL DROP), NIF 78102888V. Contacto: <a href="mailto:padeldropp@gmail.com">padeldropp@gmail.com</a>. Más información en la <a href="#/privacidad">Política de privacidad</a>.</p></article>
 
 <article data-r="condiciones" hidden><a class="back" href="#top">← Volver al inicio</a>
