@@ -65,7 +65,6 @@
     .from('.tags li', { y: 16, opacity: 0, stagger: .07, duration: .8 }, '-=.8')
     .from('.hv .pack', { scale: .8, rotate: -8, opacity: 0, duration: 1.4, ease: 'expo.out' }, .35)
     .from('.ring', { scale: .6, opacity: 0, duration: 1.6, ease: 'expo.out' }, .3)
-    .from('.chip', { scale: .6, opacity: 0, y: 20, stagger: .15, ease: 'back.out(2)', duration: .9 }, 1)
     .from('.hball', { scale: 0, rotate: -180, ease: 'back.out(2.4)', duration: 1 }, .9);
   gsap.to('.hv .pack', { y: -12, duration: 3, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.6 });
 
@@ -81,12 +80,10 @@
   // Parallax con el ratón sobre la portada
   if (fine) {
     var px = gsap.quickTo('.hv .pack', 'x', { duration: 1.2, ease: 'power3' }), py = gsap.quickTo('.hv .pack', 'y', { duration: 1.2, ease: 'power3' });
-    var cx = $$('.chip').map(function (c, i) { var k = i ? -1 : 1; return { x: gsap.quickTo(c, 'x', { duration: 1.4, ease: 'power3' }), y: gsap.quickTo(c, 'y', { duration: 1.4, ease: 'power3' }), k: k }; });
     var bx = gsap.quickTo('.bl3', 'x', { duration: 2, ease: 'power3' }), by = gsap.quickTo('.bl3', 'y', { duration: 2, ease: 'power3' });
     hero.addEventListener('pointermove', function (e) {
       var r = hero.getBoundingClientRect(), dx = (e.clientX - r.left) / r.width - .5, dy = (e.clientY - r.top) / r.height - .5;
       px(dx * 34); py(dy * 24);
-      cx.forEach(function (c) { c.x(dx * 50 * c.k); c.y(dy * 36 * c.k); });
       bx(dx * 160); by(dy * 120);
     });
   }
