@@ -121,6 +121,8 @@ document.querySelectorAll("[data-r]").forEach(function(a){a.hidden=a.dataset.r!=
 document.title=on?T[r]+" · PADEL DROP":HOME_TITLE;
 if(on){scrollTo(0,0)}else if(h.length>1){var t=document.getElementById(h.slice(1));if(t)t.scrollIntoView()}}
 addEventListener("hashchange",route);route();
+/* Enlaces internos (menú, logo, botones): un solo desplazamiento suave, sin el segundo salto que hacía el hashchange */
+document.addEventListener("click",function(e){var l=e.target.closest('a[href^="#"]');if(!l||e.defaultPrevented||e.button||e.metaKey||e.ctrlKey)return;var h=l.getAttribute("href");if(h.length<2||h.indexOf("#/")===0||h==="#mi-cuenta"||!document.getElementById("legal").hidden)return;var t=h==="#top"?null:document.getElementById(h.slice(1));if(h!=="#top"&&!t)return;e.preventDefault();if(location.hash!==h)history.pushState(null,"",h);if(t)t.scrollIntoView();else scrollTo(0,0)});
 
 /* Precio «desde» de la portada y de la barra fija: el pack más barato */
 var from=eur(Math.min.apply(null,PLANS.map(function(p){return p.price})));

@@ -68,9 +68,9 @@
     .from('.hball', { scale: 0, rotate: -180, ease: 'back.out(2.4)', duration: 1 }, .9);
   gsap.to('.hv .pack', { y: -12, duration: 3, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.6 });
 
-  // Parallax con el scroll: el texto sube y se desvanece, la mascota y los fondos van a otro ritmo
+  // Parallax con el scroll: el texto sube, la mascota y los fondos van a otro ritmo
   var hs = { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true };
-  gsap.to('.hg .ht', { yPercent: -18, opacity: .25, ease: 'none', scrollTrigger: hs });
+  gsap.to('.hg .ht', { yPercent: -18, ease: 'none', scrollTrigger: hs }); // sin oscurecer el título: al volver arriba se ve siempre al 100 %
   gsap.to('.hrow', { y: -60, ease: 'none', scrollTrigger: hs });
   gsap.to('.hv', { y: 90, ease: 'none', scrollTrigger: hs });
   gsap.to('.bl1', { yPercent: 30, ease: 'none', scrollTrigger: hs });
