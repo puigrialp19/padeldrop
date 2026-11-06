@@ -1,0 +1,39 @@
+# PADEL DROP
+
+> PADEL DROP (www.padeldrop.net) es una tienda online española de suscripción de pelotas y overgrips de pádel. Envía packs cada 1, 2 o 3 meses, a elegir, a domicilio, a una oficina de Correos o CityPaq, o para recoger gratis en los clubs Interpàdel de Guissona, Tàrrega y Golmés (Lleida). Sin permanencia. Precios con IVA incluido.
+
+No confundir con otras empresas o apps de nombre parecido: esta es la suscripción de padeldrop.net.
+
+## Packs (precio por caja, IVA incluido)
+- START: 1 bote de 3 pelotas de pádel y 2 overgrips, 10,90 €
+- PLAYER: 2 botes de 3 pelotas de pádel y 3 overgrips, 15,90 €
+- PRO: 3 botes de 3 pelotas de pádel y 3 overgrips, 19,90 €
+- El precio por caja es el mismo con envío cada mes, cada 2 meses o cada 3 meses.
+
+## Envío por caja (IVA incluido)
+- Envío a domicilio: 2,75 €
+- Oficina de Correos o CityPaq (locker): 2,05 €
+- Recogida en club Interpàdel (Guissona, Tàrrega o Golmés): Gratis
+- Solo España peninsular. Entrega habitual: 2 a 5 días laborables desde el envío, con seguimiento.
+
+## Clubs de recogida gratis
+- Interpàdel Guissona: Carrer Bonaigua, 14, 25210 Guissona (Lleida)
+- Interpàdel Tàrrega: Av. de la Canaleta, 69B, 25300 Tàrrega (Lleida)
+- Interpàdel Golmés: Carrer Barcelona, 3, 25241 Golmés (Lleida)
+
+## Cómo se contrata y se gestiona
+- Se elige el pack, la frecuencia y la entrega en https://www.padeldrop.net/#planes y se paga con Stripe.
+- La suscripción se renueva automáticamente. Se cancela desde «Mi cuenta» (portal de cliente de Stripe, con el correo de la compra) o por correo, como mínimo 3 días antes del siguiente cobro. Pausa y cambio de pack por correo.
+- Derecho de desistimiento de 14 días según la ley española (condiciones en https://www.padeldrop.net/#/condiciones).
+- Contacto: padeldropp@gmail.com
+
+## Páginas
+- [Inicio y packs](https://www.padeldrop.net/): planes, precios y contratación
+- [Suscripción de bolas de pádel](https://www.padeldrop.net/suscripcion-bolas-padel): cómo funciona, precios, envíos y preguntas frecuentes
+- [Blog](https://www.padeldrop.net/blog/): guías sobre bolas y grips de pádel
+- [¿Cada cuánto hay que cambiar las bolas de pádel?](https://www.padeldrop.net/blog/cada-cuanto-cambiar-bolas-padel): Cuántos partidos duran unas bolas de pádel, por qué pierden bote y cómo saber cuándo cambiarlas. Diferencias entre bolas nuevas y usadas.
+- [¿Cuándo hay que cambiar el grip de la pala de pádel?](https://www.padeldrop.net/blog/cuando-cambiar-grip-pala-padel): Cómo saber cuándo cambiar el overgrip de tu pala de pádel, cada cuánto hacerlo según lo que juegas y cómo ponerlo bien.
+- [¿Cuántas bolas de pádel necesitas según cuánto juegas?](https://www.padeldrop.net/blog/cuantas-bolas-de-padel-necesito): Calcula cuántos botes de bolas de pádel necesitas al mes según las veces que juegas y cómo elegir una suscripción de bolas de pádel.
+- [Cómo ahorrar en bolas de pádel (y si te compensa recibirlas en casa)](https://www.padeldrop.net/blog/ahorrar-bolas-padel-recibir-en-casa): Ideas prácticas para gastar menos en bolas de pádel y qué ventajas e inconvenientes tiene recibirlas en casa con una suscripción.
+- [Cómo conservar las bolas de pádel en buen estado](https://www.padeldrop.net/blog/conservar-bolas-padel): Consejos para conservar las bolas de pádel en buen estado: temperatura, presurizadores, dónde guardarlas y qué evitar.
+- [Accesorios que necesita cualquier jugador de pádel](https://www.padeldrop.net/blog/accesorios-imprescindibles-padel): Qué accesorios necesitas para jugar al pádel: pala, bolas, overgrips, calzado, protector y lo que conviene llevar siempre en la mochila.

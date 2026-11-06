@@ -1,0 +1,54 @@
+/* Páginas de contenido (suscripción y blog). Usa los colores y tipografías de styles.css. */
+.cpage{overflow-x:clip}
+.cnav{display:flex;align-items:center;gap:22px;margin-left:auto}
+.cnav a{text-decoration:none;font-weight:500;font-size:15px}
+.cnav a:not(.btn):hover{text-decoration:underline;text-underline-offset:5px}
+.cnav .btn{margin:0;width:auto;flex:none}
+@media (max-width:560px){.cnav{gap:14px}.cnav a:first-child{display:none}.cnav a{font-size:14px}.cnav .btn{padding:9px 14px}}
+.cmain{max-width:780px;padding-top:28px;padding-bottom:72px}
+.crumbs ol{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:6px;font-size:13px;color:var(--mut)}
+.crumbs li+li::before{content:"/";margin-right:6px;opacity:.6}
+.crumbs a{text-decoration:none}.crumbs a:hover{text-decoration:underline}
+.prose{margin-top:18px}
+.prose h1{font-size:clamp(38px,7vw,64px);margin-bottom:14px}
+.prose h2{font-size:clamp(28px,4.2vw,38px);margin:44px 0 14px}
+.prose h3{font-size:22px;margin:28px 0 10px}
+.prose p,.prose li{font-size:17px;line-height:1.7}
+.prose p+p{margin-top:14px}
+.prose ul,.prose ol{padding-left:22px;margin:12px 0}
+.prose li+li{margin-top:8px}
+.prose a{text-decoration:underline;text-decoration-color:var(--lime);text-decoration-thickness:2px;text-underline-offset:3px}
+.prose .lead{font-size:19px;color:var(--mut);margin-bottom:22px}
+.pmeta{font-size:14px;color:var(--mut);margin-bottom:14px}
+.answer{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--lime);border-radius:14px;padding:18px 20px;margin:22px 0}
+.answer p{margin:0}
+.formula{font-family:var(--hd);font-size:22px;text-transform:uppercase;background:var(--card);border-radius:12px;padding:12px 16px;text-align:center}
+.tbl{overflow-x:auto;margin:16px 0;border:1px solid var(--line);border-radius:14px}
+.tbl table{width:100%;border-collapse:collapse;font-size:16px;min-width:420px}
+.tbl caption{text-align:left;padding:12px 16px 4px;font-size:13px;color:var(--mut)}
+.tbl th,.tbl td{padding:12px 16px;text-align:left;border-top:1px solid var(--line);vertical-align:top}
+.tbl thead th{border-top:0;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
+.tbl tbody th{font-weight:700}
+.steps-list li::marker{font-family:var(--hd);font-weight:800}
+.prose .faq{margin-top:10px}
+.prose details{border-bottom:1px solid var(--line);padding:14px 0}
+.prose summary{cursor:pointer;font-weight:600;font-size:17px}
+.prose details p{margin-top:8px;color:var(--mut)}
+.posts{list-style:none;padding:0!important;display:grid;gap:14px}
+.posts li{margin:0!important}
+.posts a{display:block;text-decoration:none!important;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;transition:transform .2s,border-color .2s}
+.posts a:hover{transform:translateY(-2px);border-color:var(--lime)}
+.posts h2{font-size:clamp(24px,3.4vw,30px);margin:0 0 8px}
+.posts p{color:var(--mut);font-size:16px}
+.posts span{display:inline-block;margin-top:10px;font-weight:600}
+.related{margin-top:48px;border-top:1px solid var(--line);padding-top:24px}
+.related h2{font-size:28px;margin-bottom:10px}
+.related ul{padding-left:20px}.related li+li{margin-top:8px}
+.ccta{margin-top:56px;background:#0a0a0a;color:#f5f5f2;border-radius:24px;padding:32px 26px;text-align:center}
+.ccta h2{font-size:clamp(30px,5vw,44px);margin-bottom:10px}
+.ccta p{color:#c9c9c4;margin-bottom:18px}
+.ccta .btn{width:auto;display:inline-flex}
+.cfoot{display:grid;gap:22px;grid-template-columns:1.2fr 1fr 1fr}
+.cfoot nav{display:flex;flex-direction:column;gap:8px}
+.cfoot a{text-decoration:none}.cfoot nav a:hover{text-decoration:underline}
+@media (max-width:760px){.cfoot{grid-template-columns:1fr}}

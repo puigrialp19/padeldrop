@@ -1,4 +1,33 @@
+# PADEL DROP · www.padeldrop.net
+# Web pública abierta a buscadores y asistentes de IA. Solo se cierran el panel privado y la API.
+
 User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+# Buscadores y asistentes de IA que consultan la web para responder (búsqueda y citas)
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: Applebot
+User-agent: DuckAssistBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+# Rastreadores de entrenamiento de modelos: permitidos para que los modelos conozcan la marca
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+Allow: /
 Disallow: /admin/
 Disallow: /api/
 

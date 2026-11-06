@@ -85,7 +85,13 @@ app.get('/admin/offline.html', (req, res) => res.sendFile(path.join(adminDir, 'o
 app.use('/admin', requireAdminPage, express.static(adminDir, { index: 'index.html', extensions: ['html'] }));
 
 // 4) Web pública (la de siempre).
-app.use(publicHeaders, express.static(config.paths.public, { extensions: ['html'] }));
+// Caché: imágenes y fuentes 7 días (no cambian de nombre a menudo); HTML, CSS y JS se revalidan siempre (ETag).
+// llms.txt se sirve como texto plano en UTF-8.
+const LONG = /\.(?:png|jpe?g|webp|avif|svg|ico|woff2?)$/i;
+app.use(publicHeaders, express.static(config.paths.public, { extensions: ['html'], setHeaders(res, file) {
+  if (LONG.test(file)) res.set('Cache-Control', 'public, max-age=604800');
+  if (file.endsWith('llms.txt')) res.set('Content-Type', 'text/plain; charset=utf-8');
+} }));
 
 app.use((req, res) => res.status(404).sendFile(path.join(config.paths.public, 'index.html')));
 

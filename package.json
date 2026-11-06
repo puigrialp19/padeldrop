@@ -18,7 +18,8 @@
     "db:clear-demo": "node server/scripts/seed.js --clear",
     "create-admin": "node server/scripts/create-admin.js",
     "test:webhook": "node server/scripts/test-webhook.js",
-    "stripe:setup": "node server/scripts/stripe-setup.js"
+    "stripe:setup": "node server/scripts/stripe-setup.js",
+    "build:content": "node server/scripts/build-content.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

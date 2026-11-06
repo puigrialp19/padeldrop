@@ -68,7 +68,7 @@ dialog .sum{background:var(--card);border-radius:14px;padding:14px 16px;margin:1
 .links.open{display:flex}.links a{padding:13px 0;font-size:17px}.links .btn{margin-top:8px}
 .plans{grid-template-columns:1fr}.g4{grid-template-columns:1fr}section{padding:60px 0}.cta .btn{flex:1 1 100%}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-:root{--logo:url(../assets/img/logo-padel-drop.png)}
+:root{--logo:url(../assets/img/logo-padel-drop.webp)}
 .lg{display:block;background:var(--logo) center/contain no-repeat}
 header{color:#fff;border-color:#262626}.burger{color:#fff;border-color:#333}
 footer{background:#0a0a0a;color:#a3a3a0}footer a{color:#e8e8e5}
