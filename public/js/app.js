@@ -29,7 +29,7 @@ function drawFreq(){
 }
 pl.innerHTML="";PLANS.forEach(function(p){
   var d=document.createElement("article");d.className="plan tilt"+(p.featured?" f":"");
-  d.innerHTML=(p.featured?'<span class="badge">RECOMENDADO - MÁS VENDIDO</span>':'')+
+  d.innerHTML=(p.featured?'<span class="badge">RECOMENDADO</span>':'')+
   '<h3>'+p.name+'</h3>'+(p.who?'<p class="who">'+p.who+'</p>':'')+
   '<div class="price">'+eur(p.price)+' <small class="per">/ mes</small></div>'+
   '<p class="eq">'+p.eq+'</p>'+
