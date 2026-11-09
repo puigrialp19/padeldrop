@@ -74,3 +74,10 @@
 @media (prefers-reduced-motion:reduce){.pdc-launch,.pdc-panel,.pdc-m,.pdc-cards,.pdc-quick,.pdc-wa-inline{animation:none!important;transition:none!important}.pdc-typing i{animation:none}}
 @media print{.pdc-launch,.pdc-panel{display:none!important}}
 .pdc-log .na{animation:none}
+/* La web usa un cursor propio (punto y aro verdes) que queda por debajo del chat y oculta el del sistema.
+   Encima del chat y de su botón se usa siempre el cursor normal, para verlo en todo momento. */
+.has-cur .pdc-panel,.has-cur .pdc-panel *,.has-cur .pdc-launch{cursor:default}
+.has-cur .pdc-panel .pdc-m,.has-cur .pdc-panel .pdc-m strong,.has-cur .pdc-panel .pdc-card p,.has-cur .pdc-panel .pdc-head small{cursor:text}
+.has-cur .pdc-panel textarea{cursor:text}
+.has-cur .pdc-panel a,.has-cur .pdc-panel button,.has-cur .pdc-launch,.has-cur .pdc-panel a *,.has-cur .pdc-panel button *{cursor:pointer}
+body:has(.pdc-panel:hover) .cur,body:has(.pdc-launch:hover) .cur{display:none!important}
