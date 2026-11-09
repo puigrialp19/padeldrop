@@ -28,3 +28,8 @@ services:
         sync: false
       - key: STRIPE_WEBHOOK_SECRET
         sync: false
+      # Asistente virtual (opcional): IA gratuita de Cloudflare Workers AI. Sin ellas el chat usa solo su motor propio.
+      - key: CF_ACCOUNT_ID
+        sync: false
+      - key: CF_AI_TOKEN
+        sync: false

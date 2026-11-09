@@ -88,6 +88,9 @@ ac.addEventListener("click",function(e){e.preventDefault();openAcc()});
 acd.addEventListener("click",function(e){if(e.target===acd||e.target.closest("#ac"))acd.close()});
 if(location.hash==="#mi-cuenta")openAcc()}
 drawCart();
+/* Enlaces /#pack-start, /#pack-player o /#pack-pro (desde el asistente u otras páginas): abren la cesta con ese pack */
+function packHash(){var m=/^#pack-(start|player|pro)$/.exec(location.hash);if(!m||!planOf(m[1]))return;if(cart!==m[1])drawCart.k1=drawCart.k2=false;cart=m[1];history.replaceState(null,"","#planes");var s=document.getElementById("planes");if(s)s.scrollIntoView();openCart()}
+addEventListener("hashchange",packHash);packHash();
 var bg=document.getElementById("bg"),lk=document.getElementById("lk");
 bg.onclick=function(){var o=lk.classList.toggle("open");bg.setAttribute("aria-expanded",o)};
 lk.addEventListener("click",function(e){if(e.target.tagName==="A"){lk.classList.remove("open");bg.setAttribute("aria-expanded","false")}});

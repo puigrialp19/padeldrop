@@ -34,6 +34,15 @@ export const config = {
     apiKey: env.PACKLINK_API_KEY || '',
     apiUrl: (env.PACKLINK_API_URL || 'https://api.packlink.com/v1/').replace(/\/?$/, '/'),
   },
+  // Asistente virtual: IA gratuita de Cloudflare Workers AI (plan Workers Free: 10.000 neuronas al día sin coste).
+  // Sin estas variables, el chat funciona igual con su motor propio. Nunca se envían al navegador.
+  cfAi: {
+    accountId: env.CF_ACCOUNT_ID || '',
+    token: env.CF_AI_TOKEN || '',
+    model: env.CF_AI_MODEL || '@cf/google/gemma-4-26b-a4b-it',
+    // Tope diario propio, por debajo del gratuito, por si la cuenta de Cloudflare tuviera un plan de pago
+    dailyNeurons: Number(env.CF_AI_DAILY_NEURONS || 9000),
+  },
   paths: {
     public: path.join(ROOT, 'public'),
     admin: path.join(ROOT, 'admin'),

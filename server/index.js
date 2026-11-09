@@ -14,6 +14,8 @@ import { pushRouter } from './routes/push.js';
 import { initPush } from './services/push.js';
 import { visitRouter, liveRouter } from './routes/live.js';
 import { initLive } from './services/live.js';
+import { chatRouter, chatAdminRouter } from './routes/chat.js';
+import { initChat } from './services/assistant.js';
 
 // Comprobar la base de datos antes de aceptar visitas.
 try {
@@ -28,6 +30,8 @@ try {
 try { await initPush(); } catch (err) { console.error('  Avisos push no disponibles:', err.message); }
 // Visitantes en directo (anónimo): crea su tabla de recuentos la primera vez.
 try { await initLive(); } catch (err) { console.error('  Contador de visitas no disponible:', err.message); }
+// Asistente virtual: crea sus tablas de estadísticas la primera vez. Si falla, el chat responde igual.
+try { await initChat(); } catch (err) { console.error('  Estadísticas del asistente no disponibles:', err.message); }
 // Recogida en club: añade sus columnas si aún no existen (los pedidos las necesitan).
 await initOrderExtras();
 purgeExpiredSessions();
@@ -57,6 +61,9 @@ app.use('/api/stripe', stripeRouter);
 // 1b) Señales anónimas de visita desde la web pública (antes de la zona de administración).
 app.use('/api/visit', noStore, visitRouter);
 
+// 1c) Asistente virtual de la web pública.
+app.use('/api/chat', noStore, chatRouter);
+
 // 2) API del panel (JSON, solo administradores).
 app.use('/api', adminHeaders, noStore, apiLimiter, express.json({ limit: '20kb' }), loadUser, sameOrigin);
 app.use('/api/auth', authRouter);
@@ -66,6 +73,7 @@ app.use('/api/admin/customers', customersRouter);
 app.use('/api/admin/orders', ordersRouter);
 app.use('/api/admin/push', pushRouter);
 app.use('/api/admin/live', liveRouter);
+app.use('/api/admin/chat', chatAdminRouter);
 app.use('/api', (req, res) => res.status(404).json({ error: 'Ruta no encontrada.' }));
 
 // 3) Panel /admin. El login y su CSS son públicos; todo lo demás exige sesión de administrador.

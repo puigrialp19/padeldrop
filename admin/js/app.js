@@ -5,6 +5,7 @@ import { renderCustomerDetail } from './views/customer-detail.js';
 import { renderOrders } from './views/orders.js';
 import { renderLive } from './views/live.js';
 import { renderQr } from './views/qr.js';
+import { renderChat } from './views/chat.js';
 import { toast } from './ui.js';
 import { initPush } from './push.js';
 
@@ -21,6 +22,7 @@ const routes = [
   { re: /^\/pedidos$/, nav: 'pedidos', render: renderOrders },
   { re: /^\/directo$/, nav: 'directo', render: renderLive },
   { re: /^\/clubs$/, nav: 'clubs', render: renderQr },
+  { re: /^\/asistente$/, nav: 'asistente', render: renderChat },
 ];
 
 export function parseHash() {

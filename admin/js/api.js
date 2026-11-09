@@ -39,6 +39,7 @@ export const api = {
   pushUnsubscribe: (endpoint) => request('POST', '/api/admin/push/unsubscribe', { endpoint }),
   pushTest: () => request('POST', '/api/admin/push/test'),
   live: () => request('GET', '/api/admin/live'),
+  chat: (days) => request('GET', `/api/admin/chat${qs({ days })}`),
   liveSummary: () => request('GET', '/api/admin/live?summary=1'),
   sourceStats: (source) => request('GET', `/api/admin/live/source/${encodeURIComponent(source)}`),
   qrUrl: (text) => `/api/admin/live/qr.svg${qs({ text })}`,
