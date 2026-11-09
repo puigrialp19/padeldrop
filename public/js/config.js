@@ -13,7 +13,7 @@ var CONFIG={
   shippingNote:"",
   /* Asistente virtual: número de WhatsApp de atención al cliente, solo dígitos y con prefijo de país (por ejemplo "34600111222").
      Mientras esté vacío, el chat no muestra el botón de WhatsApp y ofrece el correo electrónico. */
-  whatsapp:""
+  whatsapp:"34682794409"
 };
 var PLANS=[
   {id:"start",name:"PADEL DROP START",who:"Ideal para 1 partido a la semana",grips:2,cans:1,price:10.9,eq:"1 bote + 2 overgrips en cada caja, IVA incluido"},
