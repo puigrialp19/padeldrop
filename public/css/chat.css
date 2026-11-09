@@ -60,7 +60,8 @@
 .pdc-foot{border-top:1px solid var(--c-line);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:grid;gap:8px;background:var(--c-bg)}
 .pdc-form{display:flex;gap:8px;align-items:flex-end}
 .pdc-form textarea{flex:1;resize:none;font:inherit;font-size:16px;line-height:1.35;max-height:110px;padding:10px 13px;border-radius:14px;border:1px solid var(--c-line);background:var(--c-card);color:var(--c-fg);outline:none}
-.pdc-form textarea:focus{border-color:var(--c-fg)}
+.pdc-form textarea{caret-color:var(--c-fg);transition:border-color .15s,box-shadow .15s}
+.pdc-form textarea:focus{border-color:var(--c-fg);box-shadow:0 0 0 3px rgba(198,255,0,.45)}
 .pdc-send{width:42px;height:42px;flex:none;border-radius:50%;border:0;background:var(--c-lime);color:#0a0a0a;cursor:pointer;display:grid;place-items:center;transition:transform .15s,opacity .15s}
 .pdc-send:hover{transform:scale(1.06)}
 .pdc-send:disabled{opacity:.45;cursor:default;transform:none}
@@ -72,3 +73,4 @@
 
 @media (prefers-reduced-motion:reduce){.pdc-launch,.pdc-panel,.pdc-m,.pdc-cards,.pdc-quick,.pdc-wa-inline{animation:none!important;transition:none!important}.pdc-typing i{animation:none}}
 @media print{.pdc-launch,.pdc-panel{display:none!important}}
+.pdc-log .na{animation:none}

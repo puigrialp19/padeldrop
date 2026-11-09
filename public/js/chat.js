@@ -69,23 +69,33 @@
     d.appendChild(a);
     return d;
   }
+  // Cursor siempre en el chat (en ordenador; en el móvil no se abre el teclado sin que el cliente lo pida)
+  var FINE = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches;
+  function keepFocus() {
+    if (FINE && input && panel && panel.classList.contains('open') && document.activeElement !== input) input.focus({ preventScroll: true });
+  }
+  var shown = 0;
   function render() {
     if (!log) return;
+    var start = log.childNodes.length ? shown : S.msgs.length; // al abrir, nada se anima
     log.innerHTML = '';
     S.msgs.forEach(function (m, i) {
-      var last = i === S.msgs.length - 1;
+      var last = i === S.msgs.length - 1, from = log.childNodes.length;
       log.appendChild(el('div', 'pdc-m ' + (m.r === 'u' ? 'u' : 'b'), fmt(m.t)));
       if (m.cards && m.cards.length) { var cw = el('div', 'pdc-cards'); m.cards.forEach(function (c) { cw.appendChild(cardEl(c)); }); log.appendChild(cw); }
       if (m.wa) log.appendChild(contactLink('pdc-wa-inline'));
       if (last && m.r === 'b' && m.quick && m.quick.length) {
         var q = el('div', 'pdc-quick');
-        m.quick.forEach(function (t) { var b = el('button', null, esc(t)); b.type = 'button'; b.addEventListener('click', function () { send(t); }); q.appendChild(b); });
+        m.quick.forEach(function (t) { var b = el('button', null, esc(t)); b.type = 'button'; b.addEventListener('mousedown', function (e) { e.preventDefault(); }); b.addEventListener('click', function () { send(t); }); q.appendChild(b); });
         log.appendChild(q);
       }
+      if (i < start) for (var k = from; k < log.childNodes.length; k++) log.childNodes[k].classList.add('na');
     });
+    shown = S.msgs.length;
     if (busy) log.appendChild(el('div', 'pdc-typing', '<i></i><i></i><i></i>'));
     if (contactA) { var c = contact(); contactA.innerHTML = c.icon + '<span>' + esc(c.label) + '</span>'; contactA.href = c.href; contactA.dataset.type = c.type; contactA.target = c.type === 'wa_click' ? '_blank' : ''; }
     requestAnimationFrame(function () { log.scrollTop = log.scrollHeight; });
+    keepFocus();
   }
 
   // ---------- Enviar ----------
@@ -136,6 +146,7 @@
     input.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit ? form.requestSubmit() : submit(); } });
     sendBtn = el('button', 'pdc-send', ICON.send);
     sendBtn.type = 'submit'; sendBtn.setAttribute('aria-label', 'Enviar');
+    sendBtn.addEventListener('mousedown', function (e) { e.preventDefault(); });
     function submit() { var t = input.value; input.value = ''; input.style.height = 'auto'; send(t); }
     form.addEventListener('submit', function (e) { e.preventDefault(); submit(); });
     form.appendChild(input); form.appendChild(sendBtn);
@@ -146,6 +157,12 @@
     foot.appendChild(contactA);
     foot.appendChild(el('p', 'pdc-note', 'Asistente automático: puede equivocarse. No escribas datos personales. <a href="/#/privacidad">Privacidad</a>'));
     panel.appendChild(head); panel.appendChild(log); panel.appendChild(foot);
+    panel.addEventListener('click', function (e) {
+      if (e.target.closest('a, button, textarea')) return;
+      var sel = window.getSelection && getSelection();
+      if (sel && !sel.isCollapsed) return;
+      keepFocus();
+    });
     panel.addEventListener('keydown', function (e) { if (e.key === 'Escape') { toggle(false); launch.focus(); } });
     document.body.appendChild(panel);
   }
@@ -170,7 +187,8 @@
         .then(function (j) { hello = j; greet(); })
         .catch(function () { hello = null; if (!S.msgs.length) S.msgs.push({ r: 'b', t: '¡Hola! 👋 Ahora mismo no puedo conectar. Puedes escribir al equipo:', wa: true }); render(); });
     }
-    if (matchMedia('(min-width: 561px)').matches) setTimeout(function () { input.focus(); }, 60);
+    keepFocus();
+    setTimeout(keepFocus, 80); // por si la animación de apertura aún no ha terminado
   }
 
   function start() {
