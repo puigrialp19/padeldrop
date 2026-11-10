@@ -4,17 +4,17 @@ Cuenta: acct_1USXZLRq7KJQz9G9 · generado 2026-11-03 con server/scripts/stripe-s
 
 | Pack | Price ID | Enlace de pago |
 |---|---|---|
-| Pack Básico / RALLYBOX START (10,90 €) | price_1UXe0LRq7KJQz9G9okhaaqdq | https://buy.stripe.com/eVq14peA03hQ1JV6cCeZ20x |
-| Pack Intermedio / RALLYBOX PLAYER (15,90 €) | price_1UXe0NRq7KJQz9G9zdKpijhL | https://buy.stripe.com/fZu3cx63u7y6fAL30qeZ20A |
-| Pack Premium / RALLYBOX PRO (19,90 €) | price_1UXe0QRq7KJQz9G9Iqs6tuSV | https://buy.stripe.com/9B6dRb9fGf0ycozbwWeZ20D |
+| Pack Básico / RALLYBOX START (10,90 €) | price_1UXe0LRq7KJQz9G9okhaaqdq | https://buy.stripe.com/9B69AV3Vm9Ge74fcB0eZ21o |
+| Pack Intermedio / RALLYBOX PLAYER (15,90 €) | price_1UXe0NRq7KJQz9G9zdKpijhL | https://buy.stripe.com/00waEZ0Jaf0y3S30SieZ21l |
+| Pack Premium / RALLYBOX PRO (19,90 €) | price_1UXe0QRq7KJQz9G9Iqs6tuSV | https://buy.stripe.com/cNi28tajK2dMbkv44ueZ21i |
 | Envío a domicilio (2,75 €) | price_1UXe0TRq7KJQz9G94xaouHkH | (segunda línea de cada enlace a domicilio) |
 | Envío a oficina/CityPaq (2,05 €) | price_1UXe0VRq7KJQz9G9dDc3Epln | (segunda línea de cada enlace a oficina) |
-| RALLYBOX START · oficina de Correos o CityPaq | price_1UXe0LRq7KJQz9G9okhaaqdq | https://buy.stripe.com/9B6aEZ2Ri3hQbkv58yeZ20y |
-| RALLYBOX PLAYER · oficina de Correos o CityPaq | price_1UXe0NRq7KJQz9G9zdKpijhL | https://buy.stripe.com/dRmaEZbnO5pYfALbwWeZ20B |
-| RALLYBOX PRO · oficina de Correos o CityPaq | price_1UXe0QRq7KJQz9G9Iqs6tuSV | https://buy.stripe.com/4gM00lbnO4lU88jfNceZ20E |
-| RALLYBOX START · recogida en club (sin envío) | price_1UXe0LRq7KJQz9G9okhaaqdq | https://buy.stripe.com/4gMbJ31Ne2dM74feJ8eZ20z |
-| RALLYBOX PLAYER · recogida en club (sin envío) | price_1UXe0NRq7KJQz9G9zdKpijhL | https://buy.stripe.com/eVq7sN3Vm7y64W730qeZ20C |
-| RALLYBOX PRO · recogida en club (sin envío) | price_1UXe0QRq7KJQz9G9Iqs6tuSV | https://buy.stripe.com/8x200l4Zq5pY88j8kKeZ20F |
+| RALLYBOX START · oficina de Correos o CityPaq | price_1UXe0LRq7KJQz9G9okhaaqdq | https://buy.stripe.com/eVqeVfeA08Ca1JV6cCeZ21n |
+| RALLYBOX PLAYER · oficina de Correos o CityPaq | price_1UXe0NRq7KJQz9G9zdKpijhL | https://buy.stripe.com/fZucN7eA03hQ60b44ueZ21k |
+| RALLYBOX PRO · oficina de Correos o CityPaq | price_1UXe0QRq7KJQz9G9Iqs6tuSV | https://buy.stripe.com/cNicN763u05Ecoz0SieZ21h |
+| RALLYBOX START · recogida en club (sin envío) | price_1UXe0LRq7KJQz9G9okhaaqdq | https://buy.stripe.com/7sYcN777yf0yewHfNceZ21m |
+| RALLYBOX PLAYER · recogida en club (sin envío) | price_1UXe0NRq7KJQz9G9zdKpijhL | https://buy.stripe.com/00w8wReA09Ge88j0SieZ21j |
+| RALLYBOX PRO · recogida en club (sin envío) | price_1UXe0QRq7KJQz9G9Iqs6tuSV | https://buy.stripe.com/9B6bJ3ajKbOm60beJ8eZ21g |
 
 Cada 2 y 3 meses (mismo precio por caja): todos los enlaces están en public/js/links.js.
 
