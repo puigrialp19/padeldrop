@@ -9,7 +9,6 @@ Actualitzat el 10 de novembre de 2026.
 |---|---|---|
 | Domini | La web continua a www.padeldrop.net | Quan compris el domini nou, avisa i faig el canvi amb redireccions 301 |
 | Correu | padeldropp@gmail.com | Quan tinguis el correu nou de RALLYBOX, avisa i el canvio a tot arreu |
-| Packlink | Nom del compte de Packlink | Configuració del compte a Packlink. Les etiquetes noves ja surten amb el remitent RALLYBOX. |
 | Render | Nom del servei («padel-drop») | Només és intern. Si el canvies, avisa'm abans, perquè l'adreça interna de Render també canvia. |
 | GitHub | Nom del repositori («padeldrop») | Només és intern. Si el canvies, Render s'ha de tornar a connectar. |
 | Google Search Console i Bing | Nom del lloc | Es canvia sol quan Google torni a rastrejar la web. Demana una nova indexació de la portada. |
@@ -37,6 +36,6 @@ Actualitzat el 10 de novembre de 2026.
   - productes RALLYBOX START, PLAYER i PRO;
   - 27 enllaços de pagament nous, amb descripció i missatge RALLYBOX (mateixos preus i condicions);
   - portal «Mi cuenta» amb el títol RALLYBOX.
-- Packlink: el remitent de les etiquetes ara és RALLYBOX.
+- Packlink: el remitent de les etiquetes (API) i l'adreça de remitent del compte (àlies i empresa) ara són RALLYBOX. Al compte només queda el correu padeldropp@gmail.com, que es manté de moment.
 - Stripe: nom públic del compte, text de l'extracte bancari, logotip i icona de la pàgina de pagament canviats a RALLYBOX, i dades internes dels productes corregides (1, 2 i 3 pots) (10 de novembre de 2026).
 - Còpia de seguretat de la web anterior: etiqueta `backup-padeldrop-2026-11-10` a GitHub i el zip `Documents\padel-drop-copia-2026-11-10.zip`.
