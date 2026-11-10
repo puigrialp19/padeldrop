@@ -1,4 +1,4 @@
-# PADEL DROP: web + panel de administración
+# RALLYBOX: web + panel de administración
 
 Web de suscripción mensual de pelotas y grips de pádel (`public/`, el diseño de siempre, sin cambios)
 y panel privado `/admin` para gestionar ventas, clientes y envíos.

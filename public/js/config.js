@@ -16,7 +16,7 @@ var CONFIG={
   whatsapp:"34682794409"
 };
 var PLANS=[
-  {id:"start",name:"PADEL DROP START",who:"Ideal para 1 partido a la semana",grips:2,cans:1,price:10.9,eq:"1 bote + 2 overgrips en cada caja, IVA incluido"},
-  {id:"player",name:"PADEL DROP PLAYER",who:"",grips:3,cans:2,price:15.9,featured:true,eq:"Equivale a 7,95 € por bote, con grips incluidos"},
-  {id:"pro",name:"PADEL DROP PRO",who:"Para jugadores habituales",grips:3,cans:3,price:19.9,eq:"¡Solo 6,63 € por bote, con grips incluidos!"}
+  {id:"start",name:"RALLYBOX START",who:"Ideal para 1 partido a la semana",grips:2,cans:1,price:10.9,eq:"1 bote + 2 overgrips en cada caja, IVA incluido"},
+  {id:"player",name:"RALLYBOX PLAYER",who:"",grips:3,cans:2,price:15.9,featured:true,eq:"Equivale a 7,95 € por bote, con grips incluidos"},
+  {id:"pro",name:"RALLYBOX PRO",who:"Para jugadores habituales",grips:3,cans:3,price:19.9,eq:"¡Solo 6,63 € por bote, con grips incluidos!"}
 ];

@@ -1,5 +1,5 @@
 // Crea un administrador o cambia su contraseña.
-// Uso: npm run create-admin -- persona@padeldrop.com
+// Uso: npm run create-admin -- persona@ejemplo.com
 // La contraseña se lee de la variable ADMIN_PASSWORD o se pide por consola (no queda en el historial).
 import { createInterface } from 'node:readline/promises';
 import { sql, closeDb } from '../db/db.js';
@@ -7,7 +7,7 @@ import { hashPassword, validatePasswordStrength } from '../services/passwords.js
 
 const email = (process.argv[2] || process.env.ADMIN_EMAIL || '').trim().toLowerCase();
 if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-  console.error('Indica un email válido: npm run create-admin -- persona@padeldrop.com');
+  console.error('Indica un email válido: npm run create-admin -- persona@ejemplo.com');
   process.exit(1);
 }
 

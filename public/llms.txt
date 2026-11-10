@@ -1,8 +1,6 @@
-# PADEL DROP
+# RALLYBOX
 
-> PADEL DROP (www.padeldrop.net) es una tienda online española de suscripción de pelotas y overgrips de pádel. Envía packs cada 1, 2 o 3 meses, a elegir, a domicilio, a una oficina de Correos o CityPaq, o para recoger gratis en los clubs Interpàdel de Guissona, Tàrrega y Golmés (Lleida). Sin permanencia. Precios con IVA incluido.
-
-No confundir con otras empresas o apps de nombre parecido: esta es la suscripción de padeldrop.net.
+> RALLYBOX (www.padeldrop.net) es una tienda online española de suscripción de pelotas y overgrips de pádel. Envía packs cada 1, 2 o 3 meses, a elegir, a domicilio, a una oficina de Correos o CityPaq, o para recoger gratis en los clubs Interpàdel de Guissona, Tàrrega y Golmés (Lleida). Sin permanencia. Precios con IVA incluido.
 
 ## Packs (precio por caja, IVA incluido)
 - START: 1 bote de 3 pelotas de pádel y 2 overgrips, 10,90 €

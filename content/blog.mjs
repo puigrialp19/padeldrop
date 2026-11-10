@@ -41,7 +41,7 @@ export const posts = [
 <p>Con bolas nuevas, el bote en el cristal y en el suelo es el esperado, la bola sale viva de la pala y los globos llegan a donde apuntas. Con bolas usadas, el juego se vuelve más lento: cuesta más rematar por 3 o por 4, la bola se queda «muerta» tras la pared y los golpes cambian de un punto a otro. Para entrenar golpes concretos pueden servir, pero para jugar un partido notarás la diferencia.</p>
 
 <h2>Cómo tener siempre bolas en buen estado</h2>
-<p>La forma más sencilla es no esperar a que se te acaben. Si juegas cada semana, una suscripción como la de PADEL DROP te envía botes nuevos (3 pelotas por bote) y overgrips cada 1, 2 o 3 meses. Puedes ${CTA_PACKS} o leer <a href="/blog/cuantas-bolas-de-padel-necesito">cuántas bolas necesitas según lo que juegas</a>.</p>
+<p>La forma más sencilla es no esperar a que se te acaben. Si juegas cada semana, una suscripción como la de RALLYBOX te envía botes nuevos (3 pelotas por bote) y overgrips cada 1, 2 o 3 meses. Puedes ${CTA_PACKS} o leer <a href="/blog/cuantas-bolas-de-padel-necesito">cuántas bolas necesitas según lo que juegas</a>.</p>
 <p>Y si quieres que te duren un poco más, revisa <a href="/blog/conservar-bolas-padel">cómo conservar las bolas de pádel</a>.</p>
 `,
   faq: [
@@ -85,7 +85,7 @@ export const posts = [
 <p>Si quieres un mango más grueso, puedes poner dos overgrips, uno encima del otro.</p>
 
 <h2>Ten siempre uno de repuesto</h2>
-<p>Lo práctico es llevar un overgrip nuevo en la mochila. Todos los packs de PADEL DROP incluyen overgrips: 2 en START y 3 en PLAYER y PRO, junto con los botes de pelotas. Puedes ${CTA_PACKS}.</p>
+<p>Lo práctico es llevar un overgrip nuevo en la mochila. Todos los packs de RALLYBOX incluyen overgrips: 2 en START y 3 en PLAYER y PRO, junto con los botes de pelotas. Puedes ${CTA_PACKS}.</p>
 `,
   faq: [
     ['¿Cuándo se cambia el overgrip de la pala de pádel?', 'Cuando resbala, está brillante, roto o huele. La frecuencia depende de cuánto juegues y de cuánto te suden las manos.'],
@@ -125,8 +125,8 @@ export const posts = [
 <li><strong>La gestión:</strong> que puedas cambiar la tarjeta, la dirección o cancelar tú mismo.</li>
 </ul>
 
-<h2>Cómo encaja con los packs de PADEL DROP</h2>
-<p>En PADEL DROP hay tres packs, y cada uno se puede recibir cada 1, 2 o 3 meses al mismo precio por caja:</p>
+<h2>Cómo encaja con los packs de RALLYBOX</h2>
+<p>En RALLYBOX hay tres packs, y cada uno se puede recibir cada 1, 2 o 3 meses al mismo precio por caja:</p>
 <ul>
 <li><strong>START</strong>: 1 bote y 2 overgrips por 10,90 €. Pensado para 1 partido a la semana.</li>
 <li><strong>PLAYER</strong>: 2 botes y 3 overgrips por 15,90 €.</li>
@@ -135,7 +135,7 @@ export const posts = [
 <p>Los precios incluyen el IVA. El envío es aparte: 2,75 € a domicilio, 2,05 € a Correos o CityPaq y gratis en los clubs Interpàdel. No hay permanencia. Si juegas mucho, compara también con lo que gastas hoy en botes sueltos. Puedes ${CTA_PACKS} o leer <a href="/suscripcion-bolas-padel">cómo funciona la suscripción</a>.</p>
 `,
   faq: [
-    ['¿Cuántas pelotas trae un bote de pádel?', 'Lo habitual es 3 pelotas por bote. Los botes de PADEL DROP traen 3 pelotas.'],
+    ['¿Cuántas pelotas trae un bote de pádel?', 'Lo habitual es 3 pelotas por bote. Los botes de RALLYBOX traen 3 pelotas.'],
     ['¿Cuántos botes de bolas de pádel necesito al mes si juego una vez por semana?', 'Si cambias las bolas cada 2 o 3 partidos, entre 1 y 2 botes al mes.'],
   ],
 },
@@ -174,7 +174,7 @@ export const posts = [
 <li><strong>Si hay permanencia</strong> y cómo se cancela.</li>
 </ul>
 
-<h2>Cómo lo hacemos en PADEL DROP</h2>
+<h2>Cómo lo hacemos en RALLYBOX</h2>
 <p>Los packs van de 10,90 € a 19,90 € por caja, IVA incluido, y traen botes de 3 pelotas y overgrips. Puedes recibirlos cada 1, 2 o 3 meses al mismo precio por caja; el envío cuesta 2,75 € a domicilio, 2,05 € a Correos o CityPaq y es gratis en los clubs Interpàdel. No hay permanencia y se cancela desde «Mi cuenta». Puedes ${CTA_PACKS}.</p>
 `,
 },
@@ -207,7 +207,7 @@ export const posts = [
 </ul>
 
 <h2>Mejor que conservar: tener siempre bolas nuevas</h2>
-<p>Si prefieres no estar pendiente, en PADEL DROP te enviamos botes cerrados de 3 pelotas y overgrips cada 1, 2 o 3 meses, según elijas. Puedes ${CTA_PACKS} o ver <a href="/blog/cada-cuanto-cambiar-bolas-padel">cada cuánto conviene cambiar las bolas</a>.</p>
+<p>Si prefieres no estar pendiente, en RALLYBOX te enviamos botes cerrados de 3 pelotas y overgrips cada 1, 2 o 3 meses, según elijas. Puedes ${CTA_PACKS} o ver <a href="/blog/cada-cuanto-cambiar-bolas-padel">cada cuánto conviene cambiar las bolas</a>.</p>
 `,
 },
 {
@@ -239,7 +239,7 @@ export const posts = [
 </ul>
 
 <h2>Lo que siempre debería ir en tu mochila</h2>
-<p>Un bote de bolas sin abrir y un overgrip de repuesto. Son lo que más se gasta y lo que antes se olvida. Con la suscripción de PADEL DROP te llegan los dos en la misma caja, cada 1, 2 o 3 meses. Puedes ${CTA_PACKS}.</p>
+<p>Un bote de bolas sin abrir y un overgrip de repuesto. Son lo que más se gasta y lo que antes se olvida. Con la suscripción de RALLYBOX te llegan los dos en la misma caja, cada 1, 2 o 3 meses. Puedes ${CTA_PACKS}.</p>
 `,
 },
 ];

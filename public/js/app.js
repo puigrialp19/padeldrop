@@ -121,7 +121,7 @@ var HOME_TITLE=document.title;
 function route(){ipShow();var h=location.hash,r=h.indexOf("#/")===0?h.slice(2):"",on=!!T[r],m=document.getElementById("top");
 document.getElementById("legal").hidden=!on;m.hidden=on;
 document.querySelectorAll("[data-r]").forEach(function(a){a.hidden=a.dataset.r!==r});
-document.title=on?T[r]+" · PADEL DROP":HOME_TITLE;
+document.title=on?T[r]+" · RALLYBOX":HOME_TITLE;
 if(on){scrollTo(0,0)}else if(h.length>1){var t=document.getElementById(h.slice(1));if(t)t.scrollIntoView()}}
 addEventListener("hashchange",route);route();
 /* Enlaces internos (menú, logo, botones): un solo desplazamiento suave, sin el segundo salto que hacía el hashchange */

@@ -1,4 +1,4 @@
-/* Asistente virtual de PADEL DROP.
+/* Asistente virtual de RALLYBOX.
    Botón flotante abajo a la derecha. El estilo (css/chat.css) se carga después de la página para no frenarla.
    Las respuestas las da el servidor (/api/chat): motor propio + IA gratuita, con los precios reales de la web.
    La conversación solo se guarda en esta pestaña (sessionStorage) para no perderla al cambiar de página. */
@@ -48,7 +48,7 @@
     if (!hello) return { href: 'mailto:padeldropp@gmail.com', label: 'Escribir a una persona del equipo', icon: ICON.mail, type: 'email_click' };
     var text = hello.waText + summary();
     if (hello.whatsapp) return { href: 'https://wa.me/' + hello.whatsapp + '?text=' + encodeURIComponent(text), label: 'Hablar con una persona por WhatsApp', icon: ICON.wa, type: 'wa_click' };
-    return { href: 'mailto:' + hello.email + '?subject=' + encodeURIComponent('Consulta desde el asistente de Padel Drop') + '&body=' + encodeURIComponent(text), label: 'Escribir a una persona del equipo', icon: ICON.mail, type: 'email_click' };
+    return { href: 'mailto:' + hello.email + '?subject=' + encodeURIComponent('Consulta desde el asistente de RALLYBOX') + '&body=' + encodeURIComponent(text), label: 'Escribir a una persona del equipo', icon: ICON.mail, type: 'email_click' };
   }
   function contactLink(cls) {
     var c = contact(), a = el('a', cls, c.icon + '<span>' + esc(c.label) + '</span>');
@@ -129,9 +129,9 @@
   function build() {
     panel = el('div', 'pdc-panel');
     panel.setAttribute('role', 'dialog');
-    panel.setAttribute('aria-label', 'Asistente virtual de Padel Drop');
+    panel.setAttribute('aria-label', 'Asistente virtual de RALLYBOX');
     panel.id = 'pdc-panel';
-    var head = el('div', 'pdc-head', '<img src="' + AVATAR + '" alt="" width="40" height="40"><div><b>Asistente Padel Drop</b><small>En línea · respuesta al momento</small></div>');
+    var head = el('div', 'pdc-head', '<img src="' + AVATAR + '" alt="" width="40" height="40"><div><b>Asistente RALLYBOX</b><small>En línea · respuesta al momento</small></div>');
     var close = el('button', 'pdc-close', ICON.close);
     close.type = 'button'; close.setAttribute('aria-label', 'Cerrar el asistente');
     close.addEventListener('click', function () { toggle(false); launch.focus(); });
@@ -177,7 +177,7 @@
     if (!panel) return;
     panel.classList.toggle('open', open);
     launch.setAttribute('aria-expanded', open ? 'true' : 'false');
-    launch.setAttribute('aria-label', open ? 'Cerrar el asistente' : 'Abrir el asistente de Padel Drop');
+    launch.setAttribute('aria-label', open ? 'Cerrar el asistente' : 'Abrir el asistente de RALLYBOX');
     if (!open) return;
     if (!S.opened) { S.opened = true; save(); track('open'); }
     if (hello) greet();
@@ -196,7 +196,7 @@
     launch.type = 'button';
     launch.setAttribute('aria-controls', 'pdc-panel');
     launch.setAttribute('aria-expanded', 'false');
-    launch.setAttribute('aria-label', 'Abrir el asistente de Padel Drop');
+    launch.setAttribute('aria-label', 'Abrir el asistente de RALLYBOX');
     launch.title = '¿Dudas? Pregúntame';
     launch.addEventListener('click', function () { toggle(!(panel && panel.classList.contains('open'))); });
     document.body.appendChild(launch);

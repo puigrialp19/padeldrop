@@ -1,4 +1,4 @@
-/* Asistente virtual de PADEL DROP. Usa los colores y tipografías de styles.css (con valores de reserva). */
+/* Asistente virtual de RALLYBOX. Usa los colores y tipografías de styles.css (con valores de reserva). */
 .pdc-launch,.pdc-panel{--c-bg:var(--bg,#fff);--c-fg:var(--fg,#0a0a0a);--c-mut:var(--mut,#5b5b5b);--c-card:var(--card,#f4f5f1);--c-line:var(--line,#e2e4dd);--c-lime:var(--lime,#c6ff00);--c-hd:var(--hd,"Barlow Condensed","Arial Narrow",Impact,sans-serif);--c-bd:var(--bd,"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif);font-family:var(--c-bd);box-sizing:border-box}
 .pdc-panel *,.pdc-launch *{box-sizing:border-box}
 

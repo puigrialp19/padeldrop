@@ -1,5 +1,5 @@
 -- =====================================================================
--- PADEL DROP · Esquema de base de datos (PostgreSQL / Supabase)
+-- RALLYBOX · Esquema de base de datos (PostgreSQL / Supabase)
 -- Se puede ejecutar varias veces sin romper nada (IF NOT EXISTS / ON CONFLICT).
 -- Importes en céntimos (integer). Fechas con zona horaria (timestamptz).
 -- =====================================================================
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS packs (
   id               bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   slug             text    NOT NULL UNIQUE,                  -- start | player | pro
   name             text    NOT NULL,                         -- Pack Básico / Intermedio / Premium
-  commercial_name  text    NOT NULL,                         -- PADEL DROP START / PLAYER / PRO
+  commercial_name  text    NOT NULL,                         -- RALLYBOX START / PLAYER / PRO
   cans             integer NOT NULL,                         -- botes de pelotas al mes
   grips            integer NOT NULL,                         -- overgrips al mes
   price_cents      integer NOT NULL,
@@ -152,10 +152,10 @@ ALTER TABLE audit_log     ENABLE ROW LEVEL SECURITY;
 ALTER TABLE push_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE app_settings  ENABLE ROW LEVEL SECURITY;
 
--- ---------- Los 3 packs de PADEL DROP ----------
+-- ---------- Los 3 packs de RALLYBOX ----------
 -- El Price ID de Stripe lo rellena el SQL que muestra "node iniciar-padel-drop.js stripe".
 INSERT INTO packs (slug, name, commercial_name, cans, grips, price_cents, stripe_price_id, sort_order) VALUES
-  ('start',  'Pack Básico',     'PADEL DROP START',  1, 2, 1090, NULL, 1),
-  ('player', 'Pack Intermedio', 'PADEL DROP PLAYER', 2, 3, 1590, NULL, 2),
-  ('pro',    'Pack Premium',    'PADEL DROP PRO',    3, 3, 1990, NULL, 3)
+  ('start',  'Pack Básico',     'RALLYBOX START',  1, 2, 1090, NULL, 1),
+  ('player', 'Pack Intermedio', 'RALLYBOX PLAYER', 2, 3, 1590, NULL, 2),
+  ('pro',    'Pack Premium',    'RALLYBOX PRO',    3, 3, 1990, NULL, 3)
 ON CONFLICT (slug) DO NOTHING;

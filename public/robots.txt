@@ -1,4 +1,4 @@
-# PADEL DROP · www.padeldrop.net
+# RALLYBOX · www.padeldrop.net
 # Web pública abierta a buscadores y asistentes de IA. Solo se cierran el panel privado y la API.
 
 User-agent: *

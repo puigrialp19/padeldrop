@@ -1,4 +1,4 @@
-/* Contador ANÓNIMO de visitantes en directo para el panel de PADEL DROP.
+/* Contador ANÓNIMO de visitantes en directo para el panel de RALLYBOX.
    No usa cookies ni guarda nada en tu dispositivo: un número aleatorio que solo vive mientras
    tienes la página abierta, la sección que miras y de dónde vienes (TikTok, Instagram, un QR...). */
 (function () {

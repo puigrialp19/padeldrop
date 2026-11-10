@@ -1,5 +1,5 @@
 -- =====================================================================
--- PADEL DROP · Crear el primer ADMINISTRADOR desde el editor SQL de Supabase
+-- RALLYBOX · Crear el primer ADMINISTRADOR desde el editor SQL de Supabase
 -- (Alternativa a "npm run create-admin". Úsalo solo si no puedes ejecutar el comando.)
 --
 -- 1) Cambia el email y la contraseña de las dos líneas marcadas.

@@ -27,7 +27,7 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
   let data = {};
   try { data = event.data ? event.data.json() : {}; } catch { data = { body: event.data?.text() }; }
-  const title = data.title || 'PADEL DROP';
+  const title = data.title || 'RALLYBOX';
   const url = data.url || '/admin/#/pedidos';
   event.waitUntil((async () => {
     await self.registration.showNotification(title, {

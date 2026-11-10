@@ -1,4 +1,4 @@
-// BASE DE CONOCIMIENTO DEL ASISTENTE VIRTUAL DE PADEL DROP
+// BASE DE CONOCIMIENTO DEL ASISTENTE VIRTUAL DE RALLYBOX
 // ----------------------------------------------------------------------------------------------
 // Aquí están los textos del asistente y las palabras con las que reconoce cada pregunta.
 // Los PRECIOS, packs, envíos, clubs y el número de WhatsApp NO se escriben aquí: se leen solos de
@@ -10,10 +10,10 @@
 // Si alguien pregunta algo que no está aquí, responde la IA gratuita con esta misma información
 // y, si tampoco lo sabe, ofrece WhatsApp (o el correo).
 
-export const BIENVENIDA = '¡Hola! 👋 Soy el asistente virtual de Padel Drop. Estoy aquí para ayudarte con cualquier duda sobre nuestras suscripciones, packs y envíos. ¿En qué puedo ayudarte?';
+export const BIENVENIDA = '¡Hola! 👋 Soy el asistente virtual de RALLYBOX. Estoy aquí para ayudarte con cualquier duda sobre nuestras suscripciones, packs y envíos. ¿En qué puedo ayudarte?';
 
 export const RAPIDAS = [
-  '¿Cómo funciona Padel Drop?',
+  '¿Cómo funciona RALLYBOX?',
   '¿Qué incluye cada pack?',
   '¿Qué suscripción me recomiendas?',
   '¿Cuánto cuesta el envío?',
@@ -22,7 +22,7 @@ export const RAPIDAS = [
 ];
 
 // Texto que se envía por WhatsApp (se añade debajo un resumen de lo que ha preguntado el cliente).
-export const WHATSAPP_TEXTO = '¡Hola! Estaba hablando con el asistente virtual de Padel Drop y necesito ayuda con una consulta.';
+export const WHATSAPP_TEXTO = '¡Hola! Estaba hablando con el asistente virtual de RALLYBOX y necesito ayuda con una consulta.';
 
 // Respuesta cuando no sabe algo.
 export const NO_SE = 'Eso no lo tengo confirmado en la información de la web y prefiero no inventármelo. Te lo resuelve mejor una persona del equipo:';
@@ -51,9 +51,9 @@ export const INTENCIONES = [
     r: () => ({ text: '¡Hola! ¿En qué te ayudo? Puedo explicarte los packs y los envíos, o recomendarte el pack que mejor te va.', quick: ['¿Qué incluye cada pack?', '¿Qué suscripción me recomiendas?'] }),
   },
   {
-    id: 'que_es', frases: ['que es padel drop', 'que es padeldrop', 'que sois', 'que haceis', 'quienes sois', 'de que va', 'que vendeis', 'que es esto'],
+    id: 'que_es', frases: ['que es rallybox', 'que es rally box', 'que es padel drop', 'que es padeldrop', 'que sois', 'que haceis', 'quienes sois', 'de que va', 'que vendeis', 'que es esto'],
     palabras: [],
-    r: (D) => ({ text: `Padel Drop es una suscripción de pelotas y overgrips de pádel: eliges un pack y te lo enviamos ${freqTxt(D)}, a casa, a una oficina de Correos o CityPaq, o para recoger gratis en los clubs ${lista(D.clubs.map((c) => c.short))}. Sin permanencia.`, quick: ['¿Qué incluye cada pack?', '¿Qué suscripción me recomiendas?'] }),
+    r: (D) => ({ text: `RALLYBOX es una suscripción de pelotas y overgrips de pádel: eliges un pack y te lo enviamos ${freqTxt(D)}, a casa, a una oficina de Correos o CityPaq, o para recoger gratis en los clubs ${lista(D.clubs.map((c) => c.short))}. Sin permanencia.`, quick: ['¿Qué incluye cada pack?', '¿Qué suscripción me recomiendas?'] }),
   },
   {
     id: 'funciona', frases: ['como funciona', 'como va esto', 'como va la suscripcion', 'funcionamiento', 'como se pide', 'como pido', 'como compro', 'como me suscribo', 'como contrato', 'quiero suscribirme', 'quiero contratar'],

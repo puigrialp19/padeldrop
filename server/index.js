@@ -34,6 +34,8 @@ try { await initLive(); } catch (err) { console.error('  Contador de visitas no 
 try { await initChat(); } catch (err) { console.error('  Estadísticas del asistente no disponibles:', err.message); }
 // Recogida en club: añade sus columnas si aún no existen (los pedidos las necesitan).
 await initOrderExtras();
+// Cambio de marca: los nombres comerciales de los packs pasan de PADEL DROP a RALLYBOX (solo ese texto; idempotente).
+try { await sql`UPDATE packs SET commercial_name = replace(commercial_name, 'PADEL DROP', 'RALLYBOX') WHERE commercial_name LIKE 'PADEL DROP%'`; } catch (err) { console.error('  No se han podido renombrar los packs:', err.message); }
 purgeExpiredSessions();
 setInterval(purgeExpiredSessions, 60 * 60 * 1000).unref();
 
@@ -110,5 +112,5 @@ app.use((err, req, res, _next) => {
 });
 
 app.listen(config.port, () => {
-  console.log(`\n  PADEL DROP funcionando en ${config.publicUrl}\n  Panel de administración: ${config.publicUrl}/admin\n`);
+  console.log(`\n  RALLYBOX funcionando en ${config.publicUrl}\n  Panel de administración: ${config.publicUrl}/admin\n`);
 });

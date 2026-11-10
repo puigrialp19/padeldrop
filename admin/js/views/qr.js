@@ -30,7 +30,7 @@ function poster(s, packs, qr, link, ship) {
   const web = link ? new URL(link).host : location.host;
   return `
   <article class="poster mx-auto flex aspect-[210/297] w-full max-w-[210mm] flex-col overflow-hidden bg-white text-black print:aspect-auto print:h-[297mm] print:max-w-none print:w-[210mm]">
-    <header class="flex items-center justify-center bg-black px-[8%] py-[3%]"><img src="/assets/img/logo-padel-drop.png" alt="PADEL DROP" class="w-[48%]"></header>
+    <header class="flex items-center justify-center bg-black px-[8%] py-[3%]"><img src="/assets/img/logo-rallybox.png" alt="RALLYBOX" class="w-[48%]"></header>
     <div class="flex flex-1 flex-col items-center px-[8%] pt-[4%] text-center">
       <p class="text-[clamp(11px,2.5vw,17pt)] font-semibold uppercase tracking-[0.18em] text-neutral-600 print:text-[5.29mm]">${esc(t.kicker)}</p>
       <h1 class="mt-[2%] font-display text-[clamp(30px,7.6vw,54pt)] font-extrabold uppercase leading-[0.93] print:text-[16.22mm]">${esc(t.title)}</h1>
@@ -56,7 +56,7 @@ function card(s, qr) {
   <div class="flex h-full items-center gap-[4mm] border border-dashed border-neutral-400 bg-white p-[4mm] text-black">
     <img src="${esc(qr)}" alt="" class="h-[36mm] w-[36mm] shrink-0">
     <div class="min-w-0">
-      <p class="font-display text-[17pt] font-extrabold uppercase leading-none">Padel <span class="rounded bg-lime px-1 [print-color-adjust:exact]">Drop</span></p>
+      <p class="font-display text-[17pt] font-extrabold uppercase leading-none">Rally<span class="rounded bg-lime px-1 [print-color-adjust:exact]">Box</span></p>
       <p class="mt-[2mm] text-[9.5pt] font-semibold leading-tight">${esc(t.short)}</p>
       ${s.offer ? `<p class="mt-[2mm] text-[9pt] leading-tight"><b>${esc(s.name && s.code ? t.members(s.name) + ': ' : '')}${esc(s.offer)}</b></p>` : ''}
       <p class="mt-[2mm] font-display text-[11pt] font-extrabold uppercase">${esc(t.scan)}</p>
@@ -166,7 +166,7 @@ export async function renderQr(view, { isStale }) {
       // Si la impresora añade encabezado, que muestre la web pública y no la dirección del panel.
       const [url, title] = [location.href, document.title];
       history.replaceState(history.state, '', '/');
-      document.title = 'PADEL DROP';
+      document.title = 'RALLYBOX';
       window.addEventListener('afterprint', () => { history.replaceState(history.state, '', url); document.title = title; }, { once: true });
       window.print();
     });

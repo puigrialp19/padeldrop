@@ -12,7 +12,7 @@ const pub = path.join(root, 'public');
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const strip = (s) => s.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 const fecha = (d) => new Date(d + 'T12:00:00Z').toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
-const ORG = { '@type': 'Organization', '@id': SITE + '/#org', name: 'PADEL DROP', url: SITE + '/', logo: SITE + '/assets/img/logo-padel-drop.png' };
+const ORG = { '@type': 'Organization', '@id': SITE + '/#org', name: 'RALLYBOX', url: SITE + '/', logo: SITE + '/assets/img/logo-rallybox.png' };
 
 const crumbsLd = (crumbs) => ({ '@type': 'BreadcrumbList', itemListElement: crumbs.map(([name, url], i) => ({ '@type': 'ListItem', position: i + 1, name, item: SITE + url })) });
 const faqLd = (faq) => ({ '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) });
@@ -29,13 +29,13 @@ function layout({ path: url, title, description, h1, lead, body, crumbs, ld, typ
 <meta name="description" content="${esc(description)}">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <link rel="canonical" href="${canonical}">
-<meta property="og:site_name" content="PADEL DROP">
+<meta property="og:site_name" content="RALLYBOX">
 <meta property="og:locale" content="es_ES">
 <meta property="og:type" content="${type}">
 <meta property="og:url" content="${canonical}">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
-<meta property="og:image" content="${SITE}/assets/img/og-padel-drop.jpg">
+<meta property="og:image" content="${SITE}/assets/img/og-rallybox.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -43,7 +43,7 @@ function layout({ path: url, title, description, h1, lead, body, crumbs, ld, typ
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="alternate" type="text/plain" href="/llms.txt" title="Resumen de PADEL DROP para asistentes de IA">
+<link rel="alternate" type="text/plain" href="/llms.txt" title="Resumen de RALLYBOX para asistentes de IA">
 <link rel="preload" href="/assets/fonts/barlow-condensed-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/fonts-local.css">
 <link rel="stylesheet" href="/css/styles.css">
@@ -52,7 +52,7 @@ function layout({ path: url, title, description, h1, lead, body, crumbs, ld, typ
 </head>
 <body class="cpage">
 <header><div class="wrap nav">
-<a href="/" class="lg" aria-label="PADEL DROP, inicio" style="height:46px;width:120px"></a>
+<a href="/" class="lg" aria-label="RALLYBOX, inicio" style="height:46px;width:120px"></a>
 <nav class="cnav" aria-label="Principal"><a href="/suscripcion-bolas-padel">Cómo funciona</a><a href="/blog/">Blog</a><a class="btn b1 sm" href="/#planes">Ver packs</a></nav>
 </div></header>
 <main class="wrap cmain">
@@ -64,14 +64,14 @@ ${lead ? `<p class="lead">${lead}</p>` : ''}
 ${body}
 </article>
 ${aside}
-<section class="ccta" aria-label="Packs de PADEL DROP">
+<section class="ccta" aria-label="Packs de RALLYBOX">
 <h2>Tu pádel, siempre a punto</h2>
 <p>Pelotas y overgrips en una caja, cada 1, 2 o 3 meses. Desde ${PACKS[0].price} € con IVA, sin permanencia.</p>
 <a class="btn b1" href="/#planes">Ver los packs</a>
 </section>
 </main>
 <footer><div class="wrap cfoot">
-<div><a href="/" class="lg" aria-label="PADEL DROP" style="height:58px;width:150px"></a><p>Tu pádel. Siempre a punto.</p></div>
+<div><a href="/" class="lg" aria-label="RALLYBOX" style="height:58px;width:150px"></a><p>Tu pádel. Siempre a punto.</p></div>
 <nav aria-label="Enlaces"><a href="/#planes">Packs</a><a href="/suscripcion-bolas-padel">Suscripción de bolas de pádel</a><a href="/blog/">Blog</a><a href="/#faq">Preguntas frecuentes</a><a href="mailto:${EMAIL}">${EMAIL}</a></nav>
 <nav aria-label="Legal"><a href="/#/aviso-legal">Aviso legal</a><a href="/#/privacidad">Política de privacidad</a><a href="/#/cookies">Política de cookies</a><a href="/#/condiciones">Condiciones de contratación</a></nav>
 </div></footer>
@@ -94,24 +94,24 @@ for (const p of sorted) {
   const url = `/blog/${p.slug}`;
   const related = sorted.filter((x) => x !== p).slice(0, 3);
   write(`blog/${p.slug}.html`, layout({
-    path: url, title: p.title + ' | PADEL DROP', description: p.description, h1: p.h1, lead: p.lead, type: 'article',
-    meta: `<p class="pmeta">Por el equipo de PADEL DROP · <time datetime="${p.date}">${fecha(p.date)}</time></p>`,
+    path: url, title: p.title + ' | RALLYBOX', description: p.description, h1: p.h1, lead: p.lead, type: 'article',
+    meta: `<p class="pmeta">Por el equipo de RALLYBOX · <time datetime="${p.date}">${fecha(p.date)}</time></p>`,
     body: p.body + faqHtml(p.faq),
     aside: `<aside class="related" aria-label="Más artículos"><h2>Sigue leyendo</h2><ul>${related.map((r) => `<li><a href="/blog/${r.slug}">${esc(r.h1)}</a></li>`).join('')}</ul></aside>`,
     crumbs: [['Inicio', '/'], ['Blog', '/blog/'], [p.h1, url]],
-    ld: [{ '@type': 'BlogPosting', '@id': SITE + url, mainEntityOfPage: SITE + url, headline: p.h1, description: p.description, datePublished: p.date, dateModified: p.updated || p.date, inLanguage: 'es-ES', image: SITE + '/assets/img/og-padel-drop.jpg', author: { '@id': SITE + '/#org' }, publisher: { '@id': SITE + '/#org' } },
+    ld: [{ '@type': 'BlogPosting', '@id': SITE + url, mainEntityOfPage: SITE + url, headline: p.h1, description: p.description, datePublished: p.date, dateModified: p.updated || p.date, inLanguage: 'es-ES', image: SITE + '/assets/img/og-rallybox.jpg', author: { '@id': SITE + '/#org' }, publisher: { '@id': SITE + '/#org' } },
       ...(p.faq ? [faqLd(p.faq)] : [])],
   }));
 }
 
 // 3 · Índice del blog
 write('blog/index.html', layout({
-  path: '/blog/', title: 'Blog de pádel: bolas, grips y material | PADEL DROP',
+  path: '/blog/', title: 'Blog de pádel: bolas, grips y material | RALLYBOX',
   description: 'Guías prácticas sobre bolas y grips de pádel: cada cuánto cambiarlos, cuántos necesitas, cómo conservarlos y qué material llevar.',
   h1: 'Blog de pádel', lead: 'Guías claras sobre el material que más se gasta: bolas y grips. Cuándo cambiarlos, cuánto necesitas y cómo cuidarlos.',
   crumbs: [['Inicio', '/'], ['Blog', '/blog/']],
   body: `<ul class="posts">${sorted.map((p) => `<li><a href="/blog/${p.slug}"><h2>${esc(p.h1)}</h2><p>${esc(p.description)}</p><span>Leer artículo →</span></a></li>`).join('')}</ul>`,
-  ld: [{ '@type': 'Blog', '@id': SITE + '/blog/', url: SITE + '/blog/', name: 'Blog de PADEL DROP', inLanguage: 'es-ES', publisher: { '@id': SITE + '/#org' },
+  ld: [{ '@type': 'Blog', '@id': SITE + '/blog/', url: SITE + '/blog/', name: 'Blog de RALLYBOX', inLanguage: 'es-ES', publisher: { '@id': SITE + '/#org' },
     blogPost: sorted.map((p) => ({ '@type': 'BlogPosting', headline: p.h1, url: `${SITE}/blog/${p.slug}`, datePublished: p.date })) }],
 }));
 
@@ -124,11 +124,9 @@ ${urls.map(([u, d, pr]) => `  <url><loc>${SITE}${u}</loc><lastmod>${d}</lastmod>
 `);
 
 // 5 · llms.txt (resumen en texto plano para asistentes de IA, propuesta llmstxt.org)
-write('llms.txt', `# PADEL DROP
+write('llms.txt', `# RALLYBOX
 
-> PADEL DROP (www.padeldrop.net) es una tienda online española de suscripción de pelotas y overgrips de pádel. Envía packs cada 1, 2 o 3 meses, a elegir, a domicilio, a una oficina de Correos o CityPaq, o para recoger gratis en los clubs Interpàdel de Guissona, Tàrrega y Golmés (Lleida). Sin permanencia. Precios con IVA incluido.
-
-No confundir con otras empresas o apps de nombre parecido: esta es la suscripción de padeldrop.net.
+> RALLYBOX (www.padeldrop.net) es una tienda online española de suscripción de pelotas y overgrips de pádel. Envía packs cada 1, 2 o 3 meses, a elegir, a domicilio, a una oficina de Correos o CityPaq, o para recoger gratis en los clubs Interpàdel de Guissona, Tàrrega y Golmés (Lleida). Sin permanencia. Precios con IVA incluido.
 
 ## Packs (precio por caja, IVA incluido)
 ${PACKS.map((p) => `- ${p.name}: ${p.cans} ${p.cans > 1 ? 'botes' : 'bote'} de 3 pelotas de pádel y ${p.grips} overgrips, ${p.price} €`).join('\n')}

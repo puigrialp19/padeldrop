@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 
 const COST = 12;
 // Hash fijo para comparar cuando el email no existe: el tiempo de respuesta no revela qué emails son válidos.
-const DUMMY_HASH = bcrypt.hashSync('padel-drop-dummy-password', COST);
+const DUMMY_HASH = bcrypt.hashSync('rallybox-dummy-password', COST);
 
 export const hashPassword = (plain) => bcrypt.hash(plain, COST);
 

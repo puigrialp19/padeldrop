@@ -1,4 +1,4 @@
-/* PADEL DROP · movimiento e interacción (GSAP + ScrollTrigger, servidos desde js/vendor).
+/* RALLYBOX · movimiento e interacción (GSAP + ScrollTrigger, servidos desde js/vendor).
    - Portada: entrada con máscara por líneas, parallax con el scroll y con el ratón.
    - Títulos: cada palabra sube desde detrás de una máscara. Manifiesto: las palabras se iluminan con el scroll (scrub).
    - Tarjetas, planes, reseñas y preguntas: aparecen escalonadas. Precios: cuentan hasta su valor.

@@ -1,8 +1,8 @@
 {
-  "name": "padel-drop",
+  "name": "rallybox",
   "version": "2.1.0",
   "private": true,
-  "description": "PADEL DROP: web de suscripción mensual de pelotas y grips de pádel + panel de administración privado.",
+  "description": "RALLYBOX: web de suscripción mensual de pelotas y grips de pádel + panel de administración privado.",
   "type": "module",
   "engines": {
     "node": ">=20.12"

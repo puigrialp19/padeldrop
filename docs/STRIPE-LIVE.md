@@ -1,20 +1,20 @@
-# Stripe de PADEL DROP (MODO REAL)
+# Stripe de RALLYBOX (MODO REAL)
 
 Cuenta: acct_1USXZLRq7KJQz9G9 · generado 2026-11-03 con server/scripts/stripe-setup.js
 
 | Pack | Price ID | Enlace de pago |
 |---|---|---|
-| Pack Básico / PADEL DROP START (10,90 €) | price_1UXe0LRq7KJQz9G9okhaaqdq | https://buy.stripe.com/eVq14peA03hQ1JV6cCeZ20x |
-| Pack Intermedio / PADEL DROP PLAYER (15,90 €) | price_1UXe0NRq7KJQz9G9zdKpijhL | https://buy.stripe.com/fZu3cx63u7y6fAL30qeZ20A |
-| Pack Premium / PADEL DROP PRO (19,90 €) | price_1UXe0QRq7KJQz9G9Iqs6tuSV | https://buy.stripe.com/9B6dRb9fGf0ycozbwWeZ20D |
+| Pack Básico / RALLYBOX START (10,90 €) | price_1UXe0LRq7KJQz9G9okhaaqdq | https://buy.stripe.com/eVq14peA03hQ1JV6cCeZ20x |
+| Pack Intermedio / RALLYBOX PLAYER (15,90 €) | price_1UXe0NRq7KJQz9G9zdKpijhL | https://buy.stripe.com/fZu3cx63u7y6fAL30qeZ20A |
+| Pack Premium / RALLYBOX PRO (19,90 €) | price_1UXe0QRq7KJQz9G9Iqs6tuSV | https://buy.stripe.com/9B6dRb9fGf0ycozbwWeZ20D |
 | Envío a domicilio (2,75 €) | price_1UXe0TRq7KJQz9G94xaouHkH | (segunda línea de cada enlace a domicilio) |
 | Envío a oficina/CityPaq (2,05 €) | price_1UXe0VRq7KJQz9G9dDc3Epln | (segunda línea de cada enlace a oficina) |
-| PADEL DROP START · oficina de Correos o CityPaq | price_1UXe0LRq7KJQz9G9okhaaqdq | https://buy.stripe.com/9B6aEZ2Ri3hQbkv58yeZ20y |
-| PADEL DROP PLAYER · oficina de Correos o CityPaq | price_1UXe0NRq7KJQz9G9zdKpijhL | https://buy.stripe.com/dRmaEZbnO5pYfALbwWeZ20B |
-| PADEL DROP PRO · oficina de Correos o CityPaq | price_1UXe0QRq7KJQz9G9Iqs6tuSV | https://buy.stripe.com/4gM00lbnO4lU88jfNceZ20E |
-| PADEL DROP START · recogida en club (sin envío) | price_1UXe0LRq7KJQz9G9okhaaqdq | https://buy.stripe.com/4gMbJ31Ne2dM74feJ8eZ20z |
-| PADEL DROP PLAYER · recogida en club (sin envío) | price_1UXe0NRq7KJQz9G9zdKpijhL | https://buy.stripe.com/eVq7sN3Vm7y64W730qeZ20C |
-| PADEL DROP PRO · recogida en club (sin envío) | price_1UXe0QRq7KJQz9G9Iqs6tuSV | https://buy.stripe.com/8x200l4Zq5pY88j8kKeZ20F |
+| RALLYBOX START · oficina de Correos o CityPaq | price_1UXe0LRq7KJQz9G9okhaaqdq | https://buy.stripe.com/9B6aEZ2Ri3hQbkv58yeZ20y |
+| RALLYBOX PLAYER · oficina de Correos o CityPaq | price_1UXe0NRq7KJQz9G9zdKpijhL | https://buy.stripe.com/dRmaEZbnO5pYfALbwWeZ20B |
+| RALLYBOX PRO · oficina de Correos o CityPaq | price_1UXe0QRq7KJQz9G9Iqs6tuSV | https://buy.stripe.com/4gM00lbnO4lU88jfNceZ20E |
+| RALLYBOX START · recogida en club (sin envío) | price_1UXe0LRq7KJQz9G9okhaaqdq | https://buy.stripe.com/4gMbJ31Ne2dM74feJ8eZ20z |
+| RALLYBOX PLAYER · recogida en club (sin envío) | price_1UXe0NRq7KJQz9G9zdKpijhL | https://buy.stripe.com/eVq7sN3Vm7y64W730qeZ20C |
+| RALLYBOX PRO · recogida en club (sin envío) | price_1UXe0QRq7KJQz9G9Iqs6tuSV | https://buy.stripe.com/8x200l4Zq5pY88j8kKeZ20F |
 
 Cada 2 y 3 meses (mismo precio por caja): todos los enlaces están en public/js/links.js.
 

@@ -1,4 +1,4 @@
-// Crea en TU cuenta de Stripe todo lo que necesita PADEL DROP y conecta la web con ella:
+// Crea en TU cuenta de Stripe todo lo que necesita RALLYBOX y conecta la web con ella:
 //   - 3 packs (START/PLAYER/PRO) + envío a domicilio y a oficina, con sus precios (IVA incluido)
 //   - cupón y código de socio de Interpàdel (10 % sobre el pack en el primer cobro, solo clientes nuevos; no descuenta el envío)
 //   - 3 enlaces a domicilio (pack + envío 2,75 €) y 3 a oficina de Correos o CityPaq (pack + envío 2,05 €)
@@ -21,9 +21,9 @@ import { PICKUP_CLUBS } from '../services/clubs.js';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 const PACKS = [
-  { slug: 'start', name: 'PADEL DROP START', cans: 1, grips: 2, cents: 1090, who: 'Pack Básico' },
-  { slug: 'player', name: 'PADEL DROP PLAYER', cans: 2, grips: 3, cents: 1590, who: 'Pack Intermedio' },
-  { slug: 'pro', name: 'PADEL DROP PRO', cans: 3, grips: 3, cents: 1990, who: 'Pack Premium' },
+  { slug: 'start', name: 'RALLYBOX START', cans: 1, grips: 2, cents: 1090, who: 'Pack Básico' },
+  { slug: 'player', name: 'RALLYBOX PLAYER', cans: 2, grips: 3, cents: 1590, who: 'Pack Intermedio' },
+  { slug: 'pro', name: 'RALLYBOX PRO', cans: 3, grips: 3, cents: 1990, who: 'Pack Premium' },
 ];
 const SHIPPING = { slug: 'envio', name: 'Envío mensual a domicilio', cents: 275 };
 const OFFICE = { slug: 'envio-oficina', name: 'Envío mensual a oficina de Correos o CityPaq', cents: 205 };
@@ -143,7 +143,7 @@ const ensureHomeLink = (stripe, pack, price, shipPrice, m) => ensureLink(stripe,
   custom_text: { submit: { message: `El total incluye el pack y ${eur(SHIPPING.cents)} € de envío a domicilio ${each(m)}. ${RENEWAL(m)}` } },
   subscription_data: subscription(pack, 'domicilio', 'envío a domicilio', m),
   metadata: { plan: pack.slug, entrega: 'domicilio', frecuencia: String(m) },
-  after_completion: thanks('¡Gracias por suscribirte a PADEL DROP! Recibirás la confirmación por correo electrónico.'),
+  after_completion: thanks('¡Gracias por suscribirte a RALLYBOX! Recibirás la confirmación por correo electrónico.'),
 });
 
 /** Envío a oficina de Correos o CityPaq: pack + envío reducido; la dirección sirve para elegir la oficina más cercana. */
@@ -157,7 +157,7 @@ const ensureOfficeLink = (stripe, pack, price, officePrice, m) => ensureLink(str
   },
   subscription_data: subscription(pack, 'oficina', 'recogida en oficina de Correos o CityPaq', m),
   metadata: { plan: pack.slug, entrega: 'oficina', frecuencia: String(m) },
-  after_completion: thanks('¡Gracias por suscribirte a PADEL DROP! Te avisaremos cuando tu caja esté lista para recoger.'),
+  after_completion: thanks('¡Gracias por suscribirte a RALLYBOX! Te avisaremos cuando tu caja esté lista para recoger.'),
 });
 
 /** Recogida en club: solo el pack (sin envío ni dirección) y un desplegable obligatorio con el club. */
@@ -167,14 +167,14 @@ const ensurePickupLink = (stripe, pack, price, m) => ensureLink(stripe, `${pack.
   custom_text: { submit: { message: `Recoges tu caja gratis ${each(m)} en el club que elijas (sin gastos de envío). ${RENEWAL(m)}` } },
   subscription_data: subscription(pack, 'club', 'recogida en club', m),
   metadata: { plan: pack.slug, entrega: 'club', frecuencia: String(m) },
-  after_completion: thanks('¡Gracias por suscribirte a PADEL DROP! Te avisaremos cuando tu caja esté en el club.'),
+  after_completion: thanks('¡Gracias por suscribirte a RALLYBOX! Te avisaremos cuando tu caja esté en el club.'),
 });
 
 async function ensurePortal(stripe, siteUrl) {
   const { data } = await stripe.billingPortal.configurations.list({ active: true, limit: 100 });
   const mine = data.find((c) => c.metadata?.pd === 'portal');
   const params = {
-    business_profile: { headline: 'PADEL DROP · Gestiona tu suscripción', privacy_policy_url: `${siteUrl}/#/privacidad`, terms_of_service_url: `${siteUrl}/#/condiciones` },
+    business_profile: { headline: 'RALLYBOX · Gestiona tu suscripción', privacy_policy_url: `${siteUrl}/#/privacidad`, terms_of_service_url: `${siteUrl}/#/condiciones` },
     default_return_url: siteUrl,
     features: {
       invoice_history: { enabled: true },
@@ -199,7 +199,7 @@ async function ensureWebhook(stripe, siteUrl) {
     ok(`webhook ${url}: ya existía (su secreto whsec_ está en Stripe → Desarrolladores → Webhooks)`);
     return { endpoint: existing, secret: null };
   }
-  const endpoint = await stripe.webhookEndpoints.create({ url, enabled_events: EVENTS, description: 'PADEL DROP: pedidos y suscripciones' });
+  const endpoint = await stripe.webhookEndpoints.create({ url, enabled_events: EVENTS, description: 'RALLYBOX: pedidos y suscripciones' });
   ok(`webhook ${url}: creado`);
   return { endpoint, secret: endpoint.secret };
 }
@@ -221,7 +221,7 @@ function updateSiteConfig(links, portalUrl) {
 
 async function main() {
   const rl = createInterface({ input: process.stdin, output: process.stdout });
-  console.log('\n  PADEL DROP · Configurar Stripe');
+  console.log('\n  RALLYBOX · Configurar Stripe');
   console.log('  Necesitas la CLAVE SECRETA de tu cuenta (Stripe → Desarrolladores → Claves de API → "Clave secreta").');
   console.log('  Empieza por sk_ o rk_, seguido de test_ (pruebas) o live_ (cobros reales). No se guarda en ningún archivo.\n');
   const key = process.env.STRIPE_SETUP_KEY || await ask(rl, '  Pega la clave secreta y pulsa Enter: ');
@@ -295,7 +295,7 @@ async function main() {
 
   const sqlLines = PACKS.map((p) => `UPDATE packs SET stripe_price_id = '${prices[p.slug][1].id}', cans = ${p.cans}, grips = ${p.grips}, price_cents = ${p.cents} WHERE slug = '${p.slug}';`);
   const doc = [
-    `# Stripe de PADEL DROP (${live ? 'MODO REAL' : 'modo prueba'})`, '',
+    `# Stripe de RALLYBOX (${live ? 'MODO REAL' : 'modo prueba'})`, '',
     `Cuenta: ${account?.id || '?'} · generado ${new Date().toISOString().slice(0, 10)} con server/scripts/stripe-setup.js`, '',
     '| Pack | Price ID | Enlace de pago |', '|---|---|---|',
     ...PACKS.map((p) => `| ${p.who} / ${p.name} (${eur(p.cents)} €) | ${prices[p.slug][1].id} | ${links[p.slug].url} |`),

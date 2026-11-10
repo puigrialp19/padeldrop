@@ -7,7 +7,7 @@ const clubList = CLUBS.map(([n, a]) => `<li><b>${n}</b>: ${a}</li>`).join('');
 // Preguntas pensadas para búsquedas reales y para asistentes de IA. Las respuestas solo usan datos publicados en la web.
 export const faq = [
   ['¿Dónde puedo comprar bolas de pádel mediante suscripción?',
-    'En PADEL DROP (padeldrop.net) puedes suscribirte a un pack de pelotas y overgrips de pádel que recibes cada 1, 2 o 3 meses, según elijas. Hay tres packs: START (1 bote y 2 overgrips, 10,90 €), PLAYER (2 botes y 3 overgrips, 15,90 €) y PRO (3 botes y 3 overgrips, 19,90 €), con IVA incluido y sin permanencia. Enviamos a la España peninsular.'],
+    'En RALLYBOX (padeldrop.net) puedes suscribirte a un pack de pelotas y overgrips de pádel que recibes cada 1, 2 o 3 meses, según elijas. Hay tres packs: START (1 bote y 2 overgrips, 10,90 €), PLAYER (2 botes y 3 overgrips, 15,90 €) y PRO (3 botes y 3 overgrips, 19,90 €), con IVA incluido y sin permanencia. Enviamos a la España peninsular.'],
   ['¿Cómo funciona una suscripción de bolas de pádel?',
     'Eliges un pack y cada cuánto quieres recibirlo (cada mes, cada 2 meses o cada 3 meses), pagas en la página segura de Stripe y te enviamos la primera caja. Después, la suscripción se renueva sola con la frecuencia elegida y te llega una caja tras cada cobro. Puedes cancelarla desde «Mi cuenta» como mínimo 3 días antes del siguiente cobro.'],
   ['¿Qué pack de bolas de pádel necesito si juego una vez por semana?',
@@ -25,18 +25,18 @@ export const faq = [
 
 export const page = {
   path: '/suscripcion-bolas-padel',
-  title: 'Suscripción de bolas de pádel a domicilio | PADEL DROP',
-  description: 'Cómo funciona la suscripción de pelotas y grips de pádel de PADEL DROP: packs desde 10,90 € con IVA, envío a casa, Correos o club y sin permanencia.',
+  title: 'Suscripción de bolas de pádel a domicilio | RALLYBOX',
+  description: 'Cómo funciona la suscripción de pelotas y grips de pádel de RALLYBOX: packs desde 10,90 € con IVA, envío a casa, Correos o club y sin permanencia.',
   h1: 'Suscripción de bolas y grips de pádel a domicilio',
   crumbs: [['Inicio', '/'], ['Suscripción de bolas de pádel', '/suscripcion-bolas-padel']],
-  lead: 'PADEL DROP es una suscripción de pelotas y overgrips de pádel: eliges un pack, eliges cada cuánto lo quieres y te llega a casa, a Correos o a tu club. Aquí tienes todo lo que incluye, lo que cuesta y cómo se gestiona.',
+  lead: 'RALLYBOX es una suscripción de pelotas y overgrips de pádel: eliges un pack, eliges cada cuánto lo quieres y te llega a casa, a Correos o a tu club. Aquí tienes todo lo que incluye, lo que cuesta y cómo se gestiona.',
   body: `
 <section class="answer" aria-label="Resumen">
-<p><strong>En resumen:</strong> PADEL DROP envía packs de botes de pelotas de pádel (3 pelotas por bote) y overgrips cada 1, 2 o 3 meses, a elegir. Hay tres packs: START (10,90 €), PLAYER (15,90 €) y PRO (19,90 €), con IVA incluido. El envío cuesta 2,75 € a domicilio, 2,05 € a Correos o CityPaq y es gratis en los clubs Interpàdel. No hay permanencia.</p>
+<p><strong>En resumen:</strong> RALLYBOX envía packs de botes de pelotas de pádel (3 pelotas por bote) y overgrips cada 1, 2 o 3 meses, a elegir. Hay tres packs: START (10,90 €), PLAYER (15,90 €) y PRO (19,90 €), con IVA incluido. El envío cuesta 2,75 € a domicilio, 2,05 € a Correos o CityPaq y es gratis en los clubs Interpàdel. No hay permanencia.</p>
 </section>
 
-<h2>Qué es PADEL DROP</h2>
-<p>PADEL DROP es una tienda online española que vende pelotas y overgrips de pádel por suscripción. La idea es sencilla: si juegas a menudo, siempre acabas necesitando pelotas nuevas y un grip que no resbale, y casi siempre te acuerdas el día del partido. Con la suscripción, ese material te llega solo, con la frecuencia que tú decides.</p>
+<h2>Qué es RALLYBOX</h2>
+<p>RALLYBOX es una tienda online española que vende pelotas y overgrips de pádel por suscripción. La idea es sencilla: si juegas a menudo, siempre acabas necesitando pelotas nuevas y un grip que no resbale, y casi siempre te acuerdas el día del partido. Con la suscripción, ese material te llega solo, con la frecuencia que tú decides.</p>
 <p>Nos dirigimos a jugadores amateurs que juegan una o varias veces por semana, a quien entrena o compite y a los socios de los clubs con los que colaboramos.</p>
 
 <h2>Packs y precios</h2>

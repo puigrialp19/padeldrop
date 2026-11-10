@@ -1,7 +1,7 @@
 {
-  "name": "PADEL DROP · Administración",
-  "short_name": "Padel Drop",
-  "description": "Panel de administración de PADEL DROP: ventas, clientes, pedidos y envíos.",
+  "name": "RALLYBOX · Administración",
+  "short_name": "RALLYBOX",
+  "description": "Panel de administración de RALLYBOX: ventas, clientes, pedidos y envíos.",
   "id": "/admin/",
   "start_url": "/admin/#/dashboard",
   "scope": "/admin/",

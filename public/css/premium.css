@@ -1,4 +1,4 @@
-/* PADEL DROP · capa visual premium (portada, secciones, microinteracciones).
+/* RALLYBOX · capa visual premium (portada, secciones, microinteracciones).
    Se carga después de styles.css. Nada queda oculto por CSS: los estados iniciales de las animaciones
    los pone js/motion.js, así que sin JavaScript (o con «reducir movimiento») todo se ve directamente. */
 :root{
