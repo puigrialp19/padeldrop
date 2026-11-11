@@ -34,7 +34,7 @@ pl.innerHTML="";PLANS.forEach(function(p){
   '<div class="price">'+eur(p.price)+' <small class="per">/ mes</small></div>'+
   '<p class="eq">'+p.eq+'</p>'+
   '<ul><li><span>'+botes(p.cans)+' de pelotas de pádel <span class="each">cada mes</span></span></li><li><span>'+p.grips+' overgrips incluidos <span class="each">cada mes</span></span></li><li>'+DLV_LI+'</li><li>Renovación automática sin permanencia</li></ul>'+
-  '<button class="btn b1 mag" data-id="'+p.id+'">Suscribirme a '+p.name.split(" ")[2]+'</button>';
+  '<button class="btn b1 mag" data-id="'+p.id+'">Suscribirme a '+p.name.split(" ").pop()+'</button>';
   pl.appendChild(d);
 });
 drawFreq();
