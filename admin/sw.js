@@ -1,7 +1,7 @@
 // Service worker del panel: hace que el panel se pueda instalar como app en el móvil.
 // IMPORTANTE: no guarda en caché ningún dato de clientes ni pedidos. Todo se pide siempre al servidor;
 // solo se guarda una pantalla de "sin conexión" para cuando no hay internet.
-const CACHE = 'pd-admin-offline-v2';
+const CACHE = 'rallybox-admin-offline-v3';
 const OFFLINE_URL = '/admin/offline.html';
 
 self.addEventListener('install', (event) => {
@@ -32,8 +32,8 @@ self.addEventListener('push', (event) => {
   event.waitUntil((async () => {
     await self.registration.showNotification(title, {
       body: data.body || 'Tienes novedades en el panel.',
-      icon: '/admin/icons/icon-192.png',
-      badge: '/admin/icons/badge-96.png',
+      icon: '/admin/icons/rallybox-icon-192.png',
+      badge: '/admin/icons/rallybox-badge-96.png',
       tag: data.tag || 'pd',
       renotify: true,
       vibrate: [120, 60, 120],
