@@ -40,8 +40,9 @@ function layout({ path: url, title, description, h1, lead, body, crumbs, ld, typ
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0b0d10">
-<link rel="icon" href="/favicon.ico" sizes="48x48">
-<link rel="icon" href="/favicon-192.png" type="image/png" sizes="192x192">
+<link rel="icon" href="/favicon-rallybox.ico" sizes="48x48">
+<link rel="icon" href="/icono-rallybox-96.png" type="image/png" sizes="96x96">
+<link rel="icon" href="/icono-rallybox-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="alternate" type="text/plain" href="/llms.txt" title="Resumen de RALLYBOX para asistentes de IA">
 <link rel="preload" href="/assets/fonts/barlow-condensed-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
