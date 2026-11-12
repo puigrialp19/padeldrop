@@ -10,7 +10,7 @@ Actualitzat el 12 de novembre de 2026.
 | Domini | La web continua a www.padeldrop.net | Quan compris el domini nou, avisa i faig el canvi amb redireccions 301 |
 | NIF de la societat civil | Ara la web diu «NIF: en trámite» | Quan Hisenda us doni el NIF (comença per J), passa-me'l i el poso a l'avís legal, la privacitat, les condicions i el peu. La llei obliga a mostrar-lo |
 | Stripe a nom de la societat | El compte està a nom teu (persona física) | Stripe → Configuració → Dades de l'empresa: canviar a «RALLYBOX, Sociedad Civil», amb el NIF i el compte bancari de la societat (contracte, cl. 13.ª) |
-| Adreça de remitent al compte de Packlink | L'adreça guardada al teu compte de Packlink encara pot ser Plaza Vell Pla, 3 | Packlink → Configuració → Adreces de remitent: Avinguda Onze de Setembre, 35, 25210 Guissona. Els enviaments que crea la web ja porten l'adreça nova |
+| Dades de facturació de Packlink | Les factures de Packlink surten a nom teu | Packlink → Configuració → Adreça de facturació: «RALLYBOX, Sociedad Civil», Avinguda Onze de Setembre, 35, 25210 Guissona, amb el NIF de la societat quan el tingueu. L'adreça de pagament no es toca (és la del titular de la targeta) |
 | Correu a Stripe | Correu d'assistència que veuen els clients (rebuts i pàgina de pagament) | Stripe → Configuració → Dades públiques de l'empresa → Correu d'assistència: `rallyboox@gmail.com` |
 | Correu a Packlink | Correu del compte (el correu antic) | Packlink → Configuració → Les meves dades. Les etiquetes noves ja surten amb `rallyboox@gmail.com` |
 | Correu a Render | Variable `ADMIN_EMAIL`, si hi tens el correu antic | Render → servei → Environment. Només la fa servir l'script que crea l'administrador |
