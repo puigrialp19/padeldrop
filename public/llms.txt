@@ -23,7 +23,7 @@
 - Se elige el pack, la frecuencia y la entrega en https://www.padeldrop.net/#planes y se paga con Stripe.
 - La suscripción se renueva automáticamente. Se cancela desde «Mi cuenta» (portal de cliente de Stripe, con el correo de la compra) o por correo, como mínimo 3 días antes del siguiente cobro. Pausa y cambio de pack por correo.
 - Derecho de desistimiento de 14 días según la ley española (condiciones en https://www.padeldrop.net/#/condiciones).
-- Contacto: padeldropp@gmail.com
+- Contacto: rallyboox@gmail.com
 
 ## Páginas
 - [Inicio y packs](https://www.padeldrop.net/): planes, precios y contratación

@@ -1,7 +1,7 @@
 // Datos comerciales que usan las páginas de contenido, el sitemap y llms.txt.
 // Deben coincidir con public/js/config.js y con las condiciones de contratación. Si cambian los precios, cámbialos aquí y ejecuta: npm run build:content
 export const SITE = 'https://www.padeldrop.net';
-export const EMAIL = 'padeldropp@gmail.com';
+export const EMAIL = 'rallyboox@gmail.com';
 export const PACKS = [
   { id: 'start', name: 'START', price: '10,90', cans: 1, grips: 2, who: '1 partido a la semana (así lo indica la ficha del pack)' },
   { id: 'player', name: 'PLAYER', price: '15,90', cans: 2, grips: 3, who: 'quien juega con más frecuencia' },

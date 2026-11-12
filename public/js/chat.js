@@ -45,7 +45,7 @@
     return lines.length ? '\n\nResumen de lo que he consultado:\n' + lines.join('\n') : '';
   }
   function contact() {
-    if (!hello) return { href: 'mailto:padeldropp@gmail.com', label: 'Escribir a una persona del equipo', icon: ICON.mail, type: 'email_click' };
+    if (!hello) return { href: 'mailto:rallyboox@gmail.com', label: 'Escribir a una persona del equipo', icon: ICON.mail, type: 'email_click' };
     var text = hello.waText + summary();
     if (hello.whatsapp) return { href: 'https://wa.me/' + hello.whatsapp + '?text=' + encodeURIComponent(text), label: 'Hablar con una persona por WhatsApp', icon: ICON.wa, type: 'wa_click' };
     return { href: 'mailto:' + hello.email + '?subject=' + encodeURIComponent('Consulta desde el asistente de RALLYBOX') + '&body=' + encodeURIComponent(text), label: 'Escribir a una persona del equipo', icon: ICON.mail, type: 'email_click' };

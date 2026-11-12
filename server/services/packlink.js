@@ -7,7 +7,7 @@ import { config } from '../config.js';
 export const SENDER = {
   firstName: 'Èric', lastName: 'Puig Rialp', company: 'RALLYBOX',
   address1: 'Plaza Vell Pla', address2: '3', postalCode: '25210', city: 'Guissona',
-  phone: '672449282', email: 'padeldropp@gmail.com',
+  phone: '672449282', email: 'rallyboox@gmail.com',
 };
 
 // Caja de envío (cm) y peso aproximado lleno por pack (kg).

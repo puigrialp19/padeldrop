@@ -1,14 +1,17 @@
 # Canvi de marca a RALLYBOX: què queda pendent
 
 Llista del que encara diu «Padel Drop» i que no s'ha pogut canviar des del codi ni des del connector de Stripe.
-Actualitzat el 10 de novembre de 2026.
+Actualitzat el 12 de novembre de 2026.
 
 ## Ho has de fer tu (des dels seus taulers)
 
 | On | Què canviar | Com |
 |---|---|---|
 | Domini | La web continua a www.padeldrop.net | Quan compris el domini nou, avisa i faig el canvi amb redireccions 301 |
-| Correu | padeldropp@gmail.com | Quan tinguis el correu nou de RALLYBOX, avisa i el canvio a tot arreu |
+| Correu a Stripe | Correu d'assistència que veuen els clients (rebuts i pàgina de pagament) | Stripe → Configuració → Dades públiques de l'empresa → Correu d'assistència: `rallyboox@gmail.com` |
+| Correu a Packlink | Correu del compte (el correu antic) | Packlink → Configuració → Les meves dades. Les etiquetes noves ja surten amb `rallyboox@gmail.com` |
+| Correu a Render | Variable `ADMIN_EMAIL`, si hi tens el correu antic | Render → servei → Environment. Només la fa servir l'script que crea l'administrador |
+| Correu a xarxes, Google i WhatsApp Business | Correu de contacte dels perfils | Des de cada app: `rallyboox@gmail.com` |
 | Render | Nom del servei («padel-drop») | Només és intern. Si el canvies, avisa'm abans, perquè l'adreça interna de Render també canvia. |
 | GitHub | Nom del repositori («padeldrop») | Només és intern. Si el canvies, Render s'ha de tornar a connectar. |
 | Google Search Console i Bing | Nom del lloc | Es canvia sol quan Google torni a rastrejar la web. Demana una nova indexació de la portada. |
@@ -36,6 +39,11 @@ Actualitzat el 10 de novembre de 2026.
   - productes RALLYBOX START, PLAYER i PRO;
   - 27 enllaços de pagament nous, amb descripció i missatge RALLYBOX (mateixos preus i condicions);
   - portal «Mi cuenta» amb el títol RALLYBOX.
-- Packlink: el remitent de les etiquetes (API) i l'adreça de remitent del compte (àlies i empresa) ara són RALLYBOX. Al compte només queda el correu padeldropp@gmail.com, que es manté de moment.
+- Packlink: el remitent de les etiquetes (API) i l'adreça de remitent del compte (àlies i empresa) ara són RALLYBOX.
+- Correu nou `rallyboox@gmail.com` a tota la web (12 de novembre de 2026):
+  - peu de pàgina, contacte, textos legals i blog;
+  - assistent del xat i dades estructurades per a Google;
+  - `llms.txt`;
+  - remitent de les etiquetes de Packlink i avisos del panell.
 - Stripe: nom públic del compte, text de l'extracte bancari, logotip i icona de la pàgina de pagament canviats a RALLYBOX, i dades internes dels productes corregides (1, 2 i 3 pots) (10 de novembre de 2026).
 - Còpia de seguretat de la web anterior: etiqueta `backup-padeldrop-2026-11-10` a GitHub i el zip `Documents\padel-drop-copia-2026-11-10.zip`.

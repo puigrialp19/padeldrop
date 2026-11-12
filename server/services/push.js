@@ -40,7 +40,7 @@ export async function initPush() {
     pub = again.find((r) => r.key === 'vapid_public').value;
     priv = again.find((r) => r.key === 'vapid_private').value;
   }
-  vapid = { publicKey: pub, privateKey: priv, subject: 'mailto:padeldropp@gmail.com' };
+  vapid = { publicKey: pub, privateKey: priv, subject: 'mailto:rallyboox@gmail.com' };
 }
 
 export const publicKey = () => vapid?.publicKey || '';
