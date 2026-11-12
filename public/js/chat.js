@@ -155,7 +155,7 @@
     contactA.addEventListener('click', function () { contactA.href = contact().href; track(contactA.dataset.type || 'email_click'); });
     foot.appendChild(form);
     foot.appendChild(contactA);
-    foot.appendChild(el('p', 'pdc-note', 'Asistente automático: puede equivocarse. No escribas datos personales. <a href="/#/privacidad">Privacidad</a>'));
+    foot.appendChild(el('p', 'pdc-note', 'Asistente automático con inteligencia artificial: puede equivocarse. No escribas datos personales. <a href="/#/privacidad">Privacidad</a>'));
     panel.appendChild(head); panel.appendChild(log); panel.appendChild(foot);
     panel.addEventListener('click', function (e) {
       if (e.target.closest('a, button, textarea')) return;

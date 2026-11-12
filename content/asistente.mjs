@@ -10,7 +10,7 @@
 // Si alguien pregunta algo que no está aquí, responde la IA gratuita con esta misma información
 // y, si tampoco lo sabe, ofrece WhatsApp (o el correo).
 
-export const BIENVENIDA = '¡Hola! 👋 Soy el asistente virtual de RALLYBOX. Estoy aquí para ayudarte con cualquier duda sobre nuestras suscripciones, packs y envíos. ¿En qué puedo ayudarte?';
+export const BIENVENIDA = '¡Hola! 👋 Soy el asistente virtual de RALLYBOX: un asistente automático, no una persona. Estoy aquí para ayudarte con cualquier duda sobre nuestras suscripciones, packs y envíos. ¿En qué puedo ayudarte?';
 
 export const RAPIDAS = [
   '¿Cómo funciona RALLYBOX?',
