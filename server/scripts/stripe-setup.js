@@ -130,7 +130,7 @@ async function ensureLink(stripe, slug, label, prices, params) {
 const FREQS = [1, 2, 3];
 const each = (m) => (m === 1 ? 'cada mes' : `cada ${m} meses`);
 const sfx = (m) => (m === 1 ? '' : `-${m}m`);
-const RENEWAL = (m) => `Suscripción con renovación automática ${each(m)}. Puedes cancelarla antes de la siguiente renovación para evitar cobros futuros.`;
+const RENEWAL = (m) => `Suscripción con renovación automática ${each(m)}. Puedes cancelarla antes de la siguiente renovación para evitar cobros futuros. Al pulsar «Suscribirse» realizas un pedido con obligación de pago.`;
 const subscription = (pack, entrega, suffix, m) => ({
   description: `${pack.name}: ${botes(pack.cans)} + ${pack.grips} overgrips ${each(m)} · ${suffix}`, metadata: { plan: pack.slug, entrega, frecuencia: String(m) },
 });

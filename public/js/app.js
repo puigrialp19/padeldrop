@@ -116,13 +116,14 @@ document.getElementById("mload").addEventListener("click",function(){
   if(!gmap){gmap=document.createElement("iframe");gmap.title="Mapa de Google del club seleccionado";gmap.loading="lazy";gmap.referrerPolicy="no-referrer-when-downgrade";gmap.setAttribute("allowfullscreen","");mframe.appendChild(gmap);document.getElementById("map").classList.add("live");this.querySelector("span").textContent="Mapa de Google cargado"}
   gmap.src="https://www.google.com/maps?q="+b.dataset.q+"&output=embed";
 });
-var T={condiciones:"Condiciones de contratación",privacidad:"Política de privacidad",cookies:"Política de cookies","aviso-legal":"Aviso legal"};
+var T={condiciones:"Condiciones de contratación",privacidad:"Política de privacidad",cookies:"Política de cookies","aviso-legal":"Aviso legal",envios:"Política de envíos",devoluciones:"Devoluciones y desistimiento",garantia:"Garantía legal"};
+var SUB={envios:"envios",devoluciones:"desistimiento",garantia:"garantia"};
 var HOME_TITLE=document.title;
 function route(){ipShow();var h=location.hash,r=h.indexOf("#/")===0?h.slice(2):"",on=!!T[r],m=document.getElementById("top");
 document.getElementById("legal").hidden=!on;m.hidden=on;
-document.querySelectorAll("[data-r]").forEach(function(a){a.hidden=a.dataset.r!==r});
+var rr=SUB[r]?"condiciones":r;document.querySelectorAll("[data-r]").forEach(function(a){a.hidden=a.dataset.r!==rr});
 document.title=on?T[r]+" · RALLYBOX":HOME_TITLE;
-if(on){scrollTo(0,0)}else if(h.length>1){var t=document.getElementById(h.slice(1));if(t)t.scrollIntoView()}}
+if(on){var sec=SUB[r]&&document.getElementById(SUB[r]);if(sec){sec.scrollIntoView()}else scrollTo(0,0)}else if(h.length>1){var t=document.getElementById(h.slice(1));if(t)t.scrollIntoView()}}
 addEventListener("hashchange",route);route();
 /* Enlaces internos (menú, logo, botones): un solo desplazamiento suave, sin el segundo salto que hacía el hashchange */
 document.addEventListener("click",function(e){var l=e.target.closest('a[href^="#"]');if(!l||e.defaultPrevented||e.button||e.metaKey||e.ctrlKey)return;var h=l.getAttribute("href");if(h.length<2||h.indexOf("#/")===0||h==="#mi-cuenta"||!document.getElementById("legal").hidden)return;var t=h==="#top"?null:document.getElementById(h.slice(1));if(h!=="#top"&&!t)return;e.preventDefault();if(location.hash!==h)history.pushState(null,"",h);if(t)t.scrollIntoView();else scrollTo(0,0)});
