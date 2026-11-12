@@ -10,7 +10,7 @@ Actualitzat el 12 de novembre de 2026.
 | Domini | La web continua a www.padeldrop.net | Quan compris el domini nou, avisa i faig el canvi amb redireccions 301 |
 | NIF de la societat civil | Ara la web diu «NIF: en trámite» | Quan Hisenda us doni el NIF (comença per J), passa-me'l i el poso a l'avís legal, la privacitat, les condicions i el peu. La llei obliga a mostrar-lo |
 | Stripe a nom de la societat | El compte està a nom teu (persona física) | Stripe → Configuració → Dades de l'empresa: canviar a «RALLYBOX, Sociedad Civil», amb el NIF i el compte bancari de la societat (contracte, cl. 13.ª) |
-| Remitent de Packlink | Les etiquetes surten amb el teu nom i Plaza Vell Pla, 3 | Digues-me des d'on s'envien les caixes (el contracte posa la logística al Socio B) i a nom de qui, i ho canvio a `server/services/packlink.js` |
+| Adreça de remitent al compte de Packlink | L'adreça guardada al teu compte de Packlink encara pot ser Plaza Vell Pla, 3 | Packlink → Configuració → Adreces de remitent: Avinguda Onze de Setembre, 35, 25210 Guissona. Els enviaments que crea la web ja porten l'adreça nova |
 | Correu a Stripe | Correu d'assistència que veuen els clients (rebuts i pàgina de pagament) | Stripe → Configuració → Dades públiques de l'empresa → Correu d'assistència: `rallyboox@gmail.com` |
 | Correu a Packlink | Correu del compte (el correu antic) | Packlink → Configuració → Les meves dades. Les etiquetes noves ja surten amb `rallyboox@gmail.com` |
 | Correu a Render | Variable `ADMIN_EMAIL`, si hi tens el correu antic | Render → servei → Environment. Només la fa servir l'script que crea l'administrador |
@@ -50,4 +50,5 @@ Actualitzat el 12 de novembre de 2026.
   - remitent de les etiquetes de Packlink i avisos del panell.
 - Stripe: nom públic del compte, text de l'extracte bancari, logotip i icona de la pàgina de pagament canviats a RALLYBOX, i dades internes dels productes corregides (1, 2 i 3 pots) (10 de novembre de 2026).
 - Textos legals (avís legal, privacitat, cookies, condicions, formulari de desistiment i peu): el titular és «RALLYBOX, Sociedad Civil», amb domicili social a Avinguda Onze de Setembre, 35, 25210 Guissona (Lleida). Ja no hi surten el nom, el NIF ni l'adreça personals (12 de novembre de 2026).
+- Remitent dels enviaments que la web crea a Packlink (API i CSV): «RALLYBOX S.C.», Avinguda Onze de Setembre, 35, 25210 Guissona (12 de novembre de 2026).
 - Còpia de seguretat de la web anterior: etiqueta `backup-padeldrop-2026-11-10` a GitHub i el zip `Documents\padel-drop-copia-2026-11-10.zip`.

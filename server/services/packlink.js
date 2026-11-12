@@ -3,10 +3,10 @@
 import { sql } from '../db/db.js';
 import { config } from '../config.js';
 
-// Remitente (datos del aviso legal). Cámbialos aquí si enviáis desde otra dirección.
+// Remitente: la sociedad y su domicilio social (datos del aviso legal). Cámbialos aquí si enviáis desde otra dirección.
 export const SENDER = {
-  firstName: 'Èric', lastName: 'Puig Rialp', company: 'RALLYBOX',
-  address1: 'Plaza Vell Pla', address2: '3', postalCode: '25210', city: 'Guissona',
+  firstName: 'RALLYBOX', lastName: 'Sociedad Civil', company: 'RALLYBOX S.C.',
+  address1: 'Avinguda Onze de Setembre', address2: '35', postalCode: '25210', city: 'Guissona',
   phone: '672449282', email: 'rallyboox@gmail.com',
 };
 
