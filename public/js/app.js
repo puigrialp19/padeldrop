@@ -116,13 +116,14 @@ document.getElementById("mload").addEventListener("click",function(){
   if(!gmap){gmap=document.createElement("iframe");gmap.title="Mapa de Google del club seleccionado";gmap.loading="lazy";gmap.referrerPolicy="no-referrer-when-downgrade";gmap.setAttribute("allowfullscreen","");mframe.appendChild(gmap);document.getElementById("map").classList.add("live");this.querySelector("span").textContent="Mapa de Google cargado"}
   gmap.src="https://www.google.com/maps?q="+b.dataset.q+"&output=embed";
 });
-var T={condiciones:"Condiciones de contratación",privacidad:"Política de privacidad",cookies:"Política de cookies","aviso-legal":"Aviso legal",envios:"Política de envíos",devoluciones:"Devoluciones y desistimiento",garantia:"Garantía legal"};
+var T={condiciones:"Condiciones de contratación",privacidad:"Política de privacidad",cookies:"Política de cookies","aviso-legal":"Aviso legal",envios:"Política de envíos",devoluciones:"Devoluciones y desistimiento",garantia:"Garantía legal","avis-legal":"Avís legal",privacitat:"Política de privacitat",galetes:"Política de galetes",condicions:"Condicions de contractació"};
+var CA={"avis-legal":1,privacitat:1,galetes:1,condicions:1};
 var SUB={envios:"envios",devoluciones:"desistimiento",garantia:"garantia"};
 var HOME_TITLE=document.title;
 function route(){ipShow();var h=location.hash,r=h.indexOf("#/")===0?h.slice(2):"",on=!!T[r],m=document.getElementById("top");
 document.getElementById("legal").hidden=!on;m.hidden=on;
 var rr=SUB[r]?"condiciones":r;document.querySelectorAll("[data-r]").forEach(function(a){a.hidden=a.dataset.r!==rr});
-document.title=on?T[r]+" · RALLYBOX":HOME_TITLE;
+document.title=on?T[r]+" · RALLYBOX":HOME_TITLE;document.documentElement.lang=CA[r]?"ca":"es";
 if(on){var sec=SUB[r]&&document.getElementById(SUB[r]);scrollTo(0,0);if(sec){setTimeout(function(){sec.scrollIntoView()},120)}}else if(h.length>1){var t=document.getElementById(h.slice(1));if(t)t.scrollIntoView()}}
 addEventListener("hashchange",route);route();
 /* Enlaces internos (menú, logo, botones): un solo desplazamiento suave, sin el segundo salto que hacía el hashchange */
