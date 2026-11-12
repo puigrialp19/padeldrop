@@ -53,7 +53,7 @@ Hay que tenerlo aunque seáis pocos, porque tratáis datos de clientes de forma 
 | Consentimiento para publicidad | No se envía publicidad. Si un día queréis enviar ofertas por correo, hay que pedir antes una casilla de consentimiento (no marcada) |
 | Aviso de que el chat es automático (Reglamento de IA) | Hecho |
 | Hojas oficiales de reclamación de la Generalitat | Informado en la web. **Tenedlas** (se descargan en consum.gencat.cat) para enviarlas si alguien las pide |
-| Atención en catalán | Informado en la web. Recomendado: versión en catalán de los textos legales |
+| Atención en catalán | Hecho: textos legales también en catalán (/#/avis-legal, /#/privacitat, /#/galetes, /#/condicions) y hoja de la caja en catalán (`condicions-per-a-la-caixa.pdf`) |
 | Accesibilidad (Ley 11/2023) | No obligatoria para microempresas (menos de 10 personas y 2 M€ de facturación) |
 
 ## 4. Modelo de contrato de encargado para los clubs
