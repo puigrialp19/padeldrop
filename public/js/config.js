@@ -16,7 +16,7 @@ var CONFIG={
   whatsapp:"34682794409"
 };
 var PLANS=[
-  {id:"start",name:"RALLYBOX START",who:"Ideal para 1 partido a la semana",grips:2,cans:1,price:10.9,eq:"1 bote + 2 overgrips en cada caja, IVA incluido"},
-  {id:"player",name:"RALLYBOX PLAYER",who:"",grips:3,cans:2,price:15.9,featured:true,eq:"Equivale a 7,95 € por bote, con grips incluidos"},
-  {id:"pro",name:"RALLYBOX PRO",who:"Para jugadores habituales",grips:3,cans:3,price:19.9,eq:"¡Solo 6,63 € por bote, con grips incluidos!"}
+  {id:"start",name:"RALLYBOX START",who:"Ideal para 1 partido a la semana",grips:2,cans:1,price:10.9,eq:"Lo justo para llegar a punto a tu partido semanal. IVA incluido."},
+  {id:"player",name:"RALLYBOX PLAYER",who:"",grips:3,cans:2,price:15.9,featured:true,eq:"El equilibrio perfecto: bolas nuevas y grip fresco en cada caja. IVA incluido."},
+  {id:"pro",name:"RALLYBOX PRO",who:"Para jugadores habituales",grips:3,cans:3,price:19.9,eq:"Máxima reserva para los que no salen de la pista. IVA incluido."}
 ];
