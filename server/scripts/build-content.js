@@ -127,7 +127,7 @@ ${urls.map(([u, d, pr]) => `  <url><loc>${SITE}${u}</loc><lastmod>${d}</lastmod>
 // 5 · llms.txt (resumen en texto plano para asistentes de IA, propuesta llmstxt.org)
 write('llms.txt', `# RALLYBOX
 
-> RALLYBOX (www.padeldrop.net) es una tienda online española de suscripción de pelotas y overgrips de pádel. Envía packs cada 1, 2 o 3 meses, a elegir, a domicilio, a una oficina de Correos o CityPaq, o para recoger gratis en los clubs Interpàdel de Guissona, Tàrrega y Golmés (Lleida). Sin permanencia. Precios con IVA incluido.
+> RALLYBOX (www.rallybox.es) es una tienda online española de suscripción de pelotas y overgrips de pádel. Envía packs cada 1, 2 o 3 meses, a elegir, a domicilio, a una oficina de Correos o CityPaq, o para recoger gratis en los clubs Interpàdel de Guissona, Tàrrega y Golmés (Lleida). Sin permanencia. Precios con IVA incluido.
 
 ## Packs (precio por caja, IVA incluido)
 ${PACKS.map((p) => `- ${p.name}: ${p.cans} ${p.cans > 1 ? 'botes' : 'bote'} de 3 pelotas de pádel y ${p.grips} overgrips, ${p.price} €`).join('\n')}

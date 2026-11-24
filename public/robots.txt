@@ -1,4 +1,4 @@
-# RALLYBOX · www.padeldrop.net
+# RALLYBOX · www.rallybox.es
 # Web pública abierta a buscadores y asistentes de IA. Solo se cierran el panel privado y la API.
 
 User-agent: *
@@ -31,4 +31,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: https://www.padeldrop.net/sitemap.xml
+Sitemap: https://www.rallybox.es/sitemap.xml

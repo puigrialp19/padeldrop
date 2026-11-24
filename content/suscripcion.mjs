@@ -7,7 +7,7 @@ const clubList = CLUBS.map(([n, a]) => `<li><b>${n}</b>: ${a}</li>`).join('');
 // Preguntas pensadas para búsquedas reales y para asistentes de IA. Las respuestas solo usan datos publicados en la web.
 export const faq = [
   ['¿Dónde puedo comprar bolas de pádel mediante suscripción?',
-    'En RALLYBOX (padeldrop.net) puedes suscribirte a un pack de pelotas y overgrips de pádel que recibes cada 1, 2 o 3 meses, según elijas. Hay tres packs: START (1 bote y 2 overgrips, 10,90 €), PLAYER (2 botes y 3 overgrips, 15,90 €) y PRO (3 botes y 3 overgrips, 19,90 €), con IVA incluido y sin permanencia. Enviamos a la España peninsular.'],
+    'En RALLYBOX (rallybox.es) puedes suscribirte a un pack de pelotas y overgrips de pádel que recibes cada 1, 2 o 3 meses, según elijas. Hay tres packs: START (1 bote y 2 overgrips, 10,90 €), PLAYER (2 botes y 3 overgrips, 15,90 €) y PRO (3 botes y 3 overgrips, 19,90 €), con IVA incluido y sin permanencia. Enviamos a la España peninsular.'],
   ['¿Cómo funciona una suscripción de bolas de pádel?',
     'Eliges un pack y cada cuánto quieres recibirlo (cada mes, cada 2 meses o cada 3 meses), pagas en la página segura de Stripe y te enviamos la primera caja. Después, la suscripción se renueva sola con la frecuencia elegida y te llega una caja tras cada cobro. Puedes cancelarla desde «Mi cuenta» como mínimo 3 días antes del siguiente cobro.'],
   ['¿Qué pack de bolas de pádel necesito si juego una vez por semana?',
@@ -20,7 +20,7 @@ export const faq = [
     'Sí. Los precios de los packs y de los envíos incluyen el IVA. El total, con el envío desglosado, se muestra antes de pagar.'],
   ['¿Cuántas pelotas trae cada bote?', 'Cada bote trae 3 pelotas de pádel.'],
   ['¿Cómo gestiono o cancelo la suscripción?',
-    `Desde «Mi cuenta» en padeldrop.net entras al portal de cliente de Stripe con el correo con el que te suscribiste: allí ves tus facturas, cambias la tarjeta o la dirección y cancelas. También puedes escribirnos a ${EMAIL}.`],
+    `Desde «Mi cuenta» en rallybox.es entras al portal de cliente de Stripe con el correo con el que te suscribiste: allí ves tus facturas, cambias la tarjeta o la dirección y cancelas. También puedes escribirnos a ${EMAIL}.`],
 ];
 
 export const page = {

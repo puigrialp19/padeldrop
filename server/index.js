@@ -50,9 +50,12 @@ app.get('/healthz', async (req, res) => {
 
 // Dominio propio: la dirección antigua de Render redirige (301) a PUBLIC_URL conservando la ruta y el ?ref de los QR ya
 // impresos. Solo GET/HEAD: el webhook de Stripe (POST) sigue llegando aunque apunte a la dirección antigua.
+// También redirige (301) el dominio anterior de la web (padeldrop.net) al dominio actual.
 const publicHost = new URL(config.publicUrl).hostname;
+const OLD_HOSTS = new Set(['padeldrop.net', 'www.padeldrop.net']);
 app.use((req, res, next) => {
-  if ((req.method !== 'GET' && req.method !== 'HEAD') || req.hostname === publicHost || !req.hostname.endsWith('.onrender.com')) return next();
+  if ((req.method !== 'GET' && req.method !== 'HEAD') || req.hostname === publicHost) return next();
+  if (!req.hostname.endsWith('.onrender.com') && !OLD_HOSTS.has(req.hostname)) return next();
   if (req.path === '/admin/sw.js') return next(); // la app del panel ya instalada sigue actualizándose
   res.redirect(301, config.publicUrl + req.originalUrl);
 });

@@ -12,7 +12,7 @@ services:
     autoDeploy: true             # cada cambio subido a GitHub se publica solo
     envVars:
       - key: PUBLIC_URL
-        value: https://www.padeldrop.net
+        value: https://www.rallybox.es
       - key: NODE_ENV
         value: production
       - key: TRUST_PROXY
